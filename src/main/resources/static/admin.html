@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel - LMS</title>
+</head>
+<body>
+<h2>Create Officer</h2>
+
+<form id="officerForm">
+    <label>Name:</label>
+    <input type="text" id="name"><br>
+
+    <label>Email:</label>
+    <input type="email" id="email"><br>
+
+    <label>Phone:</label>
+    <input type="text" id="phone"><br>
+
+    <label>Password:</label>
+    <input type="password" id="password"><br>
+
+    <label>Role:</label>
+    <select id="role">
+        <option value="LOAN_OFFICER">Loan Officer</option>
+        <option value="COLLECTION_OFFICER">Collection Officer</option>
+    </select><br>
+
+    <button type="submit">Create Officer</button>
+</form>
+
+<p id="message"></p>
+
+<script>
+    const form = document.getElementById('officerForm');
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const data = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            password: document.getElementById('password').value,
+            role: document.getElementById('role').value
+        };
+
+        fetch('http://localhost:8080/api/admin/officers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(res => {
+                if (!res.ok) {
+                    return res.text().then(text => { throw new Error(text); });
+                }
+                return res.json();
+            })
+            .then(res => {
+                document.getElementById('message').innerText =
+                    'Officer created: ' + res.name + ' (' + res.role + ')';
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('message').innerText = 'Error: ' + err.message;
+            });
+    });
+</script>
+</body>
+</html>
