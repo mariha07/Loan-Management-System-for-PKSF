@@ -16,4 +16,6 @@ public interface LoanAccountRepository extends JpaRepository<LoanAccount, Long> 
     // alternatively if you want by loanNumber ordering
     @Query("select la from LoanAccount la where la.loanNumber is not null order by la.id desc")
     Optional<LoanAccount> findLatestWithLoanNumber();
+    Optional<LoanAccount> findByLoanNumber(String loanNumber);
+
 }

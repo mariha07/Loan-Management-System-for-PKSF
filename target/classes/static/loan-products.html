@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loan Products - LMS</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f5f7fb;
+            color: #111827;
+        }
+
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ===== Sidebar ===== */
+        .sidebar {
+            width: 230px;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            padding: 20px 18px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-logo {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .sidebar-menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            color: #9ca3af;
+            margin-bottom: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 11px;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #4b5563;
+            cursor: pointer;
+            margin-bottom: 4px;
+            transition: background 0.12s ease, color 0.12s ease;
+        }
+
+        .nav-item span.icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-item:hover {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .nav-item.active {
+            background: #e0e7ff;
+            color: #3730a3;
+            font-weight: 500;
+        }
+
+        /* ===== Main area ===== */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Topbar */
+        .topbar {
+            height: 64px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+        }
+
+        .topbar-left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .topbar-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .topbar-subtitle {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #4b5563;
+        }
+
+        .badge-role {
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            background: #4f46e5;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        /* Content wrapper */
+        .content {
+            flex: 1;
+            padding: 24px 28px 32px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .content-inner {
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 20px 22px 22px;
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        .card + .card {
+            margin-top: 18px;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 16px;
+        }
+
+        /* ===== Form layout ===== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px 14px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            color: #4b5563;
+            margin-bottom: 4px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            padding: 8px 10px;
+            font-size: 13px;
+            outline: none;
+            background: #f9fafb;
+            transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #6366f1;
+            background: #ffffff;
+            box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.18);
+        }
+
+        .helper-text {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 2px;
+        }
+
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 4px;
+        }
+
+        .btn-primary {
+            border: none;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: #ffffff;
+            padding: 8px 18px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.05);
+        }
+
+        .btn-secondary {
+            border: none;
+            background: #e5e7eb;
+            color: #374151;
+            padding: 7px 16px;
+            border-radius: 999px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .message {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        .message.error { color: #b91c1c; }
+        .message.success { color: #15803d; }
+
+        /* ===== List ===== */
+        .list-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .list-header span {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        thead {
+            background: #f3f4f6;
+        }
+
+        th, td {
+            padding: 8px 6px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        th {
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        tbody tr:hover {
+            background: #eef2ff;
+        }
+
+        /* icon action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-icon {
+            border: none;
+            background: transparent;
+            padding: 4px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .btn-icon.edit:hover {
+            background: #e0ecff;
+        }
+
+        .btn-icon.delete:hover {
+            background: #fee2e2;
+        }
+
+        @media (max-width: 1024px) {
+            .content { padding: 18px; }
+            .sidebar { display: none; }
+        }
+
+        @media (max-width: 640px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">LMS</div>
+
+        <div class="sidebar-menu-title">Menu</div>
+
+        <div class="nav-item" onclick="goDashboard()">
+            <span class="icon">📊</span>
+            <span>Dashboard</span>
+        </div>
+
+        <!-- User Management (parent) -->
+        <div class="nav-item" onclick="toggleUserMenu()">
+            <span class="icon">👤</span>
+            <span>User Management</span>
+        </div>
+
+        <div id="userSubmenu" class="submenu" style="display:none;">
+            <div class="nav-item" onclick="goToUserRegistration()">
+                <span class="icon">📝</span>
+                <span>User Registration</span>
+            </div>
+        </div>
+        <div class="nav-item active">
+            <span class="icon">💰</span>
+            <span>Loan Products</span>
+        </div>
+
+        <div class="nav-item">
+            <span class="icon">📄</span>
+            <span>Loan Applications</span>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="topbar-title">Loan Products</div>
+                <div class="topbar-subtitle">Create and manage loan products for your LMS</div>
+            </div>
+            <div class="topbar-right">
+                <span id="userEmail"></span>
+                <span id="userRoleBadge" class="badge-role">ROLE</span>
+                <div id="userAvatar" class="avatar">U</div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="content">
+            <div class="content-inner">
+
+                <!-- FORM CARD (UPOR) -->
+                <section class="card">
+                    <div class="card-title">Create / Edit Loan Product</div>
+                    <div class="card-subtitle">
+                        Fill in the details and click <strong>Save Product</strong> to create, or <strong>Update Product</strong> to edit.
+                    </div>
+
+                    <form id="loanProductForm" class="form-grid">
+                        <div class="form-group full">
+                            <label for="name">Loan Name</label>
+                            <input type="text" id="name" placeholder="e.g. Car Loan 12M">
+                            <div class="helper-text">A short title borrowers can easily recognize.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="code">Product Code</label>
+                            <input type="text" id="code" placeholder="e.g. LP001">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="loanType">Loan Type</label>
+                            <select id="loanType">
+                                <option value="PERSONAL">Personal</option>
+                                <option value="BUSINESS">Business</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="maxLoan">Max Loan</label>
+                            <input type="number" id="maxLoan" placeholder="e.g. 500000">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="minLoan">Min Loan</label>
+                            <input type="number" id="minLoan" placeholder="e.g. 5000">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="interestRate">Interest Rate (%)</label>
+                            <input type="number" id="interestRate" step="0.01" value="10">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="numberOfInstallments">No. of Installments</label>
+                            <select id="numberOfInstallments">
+                                <option value="12">12</option>
+                                <option value="24">24</option>
+                                <option value="36">36</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="installmentType">Installment Type</label>
+                            <select id="installmentType">
+                                <option value="WEEKLY">Weekly</option>
+                                <option value="MONTHLY" selected>Monthly</option>
+                                <option value="YEARLY">Yearly</option>
+                            </select>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" id="submitBtn" class="btn-primary">Save Product</button>
+                            <button type="button" class="btn-secondary" onclick="cancelEdit()">Cancel</button>
+                            <div id="formMessage" class="message"></div>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- LIST CARD (NICHE) -->
+                <section class="card">
+                    <div class="list-header">
+                        <div class="card-title">Loan Product List</div>
+                        <span>Total: <strong id="totalProducts">0</strong></span>
+                    </div>
+
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Interest</th>
+                            <th>Installments</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody id="productTableBody">
+                        <!-- rows here -->
+                        </tbody>
+                    </table>
+                </section>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    // ===== USER INFO FROM LOCALSTORAGE =====
+    const userJson = localStorage.getItem('user');
+    if (!userJson) {
+        window.location.href = 'login.html';
+    } else {
+        const user = JSON.parse(userJson);
+        document.getElementById('userEmail').innerText = user.email || '';
+        document.getElementById('userRoleBadge').innerText = user.role || 'USER';
+        const initial = (user.name && user.name.length > 0) ? user.name[0].toUpperCase() : 'U';
+        document.getElementById('userAvatar').innerText = initial;
+    }
+
+    function goDashboard() {
+        window.location.href = 'dashboard.html';
+    }
+    function goToUserRegistration() {
+        window.location.href = "user-registration.html";
+    }
+
+    // ===== EDIT MODE STATE =====
+    let editingId = null;           // null = create, not null = update
+    let productsCache = [];         // last loaded list
+
+    const form = document.getElementById('loanProductForm');
+    const formMessage = document.getElementById('formMessage');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // ===== FORM SUBMIT =====
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        formMessage.textContent = '';
+        formMessage.className = 'message';
+
+        const name = document.getElementById('name').value.trim();
+        const code = document.getElementById('code').value.trim();
+        const maxLoan = parseFloat(document.getElementById('maxLoan').value);
+        const minLoan = parseFloat(document.getElementById('minLoan').value);
+        const loanType = document.getElementById('loanType').value;
+        const interestRate = parseFloat(document.getElementById('interestRate').value);
+        const numberOfInstallments = parseInt(document.getElementById('numberOfInstallments').value, 10);
+        const installmentType = document.getElementById('installmentType').value;
+
+        if (!name || !code || isNaN(maxLoan) || isNaN(minLoan) ||
+            isNaN(interestRate) || isNaN(numberOfInstallments)) {
+            formMessage.textContent = 'Please fill all required fields correctly.';
+            formMessage.classList.add('error');
+            return;
+        }
+
+        const payload = {
+            name,
+            code,
+            maxLoan,
+            minLoan,
+            loanType,
+            interestRate,
+            numberOfInstallments,
+            installmentType
+        };
+
+        try {
+            let url = 'http://localhost:8080/api/loan-products';
+            let method = 'POST';
+
+            if (editingId !== null) {
+                url = `http://localhost:8080/api/loan-products/${editingId}`;
+                method = 'PUT';
+            }
+
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) {
+                const text = await res.text();
+                console.error('Error response:', text);
+                formMessage.textContent = 'Failed to save product.';
+                formMessage.classList.add('error');
+                return;
+            }
+
+            formMessage.textContent = (editingId === null)
+                ? 'Product created successfully!'
+                : 'Product updated successfully!';
+            formMessage.classList.add('success');
+
+            cancelEdit();
+            await loadProducts();
+        } catch (err) {
+            console.error('Error while saving:', err);
+            formMessage.textContent = 'Unexpected error while saving product.';
+            formMessage.classList.add('error');
+        }
+    });
+
+    function resetFormFields() {
+        document.getElementById('name').value = '';
+        document.getElementById('code').value = '';
+        document.getElementById('maxLoan').value = '';
+        document.getElementById('minLoan').value = '';
+        document.getElementById('loanType').value = 'PERSONAL';
+        document.getElementById('interestRate').value = 10;
+        document.getElementById('numberOfInstallments').value = 12;
+        document.getElementById('installmentType').value = 'MONTHLY';
+    }
+
+    function cancelEdit() {
+        editingId = null;
+        resetFormFields();
+        submitBtn.textContent = 'Save Product';
+        formMessage.textContent = '';
+        formMessage.className = 'message';
+    }
+
+    // ===== LOAD PRODUCTS =====
+    async function loadProducts() {
+        try {
+            const res = await fetch('http://localhost:8080/api/loan-products');
+            const list = await res.json();
+            productsCache = list;
+
+            const tbody = document.getElementById('productTableBody');
+            tbody.innerHTML = '';
+
+            list.forEach((p, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${p.name}</td>
+                    <td>${p.loanType}</td>
+                    <td>${p.interestRate}%</td>
+                    <td>${p.numberOfInstallments}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon edit" title="Edit" onclick="editProduct(${p.id})">✏️</button>
+                            <button class="btn-icon delete" title="Delete" onclick="deleteProduct(${p.id})">🗑️</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('totalProducts').innerText = list.length;
+        } catch (err) {
+            console.error('Error loading products:', err);
+        }
+    }
+
+    // ===== EDIT PRODUCT =====
+    function editProduct(id) {
+        const p = productsCache.find(prod => prod.id === id);
+        if (!p) return;
+
+        editingId = id;
+        document.getElementById('name').value = p.name || '';
+        document.getElementById('code').value = p.code || '';
+        document.getElementById('loanType').value = p.loanType || 'PERSONAL';
+        document.getElementById('maxLoan').value = p.maxLoan ?? '';
+        document.getElementById('minLoan').value = p.minLoan ?? '';
+        document.getElementById('interestRate').value = p.interestRate ?? 10;
+        document.getElementById('numberOfInstallments').value = p.numberOfInstallments ?? 12;
+        document.getElementById('installmentType').value = p.installmentType || 'MONTHLY';
+
+        submitBtn.textContent = 'Update Product';
+        formMessage.textContent = 'Editing product: ' + (p.name || '');
+        formMessage.className = 'message';
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ===== DELETE PRODUCT =====
+    async function deleteProduct(id) {
+        const ok = confirm('Are you sure you want to delete this product?');
+        if (!ok) return;
+
+        try {
+            const res = await fetch(`http://localhost:8080/api/loan-products/${id}`, {
+                method: 'DELETE'
+            });
+            if (res.status === 204 || res.ok) {
+                await loadProducts();
+            } else {
+                console.error('Delete failed, status:', res.status);
+            }
+        } catch (err) {
+            console.error('Error deleting product:', err);
+        }
+    }
+
+    // expose for inline onclick
+    window.editProduct = editProduct;
+    window.deleteProduct = deleteProduct;
+
+    // initial load
+    loadProducts();
+</script>
+
+</body>
+</html>
