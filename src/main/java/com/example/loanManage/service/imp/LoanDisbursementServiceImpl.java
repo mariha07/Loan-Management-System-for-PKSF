@@ -59,7 +59,7 @@ public class LoanDisbursementServiceImpl implements LoanDisbursementService {
         LoanDisbursement disbursement = new LoanDisbursement();
         disbursement.setLoanAccount(loan);
         disbursement.setDisbursementAmount(dto.getDisbursementAmount());
-        disbursement.setStatus("DISBURSED");
+
 
         LoanDisbursement saved = disbursementRepository.save(disbursement);
 

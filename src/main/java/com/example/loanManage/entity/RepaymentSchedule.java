@@ -6,23 +6,27 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
-@Entity
 @Getter
 @Setter
-@Table(name = "loan_disbursement")
-public class LoanDisbursement {
+@Entity
+@Table(name = "repayment_schedule")
+public class RepaymentSchedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "loan_account_id")
+    @ManyToOne
+    @JoinColumn(name = "loan_account_id", nullable = false)
     private LoanAccount loanAccount;
 
-    @Column(nullable = false)
-    private BigDecimal disbursementAmount;
+    private Integer installmentNo;
+
+    private LocalDate repaymentDate;
+
+    private BigDecimal principalOutstanding;
+
+    private BigDecimal interestOutstanding;
 
 
 

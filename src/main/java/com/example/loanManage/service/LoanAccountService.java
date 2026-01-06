@@ -22,4 +22,5 @@ public interface LoanAccountService {
     String getNextLoanNumber();
 
     LoanAccountDto getByLoanNumber(String loanNumber);
+
 }

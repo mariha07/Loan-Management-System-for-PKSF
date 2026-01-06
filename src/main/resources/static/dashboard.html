@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <title>LMS Dashboard</title>
 
-    <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -183,14 +181,24 @@
         .panel {
             background: #ffffff;
             border-radius: 12px;
-            padding: 18px;
+            padding: 24px;
             box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+            /* Ensure the panel has enough height for a larger chart */
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
         }
 
         .panel-title {
             font-size: 16px;
             font-weight: 600;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        /* Container to help Chart.js maintain size */
+        .chart-container {
+            flex: 1;
+            position: relative;
         }
 
         .footer {
@@ -215,7 +223,7 @@
             }
             .sidebar {
                 width: 100%;
-                display: none; /* for simplicity we hide sidebar on mobile */
+                display: none;
             }
         }
 
@@ -237,81 +245,56 @@
 <body>
 
 <div class="layout">
-    <!-- Sidebar -->
     <aside class="sidebar">
         <div class="logo">LMS</div>
-
         <div class="menu-title">Menu</div>
-
-        <!-- Dashboard -->
         <div class="nav-item active">
             <span class="icon">📊</span>
             <span>Dashboard</span>
         </div>
-
-
-        <!-- User Management (parent) -->
         <div class="nav-item" onclick="toggleUserMenu()">
             <span class="icon">👤</span>
             <span>User Management</span>
         </div>
-
-        <div id="userSubmenu" class="submenu" style="display:none;">
+        <div id="userSubmenu" class="submenu">
             <div class="nav-item" onclick="goToUserRegistration()">
                 <span class="icon">📝</span>
                 <span>User Registration</span>
             </div>
         </div>
-
-        <!-- Loan Products -->
         <div class="nav-item" onclick="goToLoanProducts()">
             <span class="icon">💰</span>
             <span>Loan Products</span>
         </div>
-
-        <!-- Loan Applications (with submenu) -->
         <div class="nav-item" onclick="toggleLoanMenu()">
             <span class="icon">📄</span>
             <span>Loan Applications</span>
         </div>
-
-        <div id="loanSubmenu" class="submenu" style="display: none; margin-left: 20px;">
+        <div id="loanSubmenu" class="submenu" style="margin-left: 20px;">
             <div class="nav-item" onclick="goToBorrowerReg()">
                 <span class="icon">📝</span>
                 <span>Borrower Registration</span>
             </div>
-
             <div class="nav-item" onclick="goToLoanAccount()">
                 <span class="icon">💼</span>
                 <span>Loan Account</span>
             </div>
-
             <div class="nav-item" onclick="goToLoanDisbursement()">
                 <span class="icon">💸</span>
                 <span>Loan Disbursement</span>
             </div>
         </div>
-
-
-
-        <!-- Repayments -->
-        <div class="nav-item">
-            <span class="icon">📆</span>
-            <span>Repayments</span>
+        <div class="nav-item" onclick="toggleRepaymentMenu()">
+            <span class="icon">📆</span><span>Repayments</span>
         </div>
-
-        <!-- Settings -->
-        <div class="nav-item">
-            <span class="icon">⚙️</span>
-            <span>Settings</span>
+        <div id="repaymentSubmenu" class="submenu">
+            <div class="nav-item" onclick="goToRepaymentSchedule()">
+                📑 Repayment Schedule
+            </div>
         </div>
     </aside>
 
-
-
-    <!-- Main -->
     <div class="main">
-        <!-- Topbar -->
         <header class="topbar">
             <div class="topbar-left">
                 Welcome, <span id="userName">User</span>
@@ -324,29 +307,23 @@
             </div>
         </header>
 
-        <!-- Content -->
         <main class="content">
-
-            <!-- Cards -->
             <section class="cards">
                 <div class="card">
                     <div class="card-label">Total Loan Products</div>
                     <div class="card-value" id="statProducts">0</div>
                     <div class="card-sub">Active products</div>
                 </div>
-
                 <div class="card">
                     <div class="card-label">Total Borrowers</div>
                     <div class="card-value" id="statBorrowers">25</div>
                     <div class="card-sub">All registered borrowers</div>
                 </div>
-
                 <div class="card">
                     <div class="card-label">Active Loans</div>
                     <div class="card-value" id="statActiveLoans">12</div>
                     <div class="card-sub">Currently running</div>
                 </div>
-
                 <div class="card">
                     <div class="card-label">Pending Applications</div>
                     <div class="card-value" id="statPendingApps">4</div>
@@ -354,16 +331,19 @@
                 </div>
             </section>
 
-            <!-- Charts -->
             <section class="charts-row">
                 <div class="panel">
                     <div class="panel-title">Borrower Gender Distribution</div>
-                    <canvas id="genderChart" height="160"></canvas>
+                    <div class="chart-container">
+                        <canvas id="genderChart"></canvas>
+                    </div>
                 </div>
 
                 <div class="panel">
                     <div class="panel-title">Loan Status</div>
-                    <canvas id="loanStatusChart" height="160"></canvas>
+                    <div class="chart-container">
+                        <canvas id="loanStatusChart"></canvas>
+                    </div>
                 </div>
             </section>
 
@@ -373,110 +353,98 @@
 </div>
 
 <script>
-    // 1) Load user from localStorage
+    // 1) User Auth check
     const userJson = localStorage.getItem('user');
     if (!userJson) {
-        // no logged-in user -> back to login
-        window.location.href = 'login.html';
+        // window.location.href = 'login.html'; // Uncomment for production
     } else {
         const user = JSON.parse(userJson);
         document.getElementById('userName').innerText = user.name || 'User';
         document.getElementById('userEmail').innerText = user.email || '';
         document.getElementById('userRoleBadge').innerText = user.role || 'USER';
-
-        // Avatar initial letter
         const initial = (user.name && user.name.length > 0) ? user.name[0].toUpperCase() : 'U';
         document.getElementById('userAvatar').innerText = initial;
     }
-    function goToLoanProducts() {
-        window.location.href = "loan-products.html";
-    }
 
-    function goToBorrowerReg() {
-        window.location.href = "borrower.html";
-    }
+    // Navigation functions
+    function goToLoanProducts() { window.location.href = "loan-products.html"; }
+    function goToBorrowerReg() { window.location.href = "borrower.html"; }
+    function goToLoanAccount() { window.location.href = "loan-account.html"; }
+    function goToLoanDisbursement() { window.location.href = "loan-disbursement.html"; }
+    function goToUserRegistration() { window.location.href = 'user-registration.html'; }
+    function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
 
-    function goToLoanAccount() {
-        window.location.href = "loan-account.html";
-    }
+    function toggleUserMenu() { toggleVisibility('userSubmenu'); }
+    function toggleLoanMenu() { toggleVisibility('loanSubmenu'); }
+    function toggleRepaymentMenu() { toggleVisibility('repaymentSubmenu'); }
 
-    function goToLoanDisbursement() {
-        window.location.href = "loan-disbursement.html";
-    }
-
-    function toggleUserMenu() {
-        const m = document.getElementById('userSubmenu');
+    function toggleVisibility(id) {
+        const m = document.getElementById(id);
         m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'block' : 'none';
     }
 
-    function goToUserRegistration() {
-        window.location.href = 'user-registration.html';
-    }
-    function toggleLoanMenu() {
-        const m = document.getElementById("loanSubmenu");
-        m.style.display = (m.style.display === "none" || m.style.display === "")
-            ? "block"
-            : "none";
+    function logout() {
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
     }
 
-    // 2) Load Loan Product stats from backend
+    // 2) Load Stats
     async function loadLoanProductStats() {
         try {
             const res = await fetch('http://localhost:8080/api/loan-products/active');
-            if (!res.ok) {
-                console.error('Failed to load loan products, status:', res.status);
-                return;
-            }
-
-            const products = await res.json();
-            const totalProducts = Array.isArray(products) ? products.length : 0;
-
-            const statProductsEl = document.getElementById('statProducts');
-            if (statProductsEl) {
-                statProductsEl.innerText = totalProducts;
+            if (res.ok) {
+                const products = await res.json();
+                document.getElementById('statProducts').innerText = products.length;
             }
         } catch (err) {
             console.error('Error loading loan product stats:', err);
         }
     }
-
-    // call it on page load
     loadLoanProductStats();
 
-    // 3) Dummy data for charts – later you can load from backend
-    const genderCtx = document.getElementById('genderChart');
-    const loanStatusCtx = document.getElementById('loanStatusChart');
+    // 3) FIXED LARGE CHARTS
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false, // Essential for filling the container
+        plugins: {
+            legend: {
+                position: 'bottom', // Legend at bottom allows chart to be wider
+                labels: {
+                    padding: 20,
+                    font: { size: 12, family: 'Inter' }
+                }
+            }
+        }
+    };
 
+    const genderCtx = document.getElementById('genderChart').getContext('2d');
     new Chart(genderCtx, {
         type: 'pie',
         data: {
             labels: ['Male', 'Female'],
             datasets: [{
                 data: [60, 40],
-                backgroundColor: ['#3b82f6', '#10b981']
+                backgroundColor: ['#3b82f6', '#10b981'],
+                borderWidth: 0
             }]
         },
-        options: {
-            plugins: {
-                legend: { position: 'right' }
-            }
-        }
+        options: commonOptions
     });
 
+    const loanStatusCtx = document.getElementById('loanStatusChart').getContext('2d');
     new Chart(loanStatusCtx, {
         type: 'doughnut',
         data: {
             labels: ['Active', 'Closed', 'Overdue'],
             datasets: [{
                 data: [12, 5, 3],
-                backgroundColor: ['#6366f1', '#10b981', '#f97316']
+                backgroundColor: ['#6366f1', '#10b981', '#f97316'],
+                borderWidth: 0
             }]
         },
         options: {
-            plugins: {
-                legend: { position: 'right' }
-            },
-            cutout: '60%'
+            ...commonOptions,
+            cutout: '65%' // Makes the doughnut ring slightly thinner/more modern
         }
     });
 </script>
