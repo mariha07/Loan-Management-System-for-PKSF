@@ -21,8 +21,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
-@Transactional
+@Service // Marks this as a Service class so Spring can use it to handle business logic.
+@Transactional // Ensures that database operations either all succeed or all fail together (maintains data integrity)
 public class LoanAccountServiceImpl implements LoanAccountService {
 
     private final LoanAccountRepository loanAccountRepository;
@@ -99,15 +99,14 @@ public class LoanAccountServiceImpl implements LoanAccountService {
     }
 
     // ================= PAGINATION =================
-    @Override
-    @Transactional(readOnly = true)
-    public Page<LoanAccountDto> getPaged(int page, int size) {
-
-        return loanAccountRepository
+    @Override //method is implementing a rule defined in the LoanAccountService interface.
+    @Transactional(readOnly = true) //Tells the database this is a "read-only" task. This makes the database faster because it doesn't have to prepare for changes or locks.
+    public Page<LoanAccountDto> getPaged(int page, int size) { // Takes 'page' (which page number) and 'size' (how many loans per page) as inputs.
+        return loanAccountRepository // Accesses the database tool.
                 .findAll(PageRequest.of(page, size, Sort.by("id").descending()))
                 .map(this::toDto);
+        // After getting the 'Page' of Entities from the database, this converts each
     }
-
     // ================= GET BY ID =================
     @Override
     @Transactional(readOnly = true)

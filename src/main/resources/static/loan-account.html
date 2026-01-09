@@ -1,87 +1,242 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>Loan Account Opening</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg:#f5f7fb; --muted:#6b7280; --primary:#4f46e5; --card:#fff; --border:#e5e7eb; --text:#222; }
-        body { font-family: Inter, sans-serif; background:var(--bg); color:var(--text); margin:0; padding:0; }
-        .layout { display:flex; min-height:100vh; }
-
+        :root {
+            --bg: #f5f7fb;
+            --muted: #6b7280;
+            --primary: #4f46e5;
+            --card: #fff;
+            --border: #e5e7eb;
+            --text: #222;
+        }
+        body {
+            font-family: Inter, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+        }
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
         /* Sidebar */
-        .sidebar { width:240px; background:var(--card); border-right:1px solid var(--border); padding:18px; box-sizing:border-box; }
-        .logo { font-weight:700; font-size:20px; margin-bottom:18px; }
-        .nav-item { display:flex; align-items:center; gap:8px; padding:10px; border-radius:8px; color:#475569; cursor:pointer; margin-bottom:6px; }
-        .nav-item.active, .nav-item:hover { background:#eef2ff; color:#4338ca; }
-        .submenu { margin-left:8px; margin-top:6px; }
-
+        .sidebar {
+            width: 240px;
+            background: var(--card);
+            border-right: 1px solid var(--border);
+            padding: 18px;
+            box-sizing: border-box;
+        }
+        .logo {
+            font-weight: 700;
+            font-size: 20px;
+            margin-bottom: 18px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            border-radius: 8px;
+            color: #475569;
+            cursor: pointer;
+            margin-bottom: 6px;
+        }
+        .nav-item.active, .nav-item:hover {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+        .submenu {
+            margin-left: 8px;
+            margin-top: 6px;
+        }
         /* Main */
-        .main { flex:1; display:flex; flex-direction:column; }
-        .topbar { height:64px; background:var(--card); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 20px; }
-        .topbar-left { font-weight:600; font-size:16px; }
-        .topbar-right { display:flex; gap:12px; align-items:center; color:var(--muted); }
-        .avatar { width:32px; height:32px; border-radius:999px; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; }
-
-        .content { padding:20px; max-width:1100px; width:100%; margin:0 auto; box-sizing:border-box; }
-        .panel { background:var(--card); padding:16px; border-radius:10px; box-shadow:0 6px 18px rgba(15,23,42,0.04); margin-bottom:16px; }
-        h2 { margin:0 0 12px 0; }
-
-        .row { display:flex; gap:12px; }
-        .col { flex:1; min-width:140px; }
-
-        label { display:block; font-size:13px; margin-bottom:6px; color:#374151; }
-        input, select { width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:14px; background:#fff; box-sizing:border-box; }
-
-        .muted { font-size:13px; color:var(--muted); margin-top:6px; }
-        .small { font-size:13px; color:#374151; margin-top:6px; }
-
-        button { background:var(--primary); color:#fff; padding:10px 14px; border-radius:8px; border:none; cursor:pointer; font-weight:600; }
-        button.ghost { background:transparent; color:var(--primary); border:1px solid var(--border); padding:8px 12px; }
-
-        .search-results { background:#fff; border:1px solid var(--border); position:absolute; z-index:50; max-height:260px; overflow:auto; width:360px; margin-top:4px; border-radius:8px; box-shadow:0 8px 20px rgba(2,6,23,0.06); }
-        .sr-item { padding:10px; cursor:pointer; border-bottom:1px solid #f3f4f6; }
-        .sr-item:hover { background:#f8fafc; }
-
-        .error { color:#dc2626; margin-top:8px; }
-        .search-type { width:140px; }
-        .search-input { width:220px; }
-
-        .action { text-align:center; width:110px; }
-        table { width:100%; border-collapse:collapse; margin-top:12px; }
-        th, td { padding:12px 10px; border-bottom:1px solid #f1f5f9; text-align:left; vertical-align:middle; }
-        th { background:#f8fafc; color:#374151; font-weight:600; }
-
-        @media (max-width:900px) {
-            .row { flex-direction:column; }
-            .search-results { width:calc(100% - 40px); }
-            .sidebar { display:none }
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .topbar {
+            height: 64px;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        .topbar-left {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .topbar-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            color: var(--muted);
+        }
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            background: var(--primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+        .content {
+            padding: 20px;
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+        .panel {
+            background: var(--card);
+            padding: 16px;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+            margin-bottom: 16px;
+        }
+        h2 {
+            margin: 0 0 12px 0;
+        }
+        .row {
+            display: flex;
+            gap: 12px;
+        }
+        .col {
+            flex: 1;
+            min-width: 140px;
+        }
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #374151;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-size: 14px;
+            background: #fff;
+            box-sizing: border-box;
+        }
+        .muted {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 6px;
+        }
+        .small {
+            font-size: 13px;
+            color: #374151;
+            margin-top: 6px;
+        }
+        button {
+            background: var(--primary);
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        button.ghost {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+        }
+        .search-results {
+            background: #fff;
+            border: 1px solid var(--border);
+            position: absolute;
+            z-index: 50;
+            max-height: 260px;
+            overflow: auto;
+            width: 360px;
+            margin-top: 4px;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(2, 6, 23, 0.06);
+        }
+        .sr-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .sr-item:hover {
+            background: #f8fafc;
+        }
+        .error {
+            color: #dc2626;
+            margin-top: 8px;
+        }
+        .search-type {
+            width: 140px;
+        }
+        .search-input {
+            width: 220px;
+        }
+        .action {
+            text-align: center;
+            width: 110px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        th, td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #f1f5f9;
+            text-align: left;
+            vertical-align: middle;
+        }
+        th {
+            background: #f8fafc;
+            color: #374151;
+            font-weight: 600;
+        }
+        @media (max-width: 900px) {
+            .row {
+                flex-direction: column;
+            }
+            .search-results {
+                width: calc(100% - 40px);
+            }
+            .sidebar {
+                display: none
+            }
         }
     </style>
 </head>
 <body>
 <div class="layout">
-
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="logo">LMS</div>
-
         <div class="nav-item" onclick="goToDashboard()">
             <span>📊</span><span>Dashboard</span>
         </div>
-
         <div class="nav-item" onclick="toggleUserMenu()">
             <span>👤</span><span>User Management</span>
         </div>
         <div id="userSubmenu" class="submenu" style="display:none;">
             <div class="nav-item" onclick="goToUserRegistration()">📝 User Registration</div>
         </div>
-
         <div class="nav-item" onclick="goToLoanProducts()">
             <span>💰</span><span>Loan Products</span>
         </div>
-
         <div class="nav-item active" onclick="toggleLoanMenu()">
             <span>📄</span><span>Loan Applications</span>
         </div>
@@ -90,14 +245,10 @@
             <div class="nav-item active">💼 Loan Account</div>
             <div class="nav-item" onclick="goToLoanDisbursement()">💸 Loan Disbursement</div>
         </div>
-
         <div class="nav-item" onclick="goToRepayments()">📆 Repayments</div>
-
     </aside>
-
     <!-- Main -->
     <div class="main">
-
         <!-- Topbar -->
         <header class="topbar">
             <div class="topbar-left">Open Loan Account</div>
@@ -106,14 +257,11 @@
                 <div class="avatar" id="userAvatar">A</div>
             </div>
         </header>
-
         <!-- Content -->
         <div class="content">
-
             <!-- Search panel -->
             <div class="panel" style="position:relative;">
                 <h2 style="margin-bottom:8px;">Select Borrower</h2>
-
                 <div style="display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap;">
                     <!-- Search by type + number -->
                     <div style="display:flex; gap:8px; align-items:center;">
@@ -127,50 +275,43 @@
                                 <option value="MOBILE">Mobile</option>
                             </select>
                         </div>
-
                         <div style="min-width:220px;">
                             <label id="searchLabel">Search (type or number)</label>
                             <input id="searchInput" class="search-input">
                         </div>
-
                         <div style="align-self:stretch; display:flex; align-items:center;">
                             <button id="btnSearch" class="ghost">Search</button>
                         </div>
                     </div>
-
                     <div class="col">
                         <label>Loan Number</label>
-                        <input id="loanNumber" readonly />
+                        <input id="loanNumber" readonly/>
                     </div>
                 </div>
-
                 <!-- live search results -->
                 <div id="searchResults" class="search-results" style="display:none; left:18px; top:120px;"></div>
             </div>
-
             <!-- borrower summary + product selection -->
             <div class="panel">
                 <h2 style="margin-bottom:8px">Account Open Details</h2>
-
                 <div class="row" style="margin-bottom:12px;">
                     <div class="col">
                         <label>Borrower Name</label>
-                        <input id="bf_name" readonly placeholder="Select borrower from search" />
+                        <input id="bf_name" readonly placeholder="Select borrower from search"/>
                     </div>
                     <div class="col">
                         <label>ID Type</label>
-                        <input id="bf_idType" readonly />
+                        <input id="bf_idType" readonly/>
                     </div>
                     <div class="col">
                         <label>ID No</label>
-                        <input id="bf_idNumber" readonly />
+                        <input id="bf_idNumber" readonly/>
                     </div>
                     <div class="col">
                         <label>Mobile</label>
-                        <input id="bf_mobile" readonly />
+                        <input id="bf_mobile" readonly/>
                     </div>
                 </div>
-
                 <div style="margin-bottom:12px;">
                     <label>Loan Product</label>
                     <select id="productSelect">
@@ -178,37 +319,31 @@
                     </select>
                     <div class="muted" id="productInfo"></div>
                 </div>
-
                 <div class="row">
                     <div class="col">
                         <label>Application Amount</label>
-                        <input id="approvedAmount" type="number" step="0.01" placeholder="Enter approved amount" />
+                        <input id="approvedAmount" type="number" step="0.01" placeholder="Enter approved amount"/>
                         <div class="small">Must be ≤ product max loan (server validated)</div>
                     </div>
-
                     <div class="col">
                         <label>Installment Type</label>
-                        <input id="prod_installmentType" readonly />
+                        <input id="prod_installmentType" readonly/>
                     </div>
-
                     <div class="col">
                         <label>Interest Rate (%)</label>
-                        <input id="prod_interestRate" readonly />
+                        <input id="prod_interestRate" readonly/>
                     </div>
-
                     <div class="col">
                         <label># Installments</label>
-                        <input id="prod_numberOfInstallments" readonly />
+                        <input id="prod_numberOfInstallments" readonly/>
                     </div>
                 </div>
-
                 <div style="display:flex; gap:12px; align-items:center; margin-top:12px;">
                     <button id="saveBtn">Open Account</button>
                     <div id="saveMsg" class="muted"></div>
                     <div id="errorBox" class="error"></div>
                 </div>
             </div>
-
             <!-- existing accounts list -->
             <div class="panel">
                 <h2 style="margin-bottom:8px">Recent Loan Accounts</h2>
@@ -225,568 +360,1060 @@
                     </tr>
                     </thead>
                     <tbody id="accountList">
-                    <tr><td colspan="7" class="muted">No data loaded yet.</td></tr>
+                    <tr>
+                        <td colspan="7" class="muted">No data loaded yet.</td>
+                    </tr>
                     </tbody>
                 </table>
                 <div id="paginationBar"
                      style="display:flex; align-items:center; justify-content:flex-end;
-            gap:16px; font-size:14px; margin-top:12px;">
 
+gap:16px; font-size:14px; margin-top:12px;">
                     <div>
                         Items per page:
                         <select id="pageSizeSelect">
+
                             <option value="8">8</option>
+
                             <option value="10" selected>10</option>
+
                             <option value="20">20</option>
                         </select>
                     </div>
-
                     <div id="pageInfo">1–10 of 0</div>
-
                     <div style="display:flex; gap:6px;">
                         <button class="ghost" id="prevBtn">⟨</button>
                         <button class="ghost" id="nextBtn">⟩</button>
                     </div>
                 </div>
-
-
             </div>
-
         </div>
     </div>
 </div>
-
 <script>
     // ======= CONFIG =======
     const API_BASE = 'http://localhost:8080/api';
 
     // ======= ELEMENT REFS =======
+
     const searchType = document.getElementById('searchType');
+
     const searchInput = document.getElementById('searchInput');
+
     const btnSearch = document.getElementById('btnSearch');
+
     const searchResults = document.getElementById('searchResults');
 
+
     const bf_name = document.getElementById('bf_name');
+
     const bf_idType = document.getElementById('bf_idType');
+
     const bf_idNumber = document.getElementById('bf_idNumber');
+
     const bf_mobile = document.getElementById('bf_mobile');
 
+
     const productSelect = document.getElementById('productSelect');
+
     const productInfo = document.getElementById('productInfo');
+
     const approvedAmount = document.getElementById('approvedAmount');
+
     const prod_installmentType = document.getElementById('prod_installmentType');
+
     const prod_interestRate = document.getElementById('prod_interestRate');
+
     const prod_numberOfInstallments = document.getElementById('prod_numberOfInstallments');
 
+
     const saveBtn = document.getElementById('saveBtn');
+
     const saveMsg = document.getElementById('saveMsg');
+
     const errorBox = document.getElementById('errorBox');
 
+
     const accountList = document.getElementById('accountList');
+
     const loanNumberInput = document.getElementById('loanNumber');
 
+
     let products = [];
+
     let selectedBorrower = null;
+
     let accounts = [];
+
     let currentPage = 0;
+
     let pageSize = 10;
+
     let totalElements = 0;
 
 
     // ======= HELPERS =======
+
     async function loadNextLoanNumber() {
+
         try {
+
             const res = await fetch(`${API_BASE}/loan-accounts/next-loan-number`);
+
             if (!res.ok) return;
 
+
             const data = await res.json();
+
             loanNumberInput.value = data.nextLoanNumber;
+
         } catch (err) {
+
             console.error("Next loan number load error", err);
+
         }
+
     }
+
 
     function debounce(fn, wait = 300) {
+
         let t;
+
         return (...args) => {
+
             clearTimeout(t);
+
             t = setTimeout(() => fn.apply(this, args), wait);
+
         };
+
     }
+
 
     function escapeHtml(s) {
+
         if (!s) return '';
+
         return String(s).replace(/[&<>"']/g, m => (
-            {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]
+
+            {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[m]
+
         ));
+
     }
+
     function updatePaginationInfo() {
+
         const start = currentPage * pageSize + 1;
+
         const end = Math.min(start + pageSize - 1, totalElements);
+
         document.getElementById("pageInfo").innerText =
+
             `${start}–${end} of ${totalElements}`;
+
     }
+
 
     // ======= PRODUCTS =======
+
     async function loadProducts() {
+
         try {
+
             const res = await fetch(`${API_BASE}/loan-accounts/products`);
+
             products = await res.json();
+
             productSelect.innerHTML = `<option value="">-- Select product --</option>`;
+
             products.forEach(p => {
+
                 const opt = document.createElement('option');
+
                 opt.value = p.id;
+
                 opt.text = (p.name || 'Unnamed') + (p.loanType ? ` (${p.loanType})` : '');
+
                 productSelect.appendChild(opt);
+
             });
+
         } catch (err) {
+
             console.error('loadProducts error', err);
+
         }
+
     }
+
 
     // === product select change handler (replace your current one) ===
+
     productSelect.addEventListener('change', () => {
+
         errorBox.innerText = '';
+
         const pid = productSelect.value;
+
         if (!pid) {
+
             productInfo.innerText = '';
+
             prod_installmentType.value = '';
+
             prod_interestRate.value = '';
+
             prod_numberOfInstallments.value = '';
+
             return;
+
         }
+
 
         const p = products.find(x => String(x.id) === String(pid));
+
         if (!p) return;
 
-        // show max/min with fallback
+
+// show max/min with fallback
+
         const minDisplay = (p.minLoan != null) ? Number(p.minLoan) : 'N/A';
+
         const maxDisplay = (p.maxLoan != null) ? Number(p.maxLoan) : 'N/A';
+
         productInfo.innerText = `Max loan: ${maxDisplay} — Min loan: ${minDisplay}`;
 
+
         prod_installmentType.value = p.installmentType ?? '';
-        // ensure interest rate shows nicely (no conversion errors)
+
+// ensure interest rate shows nicely (no conversion errors)
+
         prod_interestRate.value = (p.interestRate != null) ? p.interestRate : '';
+
         prod_numberOfInstallments.value = p.numberOfInstallments ?? '';
+
     });
+
 
     // === save button click handler — validation part (put this BEFORE building payload) ===
+
     saveBtn.addEventListener('click', async (e) => {
+
         e.preventDefault();
+
         errorBox.innerText = '';
+
         saveMsg.innerText = '';
 
-        // basic selection checks
-        if (!selectedBorrower) { errorBox.innerText = 'Select a borrower first'; return; }
-        if (!productSelect.value) { errorBox.innerText = 'Select a loan product'; return; }
 
-        // find chosen product object
-        const product = products.find(p => String(p.id) === String(productSelect.value));
-        if (!product) { errorBox.innerText = 'Selected product not found'; return; }
+// basic selection checks
 
-        // approved amount numeric check
-        const approvedRaw = approvedAmount.value;
-        const approved = approvedRaw !== '' ? Number(approvedRaw) : NaN;
-        if (Number.isNaN(approved)) {
-            errorBox.innerText = 'Approved amount must be a valid number';
+        if (!selectedBorrower) {
+            errorBox.innerText = 'Select a borrower first';
             return;
         }
 
-        // convert product min/max safely (handle null, string, number)
+        if (!productSelect.value) {
+            errorBox.innerText = 'Select a loan product';
+            return;
+        }
+
+
+// find chosen product object
+
+        const product = products.find(p => String(p.id) === String(productSelect.value));
+
+        if (!product) {
+            errorBox.innerText = 'Selected product not found';
+            return;
+        }
+
+
+// approved amount numeric check
+
+        const approvedRaw = approvedAmount.value;
+
+        const approved = approvedRaw !== '' ? Number(approvedRaw) : NaN;
+
+        if (Number.isNaN(approved)) {
+
+            errorBox.innerText = 'Approved amount must be a valid number';
+
+            return;
+
+        }
+
+
+// convert product min/max safely (handle null, string, number)
+
         const prodMin = (product.minLoan != null) ? Number(product.minLoan) : null;
+
         const prodMax = (product.maxLoan != null) ? Number(product.maxLoan) : null;
 
-        // check min
+
+// check min
+
         if (prodMin !== null && approved < prodMin) {
+
             errorBox.innerText = `Approved amount must be at least ${prodMin}`;
+
             return;
+
         }
 
-        // check max
+
+// check max
+
         if (prodMax !== null && approved > prodMax) {
-            errorBox.innerText = `Approved amount must not exceed ${prodMax}`;
-            return;
-        }
-        console.log("PAYLOAD SENDING:", payload);
-        // optional: round/format approved before sending (use BigDecimal on backend ideally)
-        // const approvedNormalized = Number(approved.toFixed(2));
 
-        // --- if you reach here, validation passed; now build payload normally ---
+            errorBox.innerText = `Approved amount must not exceed ${prodMax}`;
+
+            return;
+
+        }
+
+        console.log("PAYLOAD SENDING:", payload);
+
+// optional: round/format approved before sending (use BigDecimal on backend ideally)
+
+// const approvedNormalized = Number(approved.toFixed(2));
+
+
+// --- if you reach here, validation passed; now build payload normally ---
+
         const payload = {
+
             borrowerId: selectedBorrower.id,
+
             loanProductId: product.id,
+
             approvedAmount: approved, // or approvedNormalized
+
             openingDate: new Date().toISOString().slice(0, 10),
+
             status: 'OPEN'
+
         };
 
-        // ... then continue with fetch to create account ...
+
+// ... then continue with fetch to create account ...
+
     });
+
 
     // ======= BORROWER SEARCH =======
+
     async function searchBorrowerByQuery(q) {
+
         if (!q || q.trim().length < 2) {
+
             hideSearchResults();
+
             return;
+
         }
+
         try {
+
             const res = await fetch(`${API_BASE}/loan-accounts/search-borrower?q=${encodeURIComponent(q)}`);
+
             const list = await res.json();
+
             renderSearchResults(list);
+
         } catch (err) {
+
             console.error('search error', err);
+
         }
+
     }
+
     const debouncedLiveSearch = debounce(searchBorrowerByQuery, 300);
 
+
     async function searchBorrowerByTypeAndValue(type, value) {
+
         if (!value || !value.trim()) {
+
             hideSearchResults();
+
             return;
+
         }
+
         try {
+
             const res = await fetch(`${API_BASE}/loan-accounts/search-borrower?q=${encodeURIComponent(value.trim())}`);
+
             const list = await res.json();
+
             let filtered = list;
+
             if (type && type !== 'auto' && type !== '') {
+
                 if (type === 'MOBILE') {
+
                     filtered = list.filter(x => (x.mobile || '').includes(value.trim()));
+
                 } else {
+
                     filtered = list.filter(x => (x.idNumber || '').includes(value.trim()));
+
                 }
+
             }
+
             renderSearchResults(filtered);
+
         } catch (err) {
+
             console.error('searchByType error', err);
+
         }
+
     }
+
 
     function renderSearchResults(list) {
+
         searchResults.innerHTML = '';
+
         if (!list || list.length === 0) {
+
+            hideSearchResults();
+
+            return;
+
+        }
+
+        list.forEach(b => {
+
+            const div = document.createElement('div');
+
+            div.className = 'sr-item';
+
+            const name = b.name || '(no name)';
+
+            const idType = b.idType || '';
+
+            const idNumber = b.idNumber || '';
+
+            const mobile = b.mobile || '';
+
+            div.innerHTML = `
+
+<div style="font-weight:600">${escapeHtml(name)}</div>
+
+<div style="font-size:13px; color:#6b7280">
+
+${escapeHtml(idType)} - ${escapeHtml(idNumber)} • ${escapeHtml(mobile)}
+
+</div>`;
+
+            div.addEventListener('click', () => {
+
+                selectBorrower(b);
+
+                hideSearchResults();
+
+            });
+
+            searchResults.appendChild(div);
+
+        });
+
+        searchResults.style.display = 'block';
+
+    }
+
+
+    function hideSearchResults() {
+
+        searchResults.style.display = 'none';
+
+        searchResults.innerHTML = '';
+
+    }
+
+
+    function selectBorrower(b) {
+
+        selectedBorrower = b;
+
+        bf_name.value = b.name || '';
+
+        bf_idType.value = b.idType || '';
+
+        bf_idNumber.value = b.idNumber || '';
+
+        bf_mobile.value = b.mobile || '';
+
+        saveMsg.innerText = '';
+
+        errorBox.innerText = '';
+
+    }
+
+
+    // live search
+
+    searchInput.addEventListener('input', (e) => {
+
+        const q = e.target.value;
+
+        if (searchType.value === 'auto') {
+
+            debouncedLiveSearch(q);
+
+        } else {
+
+            hideSearchResults();
+
+        }
+
+    });
+
+
+    searchInput.addEventListener('keydown', (e) => {
+
+        if (e.key === 'Enter') {
+
+            e.preventDefault();
+
+            triggerSearch();
+
+        }
+
+    });
+
+
+    btnSearch.addEventListener('click', (e) => {
+
+        e.preventDefault();
+
+        triggerSearch();
+
+    });
+
+
+    function triggerSearch() {
+
+        const type = searchType.value;
+
+        const value = searchInput.value.trim();
+
+        if (!value) {
             hideSearchResults();
             return;
         }
-        list.forEach(b => {
-            const div = document.createElement('div');
-            div.className = 'sr-item';
-            const name = b.name || '(no name)';
-            const idType = b.idType || '';
-            const idNumber = b.idNumber || '';
-            const mobile = b.mobile || '';
-            div.innerHTML = `
-                <div style="font-weight:600">${escapeHtml(name)}</div>
-                <div style="font-size:13px; color:#6b7280">
-                    ${escapeHtml(idType)} - ${escapeHtml(idNumber)} • ${escapeHtml(mobile)}
-                </div>`;
-            div.addEventListener('click', () => {
-                selectBorrower(b);
-                hideSearchResults();
-            });
-            searchResults.appendChild(div);
-        });
-        searchResults.style.display = 'block';
-    }
 
-    function hideSearchResults() {
-        searchResults.style.display = 'none';
-        searchResults.innerHTML = '';
-    }
-
-    function selectBorrower(b) {
-        selectedBorrower = b;
-        bf_name.value = b.name || '';
-        bf_idType.value = b.idType || '';
-        bf_idNumber.value = b.idNumber || '';
-        bf_mobile.value = b.mobile || '';
-        saveMsg.innerText = '';
-        errorBox.innerText = '';
-    }
-
-    // live search
-    searchInput.addEventListener('input', (e) => {
-        const q = e.target.value;
-        if (searchType.value === 'auto') {
-            debouncedLiveSearch(q);
-        } else {
-            hideSearchResults();
-        }
-    });
-
-    searchInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            triggerSearch();
-        }
-    });
-
-    btnSearch.addEventListener('click', (e) => {
-        e.preventDefault();
-        triggerSearch();
-    });
-
-    function triggerSearch() {
-        const type = searchType.value;
-        const value = searchInput.value.trim();
-        if (!value) { hideSearchResults(); return; }
         if (type === 'auto') {
+
             searchBorrowerByQuery(value);
+
         } else {
+
             searchBorrowerByTypeAndValue(type, value);
+
         }
+
     }
+
 
     // ======= CREATE LOAN ACCOUNT =======
+
     saveBtn.addEventListener('click', async (e) => {
+
         e.preventDefault();
+
         errorBox.innerText = '';
+
         saveMsg.innerText = '';
 
-        if (!selectedBorrower) { errorBox.innerText = 'Select a borrower first'; return; }
-        if (!productSelect.value) { errorBox.innerText = 'Select a loan product'; return; }
-        if (!approvedAmount.value || Number(approvedAmount.value) <= 0) { errorBox.innerText = 'Enter approved amount'; return; }
+
+        if (!selectedBorrower) {
+            errorBox.innerText = 'Select a borrower first';
+            return;
+        }
+
+        if (!productSelect.value) {
+            errorBox.innerText = 'Select a loan product';
+            return;
+        }
+
+        if (!approvedAmount.value || Number(approvedAmount.value) <= 0) {
+            errorBox.innerText = 'Enter approved amount';
+            return;
+        }
+
 
         const product = products.find(p => String(p.id) === String(productSelect.value));
-        if (!product) { errorBox.innerText = 'Selected product not found'; return; }
+
+        if (!product) {
+            errorBox.innerText = 'Selected product not found';
+            return;
+        }
+
 
         const approved = Number(approvedAmount.value);
 
+
 // ----- Convert product values to numbers safely -----
+
         const min = product.minLoan !== undefined && product.minLoan !== null ? Number(product.minLoan) : null;
+
         const max = product.maxLoan !== undefined && product.maxLoan !== null ? Number(product.maxLoan) : null;
 
+
 // ----- Validate approved amount is a number -----
+
         if (Number.isNaN(approved)) {
+
             errorBox.innerText = 'Approved amount must be a valid number';
+
             return;
+
         }
+
 
 // ----- MIN Loan Validation -----
+
         if (min !== null && approved < min) {
+
             errorBox.innerText = `Approved amount cannot be less than minimum loan amount (${min})`;
+
             return;
+
         }
+
 
 // ----- MAX Loan Validation -----
+
         if (max !== null && approved > max) {
+
             errorBox.innerText = `Approved amount cannot exceed maximum loan amount (${max})`;
+
             return;
+
         }
+
 
         const payload = {
+
             borrowerId: selectedBorrower.id,
+
             loanProductId: product.id,
+
             approvedAmount: approved,
+
             openingDate: new Date().toISOString().slice(0, 10),
+
             status: 'OPEN'
+
         };
 
+
         try {
+
             const res = await fetch(`${API_BASE}/loan-accounts`, {
+
                 method: 'POST',
+
                 headers: {'Content-Type': 'application/json'},
+
                 body: JSON.stringify(payload)
+
             });
+
             if (res.ok) {
+
                 const created = await res.json();
+
                 saveMsg.innerText = 'Loan account opened successfully';
 
+
                 loanNumberInput.value = created.loanNumber ?? "";
+
                 await loadNextLoanNumber();
+
                 selectedBorrower = null;
+
                 bf_name.value = '';
+
                 bf_idType.value = '';
+
                 bf_idNumber.value = '';
+
                 bf_mobile.value = '';
 
+
                 productSelect.value = '';
+
                 productInfo.innerText = '';
+
                 approvedAmount.value = '';
+
                 prod_installmentType.value = '';
+
                 prod_interestRate.value = '';
+
                 prod_numberOfInstallments.value = '';
 
+
                 loadRecentAccounts();
+
             } else {
+
                 const txt = await res.text();
+
                 errorBox.innerText = txt || 'Failed to open account';
+
             }
+
         } catch (err) {
+
             console.error('save error', err);
+
             errorBox.innerText = 'Network/server error';
+
         }
+
     });
-//for pagination
+
+    //for pagination
+
     async function loadAccountsPage() {
+
         const res = await fetch(
             `${API_BASE}/loan-accounts/page?page=${currentPage}&size=${pageSize}`
         );
+
         if (!res.ok) return;
+
 
         const data = await res.json();
 
+
         accounts = data.content;
+
         totalElements = data.totalElements;
 
-        renderAccounts(accounts);
-        updatePaginationInfo();
-    }
 
+        renderAccounts(accounts);
+
+        updatePaginationInfo();
+
+    }
 
 
     function renderAccounts(list) {
+
         accountList.innerHTML = '';
+
         if (!list || list.length === 0) {
+
             accountList.innerHTML = '<tr><td colspan="7" class="muted">No accounts yet.</td></tr>';
+
             return;
+
         }
+
         list.forEach((a, idx) => {
+
             const tr = document.createElement('tr');
+
             tr.innerHTML = `
-                <td>${idx + 1}</td>
-                <td>${escapeHtml(a.loanNumber || '')}</td>
-                <td>${escapeHtml(a.borrowerName || '')}</td>
-                <td>${escapeHtml(a.loanProductName || '')}</td>
-                <td>${a.approvedAmount ?? ''}</td>
-                <td>${escapeHtml(a.status || '')}</td>
-                <td class="action">
-                    <button class="ghost" onclick="viewAccount(${a.id})">View</button>
-                </td>`;
+
+<td>${idx + 1}</td>
+
+<td>${escapeHtml(a.loanNumber || '')}</td>
+
+<td>${escapeHtml(a.borrowerName || '')}</td>
+
+<td>${escapeHtml(a.loanProductName || '')}</td>
+
+<td>${a.approvedAmount ?? ''}</td>
+
+<td>${escapeHtml(a.status || '')}</td>
+
+<td class="action">
+
+<button class="ghost" onclick="viewAccount(${a.id})">View</button>
+
+</td>`;
+
             accountList.appendChild(tr);
+
         });
+
     }
+
 
     function viewAccount(id) {
-        // 1) list theke oi account ta ber kori
+
+// 1) list theke oi account ta ber kori
+
         const acc = accounts.find(a => String(a.id) === String(id));
+
         if (!acc) {
+
             alert("Account not found in list");
+
             return;
+
         }
 
-        // 2) Loan number form-e dekhabo
+
+// 2) Loan number form-e dekhabo
+
         if (acc.loanNumber) {
+
             loanNumberInput.value = acc.loanNumber;
+
         } else {
+
             loanNumberInput.value = `LN-${String(acc.id).padStart(5, '0')}`;
+
         }
 
-        // 3) Borrower info form-e boshao
-        bf_name.value    = acc.borrowerName   || "";
-        bf_idType.value  = acc.borrowerIdType || "";      // jodi DTO te pathao
-        bf_idNumber.value = acc.borrowerIdNumber || "";   // jodi DTO te pathao
-        bf_mobile.value  = acc.borrowerMobile || "";
 
-        // 4) Loan product select dropdown + info
+// 3) Borrower info form-e boshao
+
+        bf_name.value = acc.borrowerName || "";
+
+        bf_idType.value = acc.borrowerIdType || ""; // jodi DTO te pathao
+
+        bf_idNumber.value = acc.borrowerIdNumber || ""; // jodi DTO te pathao
+
+        bf_mobile.value = acc.borrowerMobile || "";
+
+
+// 4) Loan product select dropdown + info
+
         if (acc.loanProductId) {
+
             productSelect.value = acc.loanProductId;
 
+
             const p = products.find(x => String(x.id) === String(acc.loanProductId));
+
             if (p) {
+
                 productInfo.innerText =
+
                     `Max loan: ${p.maxLoan ?? 'N/A'} — Min loan: ${p.minLoan ?? 'N/A'}`;
-                prod_installmentType.value   = p.installmentType        ?? "";
-                prod_interestRate.value      = p.interestRate           ?? "";
+
+                prod_installmentType.value = p.installmentType ?? "";
+
+                prod_interestRate.value = p.interestRate ?? "";
+
                 prod_numberOfInstallments.value = p.numberOfInstallments ?? "";
+
             } else {
-                // fallback: jodi DTO thekei ashe
+
+// fallback: jodi DTO thekei ashe
+
                 productInfo.innerText = "";
-                prod_installmentType.value   = acc.installmentType        || "";
-                prod_interestRate.value      = acc.interestRate           || "";
+
+                prod_installmentType.value = acc.installmentType || "";
+
+                prod_interestRate.value = acc.interestRate || "";
+
                 prod_numberOfInstallments.value = acc.numberOfInstallments || "";
+
             }
+
         }
 
-        // 5) Approved amount
+
+// 5) Approved amount
+
         approvedAmount.value = acc.approvedAmount ?? "";
 
-        // 6) niccha theke click korle form-er dike scroll kore ante
+
+// 6) niccha theke click korle form-er dike scroll kore ante
+
         document.querySelector('.content').scrollIntoView({behavior: 'smooth'});
+
     }
 
-   //Pagination
+
+    //Pagination
+
     function renderPagination() {
+
         const container = document.getElementById('pagination');
+
         container.innerHTML = '';
 
-        // Prev
+
+// Prev
+
         const prev = document.createElement('button');
+
         prev.innerText = 'Prev';
+
         prev.disabled = currentPage === 0;
+
         prev.onclick = () => loadRecentAccounts(currentPage - 1);
+
         container.appendChild(prev);
 
-        // Page numbers
+
+// Page numbers
+
         for (let i = 0; i < totalPages; i++) {
+
             const btn = document.createElement('button');
+
             btn.innerText = i + 1;
+
             btn.className = 'ghost';
+
             if (i === currentPage) {
+
                 btn.style.fontWeight = '700';
+
             }
+
             btn.onclick = () => loadRecentAccounts(i);
+
             container.appendChild(btn);
+
         }
 
-        // Next
+
+// Next
+
         const next = document.createElement('button');
+
         next.innerText = 'Next';
+
         next.disabled = currentPage === totalPages - 1;
+
         next.onclick = () => loadRecentAccounts(currentPage + 1);
+
         container.appendChild(next);
+
     }
+
 
     // ===== PAGINATION BUTTON HANDLERS =====
 
+
     document.getElementById("prevBtn").onclick = () => {
+
         if (currentPage > 0) {
+
             currentPage--;
+
             loadAccountsPage();
+
         }
+
     };
+
 
     document.getElementById("nextBtn").onclick = () => {
+
         if ((currentPage + 1) * pageSize < totalElements) {
+
             currentPage++;
+
             loadAccountsPage();
+
         }
+
     };
+
     document.getElementById("pageSizeSelect").onchange = (e) => {
+
         pageSize = Number(e.target.value);
+
         currentPage = 0;
+
         loadAccountsPage();
+
     };
+
 
     // ======= INIT =======
+
     (async function init() {
+
         await loadProducts();
+
         await loadNextLoanNumber();
+
         await loadAccountsPage();
 
+
         const searchLabel = document.getElementById('searchLabel');
+
         searchType.addEventListener('change', () => {
+
             if (searchType.value === 'auto') searchLabel.innerText = 'Search (type or number)';
+
             else if (searchType.value === 'MOBILE') searchLabel.innerText = 'Enter mobile number';
+
             else searchLabel.innerText = `Enter ${searchType.value} number`;
+
         });
+
     })();
 
+
     // ======= NAVIGATION HELPERS =======
-    function goToDashboard(){ window.location.href = 'dashboard.html'; }
-    function goToUserRegistration(){ window.location.href = 'user-registration.html'; }
-    function goToLoanProducts(){ window.location.href = 'loan-products.html'; }
-    function goToBorrowerReg(){ window.location.href = 'borrower.html'; }
-    function goToLoanDisbursement(){ window.location.href = 'loan-disbursement.html'; }
-    function goToRepayments(){ window.location.href = 'repayments.html'; }
-    function goToSettings(){ window.location.href = 'settings.html'; }
-    function toggleUserMenu(){
-        const el=document.getElementById('userSubmenu');
-        el.style.display = el.style.display==='block' ? 'none' : 'block';
+
+    function goToDashboard() {
+        window.location.href = 'dashboard.html';
     }
-    function toggleLoanMenu(){
-        const el=document.getElementById('loanSubmenu');
-        el.style.display = el.style.display==='block' ? 'none' : 'block';
+
+    function goToUserRegistration() {
+        window.location.href = 'user-registration.html';
     }
+
+    function goToLoanProducts() {
+        window.location.href = 'loan-products.html';
+    }
+
+    function goToBorrowerReg() {
+        window.location.href = 'borrower.html';
+    }
+
+    function goToLoanDisbursement() {
+        window.location.href = 'loan-disbursement.html';
+    }
+
+    function goToRepayments() {
+        window.location.href = 'repayments.html';
+    }
+
+    function goToSettings() {
+        window.location.href = 'settings.html';
+    }
+
+    function toggleUserMenu() {
+
+        const el = document.getElementById('userSubmenu');
+
+        el.style.display = el.style.display === 'block' ? 'none' : 'block';
+
+    }
+
+    function toggleLoanMenu() {
+
+        const el = document.getElementById('loanSubmenu');
+
+        el.style.display = el.style.display === 'block' ? 'none' : 'block';
+
+    }
+
 </script>
+
 </body>
+
 </html>

@@ -7,15 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Data // Lombok annotation: Automatically creates Getters, Setters, toString, and equals methods.
+@NoArgsConstructor //Lombok: Creates a constructor with no arguments.
+@AllArgsConstructor //Lombok: Creates a constructor with all fields as arguments.
 public class BorrowerDto {
-
     private Long id;
-
-    @NotBlank(message = "Name is required")
-    @Size(min = 3, message = "Name must be at least 3 characters")
+    @NotBlank(message = "Name is required") // Ensures the name is not empty or just spaces.
+    @Size(min = 3, message = "Name must be at least 3 characters") // Rejects names that are too short.
     private String name;
 
     @NotNull(message = "ID Type required")
@@ -56,5 +54,5 @@ public class BorrowerDto {
     @NotBlank(message = "Permanent upazila required")
     private String permanentUpazila;
 
-    private Boolean sameAsPresentAddress;
+    private Boolean sameAsPresentAddress; // A checkbox value to indicate if both addresses are the same.
 }

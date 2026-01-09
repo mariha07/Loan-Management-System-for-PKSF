@@ -21,7 +21,7 @@ public class LoanProductServiceImpl implements LoanProductService {
     @Override
     public LoanProductDto create(LoanProductDto request) {
 
-        validate(request); // 🔥 validate incoming data
+        validate(request); //validate incoming data
 
         LoanProduct lp = new LoanProduct();
         copyDtoToEntity(request, lp);
@@ -57,7 +57,7 @@ public class LoanProductServiceImpl implements LoanProductService {
     @Override
     public LoanProductDto update(Long id, LoanProductDto request) {
 
-        validate(request); // 🔥 prevent null update crash
+        validate(request); //prevent null update crash
 
         LoanProduct lp = loanProductRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Loan product not found"));
@@ -108,7 +108,7 @@ public class LoanProductServiceImpl implements LoanProductService {
         lp.setMinLoan(dto.getMinLoan());
     }
 
-    // 🔥 Validation to avoid null crash from frontend
+    //Validation to avoid null crash from frontend
     private void validate(LoanProductDto dto) {
         if (dto.getName() == null || dto.getName().isBlank())
             throw new RuntimeException("Loan Product Name is required");

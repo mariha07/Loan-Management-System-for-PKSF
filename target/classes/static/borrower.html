@@ -10,617 +10,360 @@
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: "Inter", sans-serif; background: #f5f7fb; color: #222; }
+        body { font-family: "Inter", sans-serif; background-color: #f5f7fb; color: #222; }
+
         .layout { display: flex; min-height: 100vh; }
 
-        /* Sidebar */
+        /* ===== Sidebar (Matched with Dashboard) ===== */
         .sidebar {
             width: 240px;
-            background: #fff;
+            background: #ffffff;
             border-right: 1px solid #e5e7eb;
-            padding: 20px;
+            padding: 20px 16px;
         }
-        .logo { font-size: 22px; font-weight: 700; margin-bottom: 20px; }
-        .nav-item { padding: 10px; border-radius: 8px; cursor: pointer; margin-bottom: 8px; }
-        .nav-item:hover, .active { background: #eef2ff; color: #4338ca; }
+        .sidebar .logo { font-weight: 700; font-size: 20px; margin-bottom: 24px; }
+        .sidebar .menu-title { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; margin-bottom: 10px; }
+        .nav-item { display: flex; align-items: center; padding: 10px 12px; border-radius: 8px; margin-bottom: 4px; font-size: 14px; cursor: pointer; color: #4b5563; }
+        .nav-item.active, .nav-item:hover { background: #eef2ff; color: #4338ca; }
+        .submenu { margin-left: 30px; margin-top: 2px; display: none; }
+        .submenu .nav-item { padding: 8px 10px; font-size: 13px; }
+        .nav-item span.icon { width: 20px; margin-right: 8px; text-align: center; }
 
         /* Main Panel */
         .main { flex: 1; display: flex; flex-direction: column; }
-        .topbar {
-            background: #fff; height: 64px;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 20px; border-bottom: 1px solid #e5e7eb;
-        }
+        .topbar { height: 64px; background: #ffffff; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; }
+        .topbar-left { font-size: 18px; font-weight: 600; }
+        .topbar-right { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+        .badge-role { padding: 6px 10px; border-radius: 999px; font-size: 12px; background: #eef2ff; color: #4f46e5; font-weight: 600; }
+        .avatar { width: 32px; height: 32px; border-radius: 999px; background: #4f46e5; color: white; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600; }
+        .logout-btn { border: none; background: #fee2e2; color: #b91c1c; padding: 6px 10px; border-radius: 999px; font-size: 12px; cursor: pointer; }
 
-        .content { padding: 20px; width: 100%; }
+        /* Content */
+        .content { padding: 24px; }
+        .content-inner { width: 100%; max-width: 1100px; margin: 0 auto; }
+        .panel { background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); margin-bottom: 24px; }
+        .panel-title { font-size: 16px; font-weight: 600; margin-bottom: 10px; }
 
-        .card {
-            background: #fff; padding: 20px; border-radius: 12px;
-            margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        }
-
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; align-items: start; }
-
-        @media (max-width: 900px) {
-            .grid-2, .grid-3 { grid-template-columns: 1fr; }
-        }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 
         .form-group { margin-bottom: 12px; }
-        .form-group label { font-size: 14px; margin-bottom: 6px; display: block; color: #374151; }
-        .form-group input, .form-group select {
-            width: 100%; padding: 8px; border-radius: 8px;
-            border: 1px solid #cfd4dd; font-size: 14px;
-            background: #fff;
-        }
+        .form-group label { font-size: 13px; font-weight: 500; margin-bottom: 6px; display: block; color: #374151; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #e5e7eb; font-size: 14px; background: #f9fafb; outline: none; }
+        .btn-primary { background: #4f46e5; color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 500; }
 
-        .btn-primary {
-            background: #4f46e5; color: white; border: none;
-            padding: 10px 16px; border-radius: 6px; cursor: pointer;
-        }
-        .btn-primary:hover { background: #4338ca; }
+        .error { color: #dc2626; font-size: 12px; margin-top: 4px; height: 14px; }
+        .success { color: #059669; font-size: 13px; }
 
-        .error { color: #dc2626; font-size: 13px; margin-top: 6px; min-height: 18px; }
-        .success { color: #059669; font-size: 14px; margin-top: 6px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 12px; border-bottom: 2px solid #f3f4f6; color: #6b7280; font-size: 13px; }
+        td { padding: 12px; border-bottom: 1px solid #f3f4f6; font-size: 14px; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: auto; }
-        th, td { padding: 12px 10px; border-bottom: 1px solid #eee; vertical-align: middle; }
-        th { background: #f1f1f8; font-weight: 600; color: #374151; text-align: left; }
-        tbody tr:hover { background: #fbfbff; }
-
-        /* action column centered */
-        td.action { text-align: center; width: 120px; }
-
-        /* responsive small screens fix */
-        @media (max-width: 640px) {
-            th:nth-child(1), td:nth-child(1) { width: 40px; }
-            td.action { width: 80px; }
-        }
-
-        .action-btn { cursor: pointer; margin: 0 6px; font-size: 18px; display:inline-block; }
-        .edit { color: #2563eb; }
-        .delete { color: #dc2626; }
-
-        .small-label { font-size: 13px; color: #6b7280; margin-bottom: 8px; display:block; }
+        .action-btn { cursor: pointer; margin: 0 6px; font-size: 16px; }
+        .ghost { background: none; border: 1px solid #e5e7eb; padding: 4px 8px; border-radius: 4px; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="layout">
-
-    <!-- Sidebar -->
     <aside class="sidebar">
         <div class="logo">LMS</div>
+        <div class="menu-title">Menu</div>
 
-        <div class="nav-item" onclick="goToDashboard()">📊 Dashboard</div>
-
-        <div class="nav-item" onclick="toggleUserMenu()">👤 User Management</div>
-        <div id="userSubmenu" style="margin-left:20px; display:none;">
-            <div class="nav-item" onclick="goToUserRegistration()">📝 User Registration</div>
+        <div class="nav-item" onclick="goDashboard()">
+            <span class="icon">📊</span><span>Dashboard</span>
         </div>
 
-        <div class="nav-item" onclick="goToLoanProducts()">💰 Loan Products</div>
+        <div class="nav-item" onclick="toggleUserMenu()">
+            <span class="icon">👤</span><span>User Management</span>
+        </div>
+        <div id="userSubmenu" class="submenu">
+            <div class="nav-item" onclick="goToUserRegistration()">
+                <span class="icon">📝</span><span>User Registration</span>
+            </div>
+        </div>
 
-        <div class="nav-item active">📄 Loan Applications</div>
-        <div style="margin-left:20px;">
-            <div class="nav-item active">📝 Borrower Registration</div>
-            <div class="nav-item" onclick="goToLoanAccount()">💼 Loan Account</div>
-            <div class="nav-item" onclick="goToLoanDisbursement()">💸 Loan Disbursement</div>
+        <div class="nav-item" onclick="goToLoanProducts()">
+            <span class="icon">💰</span><span>Loan Products</span>
+        </div>
+
+        <div class="nav-item" onclick="toggleLoanMenu()">
+            <span class="icon">📄</span><span>Loan Applications</span>
+        </div>
+        <div id="loanSubmenu" class="submenu" style="display:block;"> <div class="nav-item active" onclick="goToBorrowerReg()">
+            <span class="icon">📝</span><span>Borrower Registration</span>
+        </div>
+            <div class="nav-item" onclick="goToLoanAccount()">
+                <span class="icon">💼</span><span>Loan Account</span>
+            </div>
+            <div class="nav-item" onclick="goToLoanDisbursement()">
+                <span class="icon">💸</span><span>Loan Disbursement</span>
+            </div>
+        </div>
+
+        <div class="nav-item" onclick="toggleRepaymentMenu()">
+            <span class="icon">📆</span><span>Repayments</span>
+        </div>
+        <div id="repaymentSubmenu" class="submenu">
+            <div class="nav-item" onclick="goToRepaymentSchedule()">📑 Repayment Schedule</div>
         </div>
     </aside>
 
-    <!-- Main -->
     <div class="main">
-
-        <!-- Topbar -->
         <header class="topbar">
-            <h3>Borrower Registration</h3>
+            <div class="topbar-left">Borrower Registration</div>
+            <div class="topbar-right">
+                <span class="badge-role" id="userRoleBadge">ROLE</span>
+                <span id="userEmail" style="color:#6b7280;"></span>
+                <div class="avatar" id="userAvatar">U</div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
         </header>
 
         <main class="content">
+            <div class="content-inner">
 
-            <!-- Borrower Form -->
-            <section class="card">
-                <h3 style="margin-bottom:10px">Borrower Registration</h3>
+                <section class="panel">
+                    <div class="panel-title">Borrower Details</div>
+                    <form id="borrowerForm">
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input id="name" type="text" placeholder="John Doe">
+                                <p class="error" id="err_name"></p>
+                            </div>
+                            <div class="form-group">
+                                <label>ID Type</label>
+                                <select id="idType">
+                                    <option value="">Select</option>
+                                    <option value="NID">NID</option>
+                                    <option value="PASSPORT">Passport</option>
+                                </select>
+                                <p class="error" id="err_idType"></p>
+                            </div>
+                        </div>
 
-                <form id="borrowerForm" autocomplete="off">
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>ID Number</label>
+                                <input id="idNumber" type="text">
+                                <p class="error" id="err_idNumber"></p>
+                            </div>
+                            <div class="form-group">
+                                <label>Date of Birth</label>
+                                <input id="dob" type="date">
+                                <p class="error" id="err_dob"></p>
+                            </div>
+                        </div>
 
-                    <div class="grid-2">
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input id="name" type="text" autocomplete="name">
-                            <p class="error" id="err_name"></p>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <select id="gender">
+                                    <option value="">Select</option>
+                                    <option value="MALE">Male</option>
+                                    <option value="FEMALE">Female</option>
+                                </select>
+                                <p class="error" id="err_gender"></p>
+                            </div>
+                            <div class="form-group">
+                                <label>Mobile (11 digits)</label>
+                                <input id="mobile" type="text" maxlength="11" placeholder="01700000000">
+                                <p class="error" id="err_mobile"></p>
+                            </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="idType">ID Type</label>
-                            <select id="idType">
-                                <option value="">Select</option>
-                                <option value="NID">NID</option>
-                                <option value="BRN">BRN</option>
-                                <option value="PASSPORT">PASSPORT</option>
+                            <label>Email Address</label>
+                            <input id="email" type="email" placeholder="john@example.com">
+                            <p class="error" id="err_email"></p>
+                        </div>
+
+                        <h4 style="margin: 15px 0 10px 0; font-size: 14px; color: #4f46e5;">Address Information</h4>
+                        <div class="grid-3">
+                            <div class="form-group"><label>Present Division</label><input id="p_div"></div>
+                            <div class="form-group"><label>Present District</label><input id="p_dis"></div>
+                            <div class="form-group"><label>Present Upazila</label><input id="p_upa"></div>
+                        </div>
+
+                        <label style="display:flex; align-items:center; gap:8px; margin: 10px 0; font-size: 13px;">
+                            <input type="checkbox" id="sameAsPresent"> Same as Present Address
+                        </label>
+
+                        <div class="grid-3">
+                            <div class="form-group"><label>Permanent Division</label><input id="per_div"></div>
+                            <div class="form-group"><label>Permanent District</label><input id="per_dis"></div>
+                            <div class="form-group"><label>Permanent Upazila</label><input id="per_upa"></div>
+                        </div>
+
+                        <div style="margin-top:20px">
+                            <button class="btn-primary" type="submit" id="saveBtn">Save Borrower</button>
+                            <span id="msg" style="margin-left:12px;"></span>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="panel">
+                    <div class="panel-title">Borrower List</div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>ID</th>
+                            <th>Mobile</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="borrowerTable"></tbody>
+                    </table>
+
+                    <div id="paginationBar" style="display:flex; align-items:center; justify-content:flex-end; gap:16px; font-size:13px; margin-top:15px; color: #6b7280;">
+                        <div>
+                            Show:
+                            <select id="pageSizeSelect" style="padding:2px; border-radius:4px;">
+                                <option value="5">5</option>
+                                <option value="10" selected>10</option>
                             </select>
-                            <p class="error" id="err_idType"></p>
+                        </div>
+                        <div id="pageInfo">0-0 of 0</div>
+                        <div style="display:flex; gap:5px;">
+                            <button class="ghost" id="prevBtn">⟨</button>
+                            <button class="ghost" id="nextBtn">⟩</button>
                         </div>
                     </div>
-
-                    <div class="grid-2">
-                        <div class="form-group">
-                            <label for="idNumber">ID Number</label>
-                            <input id="idNumber" type="text" autocomplete="off">
-                            <p class="error" id="err_idNumber"></p>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="dob">Date of Birth</label>
-                            <!-- keep date input; we will send dd/mm/yyyy to backend -->
-                            <input id="dob" type="date" max="">
-                            <p class="error" id="err_dob"></p>
-                        </div>
-                    </div>
-
-                    <div class="grid-2">
-                        <div class="form-group">
-                            <label for="gender">Gender</label>
-                            <select id="gender">
-                                <option value="">Select</option>
-                                <option value="MALE">Male</option>
-                                <option value="FEMALE">Female</option>
-                                <option value="OTHERS">Others</option>
-                            </select>
-                            <p class="error" id="err_gender"></p>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="mobile">Mobile (11 digits)</label>
-                            <input id="mobile" type="text" inputmode="numeric" maxlength="11" placeholder="01XXXXXXXXX">
-                            <p class="error" id="err_mobile"></p>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input id="email" type="email" placeholder="example@gmail.com" autocomplete="email">
-                        <p class="error" id="err_email"></p>
-                    </div>
-
-                    <h4 style="margin: 10px 0 6px 0;">Present Address</h4>
-
-                    <div class="grid-3">
-                        <div class="form-group">
-                            <label for="p_div">Division</label>
-                            <input id="p_div">
-                            <p class="error" id="err_p_div"></p>
-                        </div>
-                        <div class="form-group">
-                            <label for="p_dis">District</label>
-                            <input id="p_dis">
-                            <p class="error" id="err_p_dis"></p>
-                        </div>
-                        <div class="form-group">
-                            <label for="p_upa">Upazila</label>
-                            <input id="p_upa">
-                            <p class="error" id="err_p_upa"></p>
-                        </div>
-                    </div>
-
-                    <h4 style="margin: 10px 0 6px 0;">Permanent Address</h4>
-
-                    <label style="display:block; margin-bottom:10px;">
-                        <input type="checkbox" id="sameAsPresent"> <span class="small-label" style="display:inline-block; margin-left:8px;">Same as Present Address</span>
-                    </label>
-
-                    <div class="grid-3">
-                        <div class="form-group">
-                            <label for="per_div">Division</label>
-                            <input id="per_div">
-                            <p class="error" id="err_per_div"></p>
-                        </div>
-                        <div class="form-group">
-                            <label for="per_dis">District</label>
-                            <input id="per_dis">
-                            <p class="error" id="err_per_dis"></p>
-                        </div>
-                        <div class="form-group">
-                            <label for="per_upa">Upazila</label>
-                            <input id="per_upa">
-                            <p class="error" id="err_per_upa"></p>
-                        </div>
-                    </div>
-
-                    <div style="margin-top:12px">
-                        <button class="btn-primary" type="submit" id="saveBtn">Save</button>
-                        <span id="msg" style="margin-left:12px;"></span>
-                    </div>
-                </form>
-            </section>
-
-            <!-- Borrower List -->
-            <section class="card">
-                <h3>Borrower List</h3>
-
-                <table>
-                    <thead>
-                    <tr>
-                        <th style="width:40px">#</th>
-                        <th>Name</th>
-                        <th>ID</th>
-                        <th style="width:130px">Mobile</th>
-                        <th style="width:110px">Gender</th>
-                        <th class="action">Action</th>
-                    </tr>
-                    </thead>
-
-                    <tbody id="borrowerTable"></tbody>
-                </table>
-                <div id="paginationBar"
-                     style="display:flex; align-items:center; justify-content:flex-end;
-            gap:16px; font-size:14px; margin-top:12px;">
-
-                    <div>
-                        Items per page:
-                        <select id="pageSizeSelect">
-                            <option value="8">8</option>
-                            <option value="10" selected>10</option>
-                            <option value="20">20</option>
-                        </select>
-                    </div>
-
-                    <div id="pageInfo">1–10 of 0</div>
-
-                    <div style="display:flex; gap:6px;">
-                        <button class="ghost" id="prevBtn">⟨</button>
-                        <button class="ghost" id="nextBtn">⟩</button>
-                    </div>
-                </div>
-            </section>
-
+                </section>
+            </div>
         </main>
-
     </div>
 </div>
 
 <script>
-    /* element refs */
-    const name = document.getElementById("name");
-    const idType = document.getElementById("idType");
-    const idNumber = document.getElementById("idNumber");
-    const dob = document.getElementById("dob");
-    const gender = document.getElementById("gender");
-    const mobile = document.getElementById("mobile");
-    const email = document.getElementById("email");
+    // --- SIDEBAR & AUTH (Same as Dashboard) ---
+    const userJson = localStorage.getItem('user');
+    if (userJson) {
+        const user = JSON.parse(userJson);
+        document.getElementById('userEmail').innerText = user.email || '';
+        document.getElementById('userRoleBadge').innerText = user.role || 'USER';
+        document.getElementById('userAvatar').innerText = user.name ? user.name[0].toUpperCase() : 'U';
+    }
+    function goDashboard() { window.location.href = 'dashboard.html'; }
+    function goToLoanProducts() { window.location.href = 'loan-products.html'; }
+    function goToUserRegistration() { window.location.href = 'user-registration.html'; }
+    function goToBorrowerReg() { window.location.href = "borrower.html"; }
+    function goToLoanAccount() { window.location.href = "loan-account.html"; }
+    function goToLoanDisbursement() { window.location.href = "loan-disbursement.html"; }
+    function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
 
-    const p_div = document.getElementById("p_div");
-    const p_dis = document.getElementById("p_dis");
-    const p_upa = document.getElementById("p_upa");
+    function toggleUserMenu() { toggleVis('userSubmenu'); }
+    function toggleLoanMenu() { toggleVis('loanSubmenu'); }
+    function toggleRepaymentMenu() { toggleVis('repaymentSubmenu'); }
+    function toggleVis(id) {
+        const m = document.getElementById(id);
+        m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'block' : 'none';
+    }
+    function logout() { localStorage.removeItem('user'); window.location.href = 'login.html'; }
 
-    const per_div = document.getElementById("per_div");
-    const per_dis = document.getElementById("per_dis");
-    const per_upa = document.getElementById("per_upa");
-
-    const err_name = document.getElementById("err_name");
-    const err_idType = document.getElementById("err_idType");
-    const err_idNumber = document.getElementById("err_idNumber");
-    const err_dob = document.getElementById("err_dob");
-    const err_gender = document.getElementById("err_gender");
-    const err_mobile = document.getElementById("err_mobile");
-    const err_email = document.getElementById("err_email");
-
-    const err_p_div = document.getElementById("err_p_div");
-    const err_p_dis = document.getElementById("err_p_dis");
-    const err_p_upa = document.getElementById("err_p_upa");
-    const err_per_div = document.getElementById("err_per_div");
-    const err_per_dis = document.getElementById("err_per_dis");
-    const err_per_upa = document.getElementById("err_per_upa");
-
-    const msg = document.getElementById("msg");
-    const borrowerTable = document.getElementById("borrowerTable");
-    const sameChk = document.getElementById("sameAsPresent");
-    const saveBtn = document.getElementById("saveBtn");
-
+    // --- LOGIC ---
     let editingId = null;
     let currentPage = 0;
-    let pageSize = 8;
+    let pageSize = 10;
     let totalElements = 0;
-    async function loadBorrowersPage() {
-        const res = await fetch(
-            `${API_BASE}/borrowers/page?page=${currentPage}&size=${pageSize}`
-        );
-        const data = await res.json();
 
-        totalElements = data.totalElements;
-        renderBorrowers(data.content);
-        updatePageInfo();
-    }
-    function renderBorrowers(list) {
-        borrowerTableBody.innerHTML = '';
+    const borrowerForm = document.getElementById("borrowerForm");
+    const borrowerTable = document.getElementById("borrowerTable");
+    const sameChk = document.getElementById("sameAsPresent");
 
-        list.forEach((b, i) => {
-            borrowerTableBody.innerHTML += `
-            <tr>
-                <td>${currentPage * pageSize + i + 1}</td>
-                <td>${b.name}</td>
-                <td>${b.idNumber}</td>
-                <td>${b.mobile}</td>
-            </tr>
-        `;
-        });
-    }
-    function updatePageInfo() {
-        const start = currentPage * pageSize + 1;
-        const end = Math.min(start + pageSize - 1, totalElements);
-        document.getElementById("pageInfo").innerText =
-            `${start}-${end} of ${totalElements}`;
-    }
-    document.getElementById("prevBtn").onclick = () => {
-        if (currentPage > 0) {
-            currentPage--;
-            loadBorrowersPage();
-        }
-    };
-
-    document.getElementById("nextBtn").onclick = () => {
-        if ((currentPage + 1) * pageSize < totalElements) {
-            currentPage++;
-            loadBorrowersPage();
-        }
-    };
-    document.getElementById("pageSizeSelect").onchange = (e) => {
-        pageSize = Number(e.target.value);
-        currentPage = 0;
-        loadBorrowersPage();
-    };
-
-    // limit DOB max to today
-    (function setDobMaxToday() {
-        const today = new Date().toISOString().split('T')[0];
-        dob.max = today;
-    })();
-
-    /* same as present */
-    sameChk.addEventListener("change", function () {
-        if (this.checked) {
-            syncPresentToPermanent();
-            p_div.addEventListener("input", syncPresentToPermanent);
-            p_dis.addEventListener("input", syncPresentToPermanent);
-            p_upa.addEventListener("input", syncPresentToPermanent);
-        } else {
-            p_div.removeEventListener("input", syncPresentToPermanent);
-            p_dis.removeEventListener("input", syncPresentToPermanent);
-            p_upa.removeEventListener("input", syncPresentToPermanent);
+    // Address Sync
+    sameChk.addEventListener("change", function() {
+        if(this.checked) {
+            document.getElementById("per_div").value = document.getElementById("p_div").value;
+            document.getElementById("per_dis").value = document.getElementById("p_dis").value;
+            document.getElementById("per_upa").value = document.getElementById("p_upa").value;
         }
     });
 
-    function syncPresentToPermanent() {
-        per_div.value = p_div.value;
-        per_dis.value = p_dis.value;
-        per_upa.value = p_upa.value;
-    }
-
-    /* helpers: convert formats */
-    // convert yyyy-mm-dd (input type=date) -> dd/mm/yyyy (backend format you requested)
-    function formatInputDateToDDMMYYYY(isoDate) {
-        if (!isoDate) return "";
-        const [y, m, d] = isoDate.split("-");
-        return `${d.padStart(2,'0')}/${m.padStart(2,'0')}/${y}`;
-    }
-    // parse dd/mm/yyyy or yyyy-mm-dd into Date object
-    function parseAnyDate(str) {
-        if (!str) return null;
-        if (str.includes('/')) {
-            // dd/mm/yyyy
-            const [d, m, y] = str.split('/');
-
-        }
-    }
-    /* validation */
-    function resetErrors() {
-        document.querySelectorAll('.error').forEach(e => e.innerText = "");
-        msg.innerText = "";
-        msg.className = "";
-    }
-
-    function validateForm() {
-        resetErrors();
-        let valid = true;
-
-        if (!name.value.trim()) { err_name.innerText = "Name required"; valid = false; }
-        if (!idType.value) { err_idType.innerText = "Select ID Type"; valid = false; }
-        if (!idNumber.value.trim()) { err_idNumber.innerText = "ID Number required"; valid = false; }
-
-        // date input: check presence
-        if (!dob.value) { err_dob.innerText = "Date of birth required"; valid = false; }
-
-        if (!gender.value) { err_gender.innerText = "Select gender"; valid = false; }
-        if (!mobile.value.match(/^[0-9]{11}$/)) { err_mobile.innerText = "Mobile must be 11 digits"; valid = false; }
-        if (!email.value.match(/^[^@]+@[^@]+\.[^@]+$/)) { err_email.innerText = "Invalid email"; valid = false; }
-
-        // present address minimal check
-        if (!p_div.value.trim()) { err_p_div.innerText = "Required"; valid = false; }
-        if (!p_dis.value.trim()) { err_p_dis.innerText = "Required"; valid = false; }
-        if (!p_upa.value.trim()) { err_p_upa.innerText = "Required"; valid = false; }
-
-        // permanent address minimal check
-        if (!per_div.value.trim()) { err_per_div.innerText = "Required"; valid = false; }
-        if (!per_dis.value.trim()) { err_per_dis.innerText = "Required"; valid = false; }
-        if (!per_upa.value.trim()) { err_per_upa.innerText = "Required"; valid = false; }
-
-        return valid;
-    }
-
-    /* submit */
-    document.getElementById("borrowerForm").addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        if (!validateForm()) return;
-
-        // convert date to dd/mm/yyyy string
-        const dobFormatted = formatInputDateToDDMMYYYY(dob.value);
-
-        const payload = {
-            name: name.value.trim(),
-            idType: idType.value,
-            idNumber: idNumber.value.trim(),
-            dateOfBirth: dobFormatted,     // <-- dd/mm/yyyy
-            gender: gender.value,
-            mobile: mobile.value.trim(),
-            email: email.value.trim(),
-
-            presentDivision: p_div.value.trim(),
-            presentDistrict: p_dis.value.trim(),
-            presentUpazila: p_upa.value.trim(),
-
-            permanentDivision: per_div.value.trim(),
-            permanentDistrict: per_dis.value.trim(),
-            permanentUpazila: per_upa.value.trim()
-        };
-
-        let url = "http://localhost:8080/api/borrowers";
-        let method = "POST";
-        if (editingId !== null) {
-            url = `http://localhost:8080/api/borrowers/${editingId}`;
-            method = "PUT";
-        }
-
-        try {
-            saveBtn.disabled = true;
-            const res = await fetch(url, {
-                method,
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            });
-
-            if (res.ok) {
-                msg.innerText = editingId ? "Updated successfully" : "Saved successfully";
-                msg.className = "success";
-                editingId = null;
-                this.reset();
-                // uncheck same-as-present and remove sync listeners
-                sameChk.checked = false;
-                p_div.removeEventListener("input", syncPresentToPermanent);
-                p_dis.removeEventListener("input", syncPresentToPermanent);
-                p_upa.removeEventListener("input", syncPresentToPermanent);
-                await loadBorrowers();
-            } else {
-                const text = await res.text();
-                msg.innerText = text || "Server validation failed";
-                msg.className = "error";
-            }
-        } catch (err) {
-            console.error(err);
-            msg.innerText = "Network/server error";
-            msg.className = "error";
-        } finally {
-            saveBtn.disabled = false;
-        }
-    });
-
-    /* load list */
     async function loadBorrowers() {
         try {
-            const res = await fetch("http://localhost:8080/api/borrowers");
-            if (!res.ok) return;
-            const list = await res.json();
-            borrowerTable.innerHTML = "";
+            const res = await fetch(`http://localhost:8080/api/borrowers/page?page=${currentPage}&size=${pageSize}`);
+            const data = await res.json();
+            totalElements = data.totalElements;
 
-            list.forEach((b, i) => {
-                borrowerTable.innerHTML += `
-                    <tr>
-                        <td>${i + 1}</td>
-                        <td>${escapeHtml(b.name || '')}</td>
-                        <td>${escapeHtml(b.idType || '')}${b.idNumber ? ' - ' + escapeHtml(b.idNumber) : ''}</td>
-                        <td>${escapeHtml(b.mobile || '')}</td>
-                        <td>${escapeHtml(b.gender || '')}</td>
-                        <td class="action">
-                            <span class="edit action-btn" onclick="editBorrower(${b.id})" title="Edit">✏️</span>
-                            <span class="delete action-btn" onclick="deleteBorrower(${b.id})" title="Delete">🗑️</span>
-                        </td>
-                    </tr>
-                `;
-            });
-        } catch (err) {
-            console.error('Failed loading borrowers', err);
-        }
+            borrowerTable.innerHTML = data.content.map((b, i) => `
+                <tr>
+                    <td>${(currentPage * pageSize) + i + 1}</td>
+                    <td>${b.name}</td>
+                    <td>${b.idNumber}</td>
+                    <td>${b.mobile}</td>
+                    <td>
+                        <span class="action-btn" onclick="editBorrower(${b.id})">✏️</span>
+                        <span class="action-btn" onclick="deleteBorrower(${b.id})">🗑️</span>
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById("pageInfo").innerText = `${(currentPage * pageSize) + 1}-${Math.min((currentPage + 1) * pageSize, totalElements)} of ${totalElements}`;
+        } catch (err) { console.error(err); }
     }
 
-    function escapeHtml(s) {
-        if (!s) return '';
-        return String(s).replace(/[&<>"']/g, function (m) {
-            return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]);
+    borrowerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const payload = {
+            name: document.getElementById("name").value,
+            idType: document.getElementById("idType").value,
+            idNumber: document.getElementById("idNumber").value,
+            dateOfBirth: document.getElementById("dob").value,
+            gender: document.getElementById("gender").value,
+            mobile: document.getElementById("mobile").value,
+            email: document.getElementById("email").value,
+            presentDivision: document.getElementById("p_div").value,
+            presentDistrict: document.getElementById("p_dis").value,
+            presentUpazila: document.getElementById("p_upa").value,
+            permanentDivision: document.getElementById("per_div").value,
+            permanentDistrict: document.getElementById("per_dis").value,
+            permanentUpazila: document.getElementById("per_upa").value
+        };
+
+        const url = editingId ? `http://localhost:8080/api/borrowers/${editingId}` : "http://localhost:8080/api/borrowers";
+        const method = editingId ? "PUT" : "POST";
+
+        const res = await fetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
         });
-    }
 
-    /* delete */
+        if(res.ok) {
+            editingId = null;
+            borrowerForm.reset();
+            loadBorrowers();
+            document.getElementById("msg").innerText = "Success!";
+        }
+    });
+
     async function deleteBorrower(id) {
-        if (!confirm("Delete borrower?")) return;
-        try {
-            const res = await fetch(`http://localhost:8080/api/borrowers/${id}`, { method: "DELETE" });
-            if (res.ok) loadBorrowers();
-            else alert("Delete failed");
-        } catch (err) {
-            console.error(err);
-            alert("Network error");
+        if(confirm("Delete?")) {
+            await fetch(`http://localhost:8080/api/borrowers/${id}`, { method: "DELETE" });
+            loadBorrowers();
         }
     }
 
-    /* edit */
     async function editBorrower(id) {
+        const res = await fetch(`http://localhost:8080/api/borrowers/${id}`);
+        const b = await res.json();
         editingId = id;
-
-        try {
-            const res = await fetch(`http://localhost:8080/api/borrowers/${id}`);
-            if (!res.ok) {
-                alert("Failed to fetch borrower");
-                return;
-            }
-            const b = await res.json();
-
-            name.value = b.name || "";
-            idType.value = b.idType || "";
-            idNumber.value = b.idNumber || "";
-
-            // backend returns dd/mm/yyyy -> convert to yyyy-mm-dd for date input
-            if (b.dateOfBirth) {
-                const iso = formatDDMMYYYYToISO(b.dateOfBirth);
-                dob.value = iso;
-            } else {
-                dob.value = "";
-            }
-
-            gender.value = b.gender || "";
-            mobile.value = b.mobile || "";
-            email.value = b.email || "";
-
-            p_div.value = b.presentDivision || "";
-            p_dis.value = b.presentDistrict || "";
-            p_upa.value = b.presentUpazila || "";
-
-            per_div.value = b.permanentDivision || "";
-            per_dis.value = b.permanentDistrict || "";
-            per_upa.value = b.permanentUpazila || "";
-
-            msg.innerText = "Edit Mode Enabled";
-            msg.className = "success";
-        } catch (err) {
-            console.error(err);
-            alert("Failed to load borrower for edit");
-        }
+        document.getElementById("name").value = b.name;
+        document.getElementById("idNumber").value = b.idNumber;
+        document.getElementById("mobile").value = b.mobile;
+        document.getElementById("email").value = b.email;
+        document.getElementById("saveBtn").innerText = "Update Borrower";
     }
 
-    /* init */
+    document.getElementById("prevBtn").onclick = () => { if(currentPage > 0) { currentPage--; loadBorrowers(); } };
+    document.getElementById("nextBtn").onclick = () => { if((currentPage + 1) * pageSize < totalElements) { currentPage++; loadBorrowers(); } };
+    document.getElementById("pageSizeSelect").onchange = (e) => { pageSize = e.target.value; currentPage = 0; loadBorrowers(); };
+
     loadBorrowers();
-
-    /* navigation helpers (stubs) */
-    function goToDashboard(){ window.location.href='dashboard.html'; }
-    function toggleUserMenu(){ const el = document.getElementById('userSubmenu'); el.style.display = el.style.display === 'block' ? 'none' : 'block'; }
-    function goToUserRegistration(){ window.location.href='user-registration.html'; }
-    function goToLoanProducts(){ window.location.href='loan-products.html'; }
-    function goToLoanAccount(){ window.location.href='loan-account.html'; }
-    function goToLoanDisbursement(){ window.location.href='loan-disbursement.html'; }
-
-    loadBorrowersPage();
-
 </script>
-
 </body>
 </html>

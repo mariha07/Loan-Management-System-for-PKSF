@@ -31,6 +31,7 @@ public class LoanAccount {
     @Column(name = "approved_amount", nullable = false)
     private BigDecimal approvedAmount;
 
+    // Acts as DISBURSEMENT DATE / START DATE for repayment
     @Column(name = "opening_date", nullable = false)
     private LocalDate openingDate;
 
@@ -42,6 +43,9 @@ public class LoanAccount {
 
     @Column(name = "updated_at")
     private Instant updatedAt;
+
+    @Column(name = "disbursement_date", nullable = false)
+    private LocalDate disbursementDate;
 
     @PrePersist
     public void prePersist() {

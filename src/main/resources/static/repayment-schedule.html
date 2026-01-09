@@ -27,7 +27,6 @@
             min-height:100vh;
         }
 
-        /* Sidebar */
         .sidebar {
             width:240px;
             background:var(--card);
@@ -68,7 +67,6 @@
             display:block;
         }
 
-        /* Main */
         .main {
             flex:1;
             padding:20px;
@@ -132,15 +130,8 @@
             background:#f8fafc;
         }
 
-        .error {
-            color:#dc2626;
-            margin-top:8px;
-        }
-
-        .success {
-            color:#16a34a;
-            margin-top:8px;
-        }
+        .error { color:#dc2626; margin-top:8px; }
+        .success { color:#16a34a; margin-top:8px; }
 
         @media (max-width:900px) {
             .sidebar { display:none; }
@@ -159,14 +150,14 @@
 
         <div class="nav-item" onclick="go('dashboard.html')">📊 Dashboard</div>
 
-        <div class="nav-item" onclick="toggle('userSubmenu')">👤 User Management</div>
+        <div class="nav-item" onclick="toggleMenu('userSubmenu')">👤 User Management</div>
         <div id="userSubmenu" class="submenu">
             <div class="nav-item" onclick="go('user-registration.html')">📝 User Registration</div>
         </div>
 
         <div class="nav-item" onclick="go('loan-products.html')">💰 Loan Products</div>
 
-        <div class="nav-item" onclick="toggle('loanSubmenu')">📄 Loan Applications</div>
+        <div class="nav-item" onclick="toggleMenu('loanSubmenu')">📄 Loan Applications</div>
         <div id="loanSubmenu" class="submenu">
             <div class="nav-item" onclick="go('borrower.html')">📝 Borrower Registration</div>
             <div class="nav-item" onclick="go('loan-account.html')">💼 Loan Account</div>
@@ -174,19 +165,17 @@
         </div>
 
         <div class="nav-item" onclick="toggleMenu('repaymentSubmenu')">
-            <span>📆</span><span>Repayments</span>
+            📆 Repayments
         </div>
 
-        <div id="repaymentSubmenu" class="submenu">
+        <div id="repaymentSubmenu" class="submenu open">
             <div class="nav-item active" onclick="go('repayment-schedule.html')">
                 📑 Repayment Schedule Generation
             </div>
         </div>
-
-
     </aside>
 
-    <!-- MAIN CONTENT -->
+    <!-- MAIN -->
     <main class="main">
 
         <div class="card">
@@ -199,7 +188,6 @@
                 </div>
 
                 <button id="generateBtn" onclick="generateSchedule()">Generate</button>
-
                 <button class="secondary" onclick="loadSchedule()">View</button>
             </div>
 
@@ -230,7 +218,7 @@
                 </tr>
                 </thead>
                 <tbody id="scheduleTable">
-                <tr><td colspan="7">No data</td></tr>
+                <tr><td colspan="6">No data</td></tr>
                 </tbody>
             </table>
         </div>
@@ -244,25 +232,26 @@
     const tableBody = document.getElementById("scheduleTable");
     const msg = document.getElementById("msg");
     const generateBtn = document.getElementById("generateBtn");
+    const loanNumberInput = document.getElementById("loanNumber");
 
-    // ===============================
-    // GENERATE SCHEDULE (ONLY ONCE)
-    // ===============================
+    loanNumberInput.addEventListener("input", () => {
+        generateBtn.style.display = "inline-block";
+        tableBody.innerHTML = `<tr><td colspan="6">No data</td></tr>`;
+        msg.innerText = "";
+    });
+
     async function generateSchedule() {
         msg.innerText = "";
         msg.className = "error";
 
-        const loanNo = document.getElementById("loanNumber").value.trim();
+        const loanNo = loanNumberInput.value.trim();
         if (!loanNo) {
             msg.innerText = "Loan number required";
             return;
         }
 
         try {
-            const res = await fetch(
-                `${API}/repayment-schedules/generate/${loanNo}`,
-                { method: "POST" }
-            );
+            const res = await fetch(`${API}/repayment-schedules/generate/${loanNo}`, { method: "POST" });
 
             if (!res.ok) {
                 msg.innerText = await res.text() || "Schedule already generated";
@@ -271,72 +260,49 @@
 
             msg.className = "success";
             msg.innerText = "Schedule generated successfully";
-
-            await loadSchedule(); // reload list
+            await loadSchedule();
 
         } catch {
             msg.innerText = "Server connection failed";
         }
     }
-    // ===============================
-    // LOAD EXISTING SCHEDULE
-    // ===============================
+
     async function loadSchedule() {
 
         msg.innerText = "";
         msg.className = "error";
         tableBody.innerHTML = "";
 
-        const loanNo = document.getElementById("loanNumber").value.trim();
+        const loanNo = loanNumberInput.value.trim();
         if (!loanNo) {
             msg.innerText = "Loan number required";
             return;
         }
 
         try {
-            // 🔹 1. Load loan info (auto fill)
-            const loanRes = await fetch(
-                `${API}/loan-accounts/by-loan-number/${loanNo}`
-            );
-
+            const loanRes = await fetch(`${API}/loan-accounts/by-loan-number/${loanNo}`);
             if (!loanRes.ok) {
                 msg.innerText = "Loan account not found";
                 return;
             }
 
             const loan = await loanRes.json();
+            loanAmount.value = loan.approvedAmount ?? "";
+            installments.value = loan.numberOfInstallments ?? "";
+            loanType.value = loan.loanType ?? "";
 
-            document.getElementById("loanAmount").value =
-                loan.approvedAmount ?? "";
-
-            document.getElementById("installments").value =
-                loan.numberOfInstallments ?? "";
-
-            document.getElementById("loanType").value =
-                loan.loanType ?? "";
-
-            // 🔹 2. Load repayment schedule list
-            const res = await fetch(
-                `${API}/repayment-schedules/by-loan/${loanNo}`
-            );
-
+            const res = await fetch(`${API}/repayment-schedules/by-loan/${loanNo}`);
             if (!res.ok) {
-                tableBody.innerHTML =
-                    `<tr><td colspan="6">No schedule available</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="6">No schedule available</td></tr>`;
                 return;
             }
 
             const list = await res.json();
 
-            // ✅ hide generate button if schedule exists
-            if (list.length > 0) {
-                hideGenerateButton();
-                showScheduleTable();
-            }
+            if (list.length > 0) generateBtn.style.display = "none";
 
             if (list.length === 0) {
-                tableBody.innerHTML =
-                    `<tr><td colspan="6">No schedule available</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="6">No schedule available</td></tr>`;
                 return;
             }
 
@@ -349,8 +315,7 @@
                     <td>${s.repaymentDate}</td>
                     <td>${s.principalOutstanding}</td>
                     <td>${s.interestOutstanding}</td>
-                </tr>
-            `;
+                </tr>`;
             });
 
         } catch {
@@ -358,27 +323,15 @@
         }
     }
 
-    // ===============================
-    // UI HELPERS
-    // ===============================
-    function hideGenerateButton() {
-        if (generateBtn) {
-            generateBtn.style.display = "none";
-        }
+    function toggleMenu(id){
+        const el = document.getElementById(id);
+        if(el) el.classList.toggle("open");
     }
 
     function go(url){
         window.location.href = url;
     }
-
-    function toggleMenu(id){
-        const el = document.getElementById(id);
-        if(!el) return;
-        el.classList.toggle("open");
-    }
 </script>
-
-
 
 </body>
 </html>

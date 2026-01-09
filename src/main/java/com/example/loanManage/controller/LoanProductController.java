@@ -7,59 +7,56 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/loan-products")
-@CrossOrigin(origins = "*")
+@RestController // Tells Spring that this class is a REST API that handles data in JSON format.
+@RequestMapping("/api/loan-products") // Sets the base web address for all loan product operations.
+@CrossOrigin(origins = "*") // Allows any frontend (like React) to connect to these endpoints.
 public class LoanProductController {
 
-    private final LoanProductService loanProductService;
+    private final LoanProductService loanProductService; // Variable to hold the business logic for loan products.
 
-    public LoanProductController(LoanProductService loanProductService) {
+    public LoanProductController(LoanProductService loanProductService) { // Connects the service to the controller.
         this.loanProductService = loanProductService;
     }
 
     // POST /api/loan-products
-    @PostMapping
+    @PostMapping // Handles POST requests to save a new loan product (e.g., "Gold Loan").
     public ResponseEntity<LoanProductDto> create(@RequestBody LoanProductDto request) {
-        LoanProductDto created = loanProductService.create(request);
-        return ResponseEntity.ok(created);
+        LoanProductDto created = loanProductService.create(request); // Asks the service to save the product.
+        return ResponseEntity.ok(created); // Returns the saved product with a 200 OK status.
     }
 
     // GET /api/loan-products
-    @GetMapping
+    @GetMapping // Handles GET requests to retrieve every loan product in the database.
     public ResponseEntity<List<LoanProductDto>> getAll() {
         List<LoanProductDto> products = loanProductService.getAll();
         return ResponseEntity.ok(products);
     }
 
     // GET /api/loan-products/active
-    @GetMapping("/active")
+    @GetMapping("/active") // Fetches only the products that are currently "Live" or available for customers.
     public ResponseEntity<List<LoanProductDto>> getActive() {
         List<LoanProductDto> products = loanProductService.getActive();
         return ResponseEntity.ok(products);
     }
 
     // GET /api/loan-products/{id}
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // Fetches details for one specific product using its ID (e.g., /api/loan-products/1).
     public ResponseEntity<LoanProductDto> getById(@PathVariable Long id) {
         LoanProductDto product = loanProductService.getById(id);
         return ResponseEntity.ok(product);
     }
 
     // PUT /api/loan-products/{id}
-    @PutMapping("/{id}")
-    public ResponseEntity<LoanProductDto> update(
-            @PathVariable Long id,
-            @RequestBody LoanProductDto request) {
-
+    @PutMapping("/{id}") // Handles UPDATE requests to change product details (like changing the interest rate).
+    public ResponseEntity<LoanProductDto> update(@PathVariable Long id, @RequestBody LoanProductDto request) {
         LoanProductDto updated = loanProductService.update(id, request);
         return ResponseEntity.ok(updated);
     }
 
-    // DELETE /api/loan-products/{id}  -> mark inactive
-    @DeleteMapping("/{id}")
+    // DELETE /api/loan-products/{id}
+    @DeleteMapping("/{id}") // Soft-deletes a product by marking it as "inactive" instead of removing it from the DB.
     public ResponseEntity<Void> deactivate(@PathVariable Long id) {
-        loanProductService.deactivate(id);
-        return ResponseEntity.noContent().build();
+        loanProductService.deactivate(id); // Calls the service to flip the active status to false.
+        return ResponseEntity.noContent().build(); // Returns a 204 "No Content" status (successful deletion).
     }
 }

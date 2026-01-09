@@ -27,7 +27,7 @@ public class RepaymentSchedule {
     private BigDecimal principalOutstanding;
 
     private BigDecimal interestOutstanding;
-
+    private BigDecimal installmentAmount;;
 
 
 

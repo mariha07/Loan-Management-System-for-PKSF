@@ -14,6 +14,7 @@ public class RepaymentScheduleDto {
 
     private BigDecimal principalOutstanding;
     private BigDecimal interestOutstanding;
+    private BigDecimal installmentAmount;;
 
 
 }
