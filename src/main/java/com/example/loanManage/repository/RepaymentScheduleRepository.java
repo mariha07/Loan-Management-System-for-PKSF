@@ -21,5 +21,11 @@ public interface RepaymentScheduleRepository
     findByLoanAccount_LoanNumberOrderByInstallmentNoAsc(String loanNumber);
     Optional<RepaymentSchedule>
     findTopByLoanAccountOrderByInstallmentNoDesc(LoanAccount loanAccount);
+    Optional<RepaymentSchedule>
+    findByLoanAccount_LoanNumberAndInstallmentNo(
+            String loanNumber,
+            Integer installmentNo
+    );
+
 
 }

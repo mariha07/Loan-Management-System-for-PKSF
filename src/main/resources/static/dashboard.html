@@ -75,6 +75,11 @@
             margin-top: 2px;
             display: none;
         }
+
+        .submenu.open {
+            display: block;
+        }
+
         .submenu .nav-item {
             padding: 8px 10px;
             font-size: 13px;
@@ -263,7 +268,7 @@
             <span class="icon">📊</span>
             <span>Dashboard</span>
         </div>
-        <div class="nav-item" onclick="toggleUserMenu()">
+        <div class="nav-item" onclick="toggleMenu('userSubmenu')">
             <span class="icon">👤</span>
             <span>User Management</span>
         </div>
@@ -277,11 +282,11 @@
             <span class="icon">💰</span>
             <span>Loan Products</span>
         </div>
-        <div class="nav-item" onclick="toggleLoanMenu()">
+        <div class="nav-item" onclick="toggleMenu('loanSubmenu')">
             <span class="icon">📄</span>
             <span>Loan Applications</span>
         </div>
-        <div id="loanSubmenu" class="submenu" style="margin-left: 20px;">
+        <div id="loanSubmenu" class="submenu">
             <div class="nav-item" onclick="goToBorrowerReg()">
                 <span class="icon">📝</span>
                 <span>Borrower Registration</span>
@@ -295,12 +300,18 @@
                 <span>Loan Disbursement</span>
             </div>
         </div>
-        <div class="nav-item" onclick="toggleRepaymentMenu()">
-            <span class="icon">📆</span><span>Repayments</span>
+        <div class="nav-item" onclick="toggleMenu('repaymentSubmenu')">
+            <span class="icon">📆</span>
+            <span>Repayments</span>
         </div>
         <div id="repaymentSubmenu" class="submenu">
             <div class="nav-item" onclick="goToRepaymentSchedule()">
-                📑 Repayment Schedule
+                <span class="icon">📑</span>
+                <span>Repayment Schedule</span>
+            </div>
+            <div class="nav-item" onclick="goToRepaymentCollection()">
+                <span class="icon">📥</span>
+                <span>Repayment Collection</span>
             </div>
         </div>
     </aside>
@@ -384,20 +395,29 @@
     }
 
     // Navigation functions
+    function toggleMenu(id) {
+        const menu = document.getElementById(id);
+        if (menu) menu.classList.toggle("open");
+    }
+
     function goToLoanProducts() { window.location.href = "loan-products.html"; }
     function goToBorrowerReg() { window.location.href = "borrower.html"; }
     function goToLoanAccount() { window.location.href = "loan-account.html"; }
     function goToLoanDisbursement() { window.location.href = "loan-disbursement.html"; }
     function goToUserRegistration() { window.location.href = 'user-registration.html'; }
     function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
+    function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
 
-    function toggleUserMenu() { toggleVisibility('userSubmenu'); }
-    function toggleLoanMenu() { toggleVisibility('loanSubmenu'); }
-    function toggleRepaymentMenu() { toggleVisibility('repaymentSubmenu'); }
-
-    function toggleVisibility(id) {
-        const m = document.getElementById(id);
-        m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'block' : 'none';
+    // AUTO OPEN RELEVANT SUBMENU
+    const page = window.location.pathname;
+    if (page.includes("repayment")) {
+        document.getElementById("repaymentSubmenu")?.classList.add("open");
+    }
+    if (page.includes("loan")) {
+        document.getElementById("loanSubmenu")?.classList.add("open");
+    }
+    if (page.includes("user")) {
+        document.getElementById("userSubmenu")?.classList.add("open");
     }
 
     function logout() {

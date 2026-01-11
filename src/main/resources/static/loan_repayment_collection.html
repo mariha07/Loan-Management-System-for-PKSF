@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repayment Collection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; padding-top: 50px; }
+        .card { box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Loan Repayment Collection</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Search Section -->
+                    <div class="mb-4">
+                        <label for="loanNumberSearch" class="form-label">Search Loan Number</label>
+                        <div class="input-group">
+                            <input type="text" id="loanNumberSearch" class="form-control" placeholder="Enter Loan No (e.g. LOAN-101)" autocomplete="off">
+                            <button class="btn btn-outline-primary" type="button" onclick="searchLoan()">Search</button>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Collection Form -->
+                    <form id="collectionForm">
+                        <div class="mb-3">
+                            <label for="installmentNo" class="form-label">Installment No</label>
+                            <select id="installmentNo" class="form-select" onchange="updateInstallmentAmount()" disabled>
+                                <option value="">-- Select Installment --</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="installmentAmountDisplay" class="form-label">Total Installment Amount</label>
+                            <input type="number" id="installmentAmountDisplay" class="form-control" readonly>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="principalOutstanding" class="form-label">Principal Outstanding</label>
+                                <input type="number" id="principalOutstanding" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="interestOutstanding" class="form-label">Interest Outstanding</label>
+                                <input type="number" id="interestOutstanding" class="form-control" readonly>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="paymentAmount" class="form-label">Payment Amount</label>
+                            <input type="number" id="paymentAmount" class="form-control" placeholder="Enter amount to pay" required>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="button" id="saveBtn" class="btn btn-success" onclick="saveCollection()" disabled>Save Payment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let schedulesData = [];
+    const API_BASE = "http://localhost:8080/api";
+
+    async function searchLoan() {
+        const loanNo = document.getElementById('loanNumberSearch').value.trim();
+        if (!loanNo) {
+            alert("Please enter loan number");
+            return;
+        }
+
+        try {
+            const res = await fetch(`${API_BASE}/repayment-schedules/by-loan/${loanNo}`);
+            if (!res.ok) throw new Error("Loan not found or schedule missing");
+
+            schedulesData = await res.json();
+
+            const select = document.getElementById('installmentNo');
+            select.innerHTML = '<option value="">-- Select Installment --</option>';
+
+            // Get NEXT unpaid installment only
+            const next = schedulesData
+                .filter(s => s.status !== "PAID")
+                .sort((a, b) => a.installmentNo - b.installmentNo)[0];
+
+            if (!next) {
+                alert("All installments already PAID");
+                return;
+            }
+
+            const option = document.createElement("option");
+            option.value = next.installmentNo;
+            option.textContent = `Installment ${next.installmentNo} (${next.status})`;
+            select.appendChild(option);
+
+            // ✅ AUTO SELECT
+            select.value = next.installmentNo;
+            select.disabled = false;
+
+            // ✅ AUTO FILL DETAILS
+            updateInstallmentAmount();
+
+            document.getElementById("saveBtn").disabled = false;
+
+        } catch (e) {
+            alert(e.message);
+            console.error(e);
+        }
+    }
+
+    function updateInstallmentAmount() {
+        const instNo = document.getElementById('installmentNo').value;
+        const s = schedulesData.find(x => x.installmentNo == instNo);
+
+        if (!s) return;
+
+        document.getElementById('principalOutstanding').value = s.principalOutstanding;
+        document.getElementById('interestOutstanding').value = s.interestOutstanding;
+        document.getElementById('installmentAmountDisplay').value = s.installmentAmount;
+    }
+
+    async function saveCollection() {
+        const loanNo = document.getElementById('loanNumberSearch').value.trim();
+        const instNo = document.getElementById('installmentNo').value;
+        const amount = document.getElementById('paymentAmount').value;
+
+        if (!loanNo || !instNo || !amount) {
+            alert("Missing required fields");
+            return;
+        }
+
+        const payload = {
+            loanNumber: loanNo,
+            installmentNo: Number(instNo),
+            paymentAmount: Number(amount)
+        };
+
+        try {
+            const res = await fetch(`${API_BASE}/repayment-schedules/collect`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) {
+                const t = await res.text();
+                throw new Error(t);
+            }
+
+            alert("Payment successful");
+
+            document.getElementById("paymentAmount").value = "";
+            searchLoan(); // reload next installment
+
+        } catch (e) {
+            alert("Payment failed: " + e.message);
+            console.error(e);
+        }
+    }
+</script>
+
+
+</body>
+</html>

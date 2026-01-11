@@ -25,9 +25,10 @@ public class RepaymentSchedule {
     private BigDecimal principalPaid;
     private BigDecimal interestPaid;
     private BigDecimal installmentAmount;
+
     private BigDecimal principalOutstanding;
     private BigDecimal interestOutstanding;
-    private String status;
+    private BigDecimal paidAmount = BigDecimal.ZERO;
 
-
+    private String status; // PENDING, PAID, PARTIAL
 }
