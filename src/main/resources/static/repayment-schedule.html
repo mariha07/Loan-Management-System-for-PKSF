@@ -197,8 +197,8 @@
             <label>No of Installments</label>
             <input id="installments" readonly>
 
-            <label>Loan Type</label>
-            <input id="loanType" readonly>
+            <label>Installment Type</label>
+            <input id="installmentType" readonly>
 
             <div id="msg" class="error"></div>
         </div>
@@ -211,14 +211,17 @@
                 <tr>
                     <th>#</th>
                     <th>Loan No</th>
-                    <th>Installment</th>
+                    <th>Inst</th>
                     <th>Date</th>
-                    <th>Principal</th>
-                    <th>Interest</th>
+                    <th>Principal Paid</th>
+                    <th>Interest Paid</th>
+                    <th>Installment</th>
+                    <th>Principal OS</th>
+                    <th>Interest OS</th>
                 </tr>
                 </thead>
                 <tbody id="scheduleTable">
-                <tr><td colspan="6">No data</td></tr>
+                <tr><td colspan="9">No data</td></tr>
                 </tbody>
             </table>
         </div>
@@ -227,109 +230,179 @@
 </div>
 
 <script>
-    const API = "http://localhost:8080/api";
+    const API_BASE = "http://localhost:8080/api";
 
-    const tableBody = document.getElementById("scheduleTable");
-    const msg = document.getElementById("msg");
+    const tblBody = document.getElementById("scheduleTable");
+    const statusMsg = document.getElementById("msg");
+    const loanNoField = document.getElementById("loanNumber");
+    const amountField = document.getElementById("loanAmount");
+    const instField = document.getElementById("installments");
+    const typeField = document.getElementById("installmentType");
     const generateBtn = document.getElementById("generateBtn");
-    const loanNumberInput = document.getElementById("loanNumber");
 
-    loanNumberInput.addEventListener("input", () => {
-        generateBtn.style.display = "inline-block";
-        tableBody.innerHTML = `<tr><td colspan="6">No data</td></tr>`;
-        msg.innerText = "";
-    });
-
-    async function generateSchedule() {
-        msg.innerText = "";
-        msg.className = "error";
-
-        const loanNo = loanNumberInput.value.trim();
-        if (!loanNo) {
-            msg.innerText = "Loan number required";
-            return;
-        }
+    // ===============================
+    // AUTO FILL LOAN INFO
+    // ===============================
+    loanNoField.addEventListener("input", async () => {
+        const loanNo = loanNoField.value.trim();
+        if (loanNo.length < 6) return;
 
         try {
-            const res = await fetch(`${API}/repayment-schedules/generate/${loanNo}`, { method: "POST" });
-
+            const res = await fetch(`${API_BASE}/loan-accounts/by-loan-number/${loanNo}`);
             if (!res.ok) {
-                msg.innerText = await res.text() || "Schedule already generated";
+                clearLoanInfo();
                 return;
             }
 
-            msg.className = "success";
-            msg.innerText = "Schedule generated successfully";
-            await loadSchedule();
+            const data = await res.json();
+
+            amountField.value = data.approvedAmount ?? "";
+            instField.value = data.numberOfInstallments ?? "";
+            typeField.value = data.installmentType ?? "";
+
+            statusMsg.innerText = "";
+        } catch {
+            clearLoanInfo();
+        }
+    });
+
+    function clearLoanInfo() {
+        amountField.value = "";
+        instField.value = "";
+        typeField.value = "";
+    }
+
+    // ===============================
+    // GENERATE SCHEDULE (ONCE)
+    // ===============================
+    async function generateSchedule() {
+        const loanNo = loanNoField.value.trim();
+        if (!loanNo) {
+            statusMsg.innerText = "Loan number required";
+            return;
+        }
+
+        statusMsg.innerText = "Generating schedule...";
+        statusMsg.className = "error";
+        tblBody.innerHTML = "";
+
+        try {
+            const res = await fetch(
+                `${API_BASE}/repayment-schedules/generate/${loanNo}`,
+                { method: "POST" }
+            );
+
+            if (!res.ok) {
+                statusMsg.innerText = await res.text() || "Schedule already generated";
+                return;
+            }
+
+            const list = await res.json();
+            renderTable(list);
+
+            statusMsg.className = "success";
+            statusMsg.innerText = "Repayment schedule generated";
+
+            generateBtn.style.display = "none"; // hide after generate
 
         } catch {
-            msg.innerText = "Server connection failed";
+            statusMsg.innerText = "Server error";
         }
     }
 
-    async function loadSchedule() {
-
-        msg.innerText = "";
-        msg.className = "error";
-        tableBody.innerHTML = "";
-
-        const loanNo = loanNumberInput.value.trim();
+    async function generateSchedule() {
+        const loanNo = loanNoField.value.trim();
         if (!loanNo) {
-            msg.innerText = "Loan number required";
+            statusMsg.innerText = "Please enter a Loan Number";
             return;
         }
 
+        statusMsg.innerText = "Calculating...";
+        statusMsg.className = "error";
+        tblBody.innerHTML = "";
+
         try {
-            const loanRes = await fetch(`${API}/loan-accounts/by-loan-number/${loanNo}`);
-            if (!loanRes.ok) {
-                msg.innerText = "Loan account not found";
+            // Changed endpoint to /generate-all/ to match the backend controller
+            const res = await fetch(`${API_BASE}/repayment-schedules/generate-all/${loanNo}`, { method: "POST" });
+
+            if (!res.ok) {
+                statusMsg.innerText = await res.text() || "Failed to generate";
                 return;
             }
 
-            const loan = await loanRes.json();
-            loanAmount.value = loan.approvedAmount ?? "";
-            installments.value = loan.numberOfInstallments ?? "";
-            loanType.value = loan.loanType ?? "";
+            const data = await res.json();
+            statusMsg.className = "success";
+            statusMsg.innerText = "Repayment schedule generated successfully";
 
-            const res = await fetch(`${API}/repayment-schedules/by-loan/${loanNo}`);
+            renderTable(data);
+            generateBtn.style.display = "none";
+        } catch (err) {
+            statusMsg.innerText = "Server error";
+        }
+    }
+
+    // ===============================
+    // VIEW EXISTING SCHEDULE
+    // ===============================
+    async function loadSchedule() {
+        const loanNo = loanNoField.value.trim();
+        if (!loanNo) {
+            statusMsg.innerText = "Loan number required";
+            return;
+        }
+
+        tblBody.innerHTML = "";
+
+        try {
+            const res = await fetch(
+                `${API_BASE}/repayment-schedules/by-loan/${loanNo}`
+            );
+
             if (!res.ok) {
-                tableBody.innerHTML = `<tr><td colspan="6">No schedule available</td></tr>`;
+                statusMsg.innerText = "No schedule found";
                 return;
             }
 
             const list = await res.json();
 
-            if (list.length > 0) generateBtn.style.display = "none";
-
             if (list.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="6">No schedule available</td></tr>`;
+                tblBody.innerHTML =
+                    `<tr><td colspan="7">No schedule available</td></tr>`;
                 return;
             }
 
-            list.forEach((s, i) => {
-                tableBody.innerHTML += `
+            renderTable(list);
+            generateBtn.style.display = "none";
+
+        } catch {
+            statusMsg.innerText = "Server error";
+        }
+    }
+
+    // ===============================
+    // RENDER TABLE
+    // ===============================
+    function renderTable(list) {
+        tblBody.innerHTML = "";
+        list.forEach((s, i) => {
+            tblBody.innerHTML += `
                 <tr>
                     <td>${i + 1}</td>
                     <td>${s.loanNumber}</td>
                     <td>${s.installmentNo}</td>
                     <td>${s.repaymentDate}</td>
+                    <td>${s.principalPaid}</td>
+                    <td>${s.interestPaid}</td>
+                    <td><strong>${s.installmentAmount}</strong></td>
                     <td>${s.principalOutstanding}</td>
                     <td>${s.interestOutstanding}</td>
                 </tr>`;
             });
-
-        } catch {
-            msg.innerText = "Server connection failed";
         }
-    }
 
-    function toggleMenu(id){
-        const el = document.getElementById(id);
-        if(el) el.classList.toggle("open");
-    }
-
-    function go(url){
-        window.location.href = url;
+    function go(url) { window.location.href = url; }
+    function toggleMenu(id) {
+        document.getElementById(id).classList.toggle("open");
     }
 </script>
 

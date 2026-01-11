@@ -1,5 +1,6 @@
 package com.example.loanManage.dto;
 
+import com.example.loanManage.entity.LoanType;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -16,5 +17,8 @@ public class RepaymentScheduleDto {
     private BigDecimal interestOutstanding;
     private BigDecimal installmentAmount;;
 
+    private BigDecimal principalPaid;
+    private BigDecimal interestPaid;
+    private String status;
 
 }

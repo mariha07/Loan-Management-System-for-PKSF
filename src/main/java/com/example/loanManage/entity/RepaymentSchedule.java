@@ -21,14 +21,13 @@ public class RepaymentSchedule {
     private LoanAccount loanAccount;
 
     private Integer installmentNo;
-
     private LocalDate repaymentDate;
-
+    private BigDecimal principalPaid;
+    private BigDecimal interestPaid;
+    private BigDecimal installmentAmount;
     private BigDecimal principalOutstanding;
-
     private BigDecimal interestOutstanding;
-    private BigDecimal installmentAmount;;
-
+    private String status;
 
 
 }

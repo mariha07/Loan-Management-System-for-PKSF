@@ -201,23 +201,40 @@
     const API = "http://localhost:8080/api";
     let currentLoan = null;
 
+    // Cache elements
+    const errorBox = document.getElementById("errorBox");
+    const borrowerName = document.getElementById("borrowerName");
+    const loanProduct = document.getElementById("loanProduct");
+    const interestRate = document.getElementById("interestRate");
+    const installmentType = document.getElementById("installmentType");
+    const approvedAmount = document.getElementById("approvedAmount");
+    const disbursementAmount = document.getElementById("disbursementAmount");
+
     async function searchLoan() {
         const loanNo = document.getElementById("loanNumber").value.trim();
         if (!loanNo) return;
+        
+        errorBox.innerText = "";
 
-        const res = await fetch(`${API}/loan-accounts/by-loan-number/${loanNo}`);
-        if (!res.ok) {
-            errorBox.innerText = "Loan not found";
-            return;
+        try {
+            const res = await fetch(`${API}/loan-accounts/by-loan-number/${loanNo}`);
+            if (!res.ok) {
+                errorBox.innerText = "Loan not found";
+                clearForm();
+                return;
+            }
+
+            currentLoan = await res.json();
+
+            borrowerName.value = currentLoan.borrowerName || "";
+            loanProduct.value = currentLoan.loanProductName || "";
+            interestRate.value = currentLoan.interestRate || "";
+            installmentType.value = currentLoan.installmentType || "";
+            approvedAmount.value = currentLoan.approvedAmount || "";
+            disbursementAmount.value = currentLoan.approvedAmount || ""; // Default to full amount
+        } catch (err) {
+            errorBox.innerText = "Error connecting to server";
         }
-
-        currentLoan = await res.json();
-
-        borrowerName.value = currentLoan.borrowerName;
-        loanProduct.value = currentLoan.loanProductName;
-        interestRate.value = currentLoan.interestRate;
-        installmentType.value = currentLoan.installmentType;
-        approvedAmount.value = currentLoan.approvedAmount;
     }
 
     async function disburse() {
@@ -313,8 +330,7 @@
     function goToBorrowerReg(){ location.href="borrower.html"; }
     function goToLoanAccount(){ location.href="loan-account.html"; }
     function goToLoanProducts(){ location.href="loan-products.html"; }
-    function goToRepayments(){ location.href="repayments.html"; }
-//function goToSettings(){ location.href="settings.html"; }
+    function goToRepayments(){ location.href="repayment-schedule.html"; }
 </script>
 
 </body>

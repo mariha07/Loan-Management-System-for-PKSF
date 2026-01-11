@@ -24,7 +24,7 @@ public class LoanAccountDto {
     private BigDecimal interestRate;    // response
     private String installmentType;     // response
     private Integer numberOfInstallments;
-
+    private String loanType;
     // Account info
     private BigDecimal approvedAmount;
     private String openingDate;         // yyyy-MM-dd

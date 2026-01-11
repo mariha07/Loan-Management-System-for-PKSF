@@ -30,6 +30,9 @@ public class LoanAccount {
 
     @Column(name = "approved_amount", nullable = false)
     private BigDecimal approvedAmount;
+    private String loanType; // Added to match LoanProduct
+    private Integer numberOfInstallments; // Added to match LoanProduct
+    private String installmentType;
 
     // Acts as DISBURSEMENT DATE / START DATE for repayment
     @Column(name = "opening_date", nullable = false)

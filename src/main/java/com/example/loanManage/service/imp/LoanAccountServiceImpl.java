@@ -202,7 +202,7 @@ public class LoanAccountServiceImpl implements LoanAccountService {
                 acc.getOpeningDate() != null ? acc.getOpeningDate().toString() : null
         );
         dto.setStatus(acc.getStatus());
-
+        dto.setLoanType(acc.getLoanProduct().getLoanType().name());
         return dto;
     }
 
