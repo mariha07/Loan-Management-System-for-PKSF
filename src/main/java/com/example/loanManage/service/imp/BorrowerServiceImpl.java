@@ -80,7 +80,11 @@ public class BorrowerServiceImpl implements BorrowerService {
     private void copyDtoToEntity(BorrowerDto dto, Borrower b) { // Manually maps DTO fields to the Entity.
         b.setName(dto.getName());
         b.setIdType(dto.getIdType());
-        // ... (sets simple fields) ...
+        b.setIdNumber(dto.getIdNumber());
+        b.setDateOfBirth(convertToYYYYMMDD(dto.getDateOfBirth()));
+        b.setGender(dto.getGender());
+        b.setMobile(dto.getMobile());
+        b.setEmail(dto.getEmail());
 
         Address present = new Address(); // Creates the 'Embedded' address object.
         present.setDivision(dto.getPresentDivision());
@@ -88,18 +92,45 @@ public class BorrowerServiceImpl implements BorrowerService {
         present.setUpazila(dto.getPresentUpazila());
         b.setPresentAddress(present); // Attaches the address to the borrower.
 
-        // ... (repeats for permanent address) ...
+        Address permanent = new Address();
+        if (Boolean.TRUE.equals(dto.getSameAsPresentAddress())) {
+            permanent.setDivision(dto.getPresentDivision());
+            permanent.setDistrict(dto.getPresentDistrict());
+            permanent.setUpazila(dto.getPresentUpazila());
+        } else {
+            permanent.setDivision(dto.getPermanentDivision());
+            permanent.setDistrict(dto.getPermanentDistrict());
+            permanent.setUpazila(dto.getPermanentUpazila());
+        }
+        b.setPermanentAddress(permanent);
     }
 
     private BorrowerDto toDto(Borrower b) { // Manually maps Entity data back to the DTO for the frontend.
         BorrowerDto dto = new BorrowerDto();
         dto.setId(b.getId());
         dto.setName(b.getName());
-        // ... (extracts address fields back into the flat DTO structure) ...
+        dto.setIdType(b.getIdType());
+        dto.setIdNumber(b.getIdNumber());
+        dto.setDateOfBirth(b.getDateOfBirth());
+        dto.setGender(b.getGender());
+        dto.setMobile(b.getMobile());
+        dto.setEmail(b.getEmail());
+
+        if (b.getPresentAddress() != null) {
+            dto.setPresentDivision(b.getPresentAddress().getDivision());
+            dto.setPresentDistrict(b.getPresentAddress().getDistrict());
+            dto.setPresentUpazila(b.getPresentAddress().getUpazila());
+        }
+
+        if (b.getPermanentAddress() != null) {
+            dto.setPermanentDivision(b.getPermanentAddress().getDivision());
+            dto.setPermanentDistrict(b.getPermanentAddress().getDistrict());
+            dto.setPermanentUpazila(b.getPermanentAddress().getUpazila());
+        }
         return dto;
     }
 
-    private String convertToYYYYMMDD(String ddmmyyyy) { // Formats date strings so the DB can understand them.
+    private String convertToYYYYMMDD(String ddmmyyyy) {
         try {
             if (ddmmyyyy.contains("/")) {
                 String[] p = ddmmyyyy.split("/");
@@ -111,4 +142,3 @@ public class BorrowerServiceImpl implements BorrowerService {
         }
     }
 }
-

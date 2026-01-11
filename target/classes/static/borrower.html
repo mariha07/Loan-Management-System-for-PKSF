@@ -181,9 +181,9 @@
 
                         <h4 style="margin: 15px 0 10px 0; font-size: 14px; color: #4f46e5;">Address Information</h4>
                         <div class="grid-3">
-                            <div class="form-group"><label>Present Division</label><input id="p_div"></div>
-                            <div class="form-group"><label>Present District</label><input id="p_dis"></div>
-                            <div class="form-group"><label>Present Upazila</label><input id="p_upa"></div>
+                            <div class="form-group"><label>Division</label><input id="p_div"></div>
+                            <div class="form-group"><label>District</label><input id="p_dis"></div>
+                            <div class="form-group"><label>Upazila</label><input id="p_upa"></div>
                         </div>
 
                         <label style="display:flex; align-items:center; gap:8px; margin: 10px 0; font-size: 13px;">
@@ -191,9 +191,9 @@
                         </label>
 
                         <div class="grid-3">
-                            <div class="form-group"><label>Permanent Division</label><input id="per_div"></div>
-                            <div class="form-group"><label>Permanent District</label><input id="per_dis"></div>
-                            <div class="form-group"><label>Permanent Upazila</label><input id="per_upa"></div>
+                            <div class="form-group"><label>Perm. Division</label><input id="per_div"></div>
+                            <div class="form-group"><label>Perm. District</label><input id="per_dis"></div>
+                            <div class="form-group"><label>Perm. Upazila</label><input id="per_upa"></div>
                         </div>
 
                         <div style="margin-top:20px">
@@ -292,9 +292,9 @@
             borrowerTable.innerHTML = data.content.map((b, i) => `
                 <tr>
                     <td>${(currentPage * pageSize) + i + 1}</td>
-                    <td>${b.name}</td>
-                    <td>${b.idNumber}</td>
-                    <td>${b.mobile}</td>
+                    <td>${b.name || ''}</td>
+                    <td>${b.idNumber || ''}</td>
+                    <td>${b.mobile || ''}</td>
                     <td>
                         <span class="action-btn" onclick="editBorrower(${b.id})">✏️</span>
                         <span class="action-btn" onclick="deleteBorrower(${b.id})">🗑️</span>
@@ -321,7 +321,8 @@
             presentUpazila: document.getElementById("p_upa").value,
             permanentDivision: document.getElementById("per_div").value,
             permanentDistrict: document.getElementById("per_dis").value,
-            permanentUpazila: document.getElementById("per_upa").value
+            permanentUpazila: document.getElementById("per_upa").value,
+            sameAsPresentAddress: sameChk.checked
         };
 
         const url = editingId ? `http://localhost:8080/api/borrowers/${editingId}` : "http://localhost:8080/api/borrowers";
@@ -352,10 +353,22 @@
         const res = await fetch(`http://localhost:8080/api/borrowers/${id}`);
         const b = await res.json();
         editingId = id;
-        document.getElementById("name").value = b.name;
-        document.getElementById("idNumber").value = b.idNumber;
-        document.getElementById("mobile").value = b.mobile;
-        document.getElementById("email").value = b.email;
+        document.getElementById("name").value = b.name || '';
+        document.getElementById("idType").value = b.idType || '';
+        document.getElementById("idNumber").value = b.idNumber || '';
+        document.getElementById("dob").value = b.dateOfBirth || '';
+        document.getElementById("gender").value = b.gender || '';
+        document.getElementById("mobile").value = b.mobile || '';
+        document.getElementById("email").value = b.email || '';
+        
+        document.getElementById("p_div").value = b.presentDivision || '';
+        document.getElementById("p_dis").value = b.presentDistrict || '';
+        document.getElementById("p_upa").value = b.presentUpazila || '';
+        
+        document.getElementById("per_div").value = b.permanentDivision || '';
+        document.getElementById("per_dis").value = b.permanentDistrict || '';
+        document.getElementById("per_upa").value = b.permanentUpazila || '';
+        
         document.getElementById("saveBtn").innerText = "Update Borrower";
     }
 
