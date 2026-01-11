@@ -1,337 +1,566 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <title>Loan Disbursement</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <head>
+        <meta charset="utf-8" />
+        <title>Loan Disbursement</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <style>
-        :root { --bg:#f5f7fb; --muted:#6b7280; --primary:#4f46e5; --card:#fff; --border:#e5e7eb; --text:#222; }
-        body { font-family: Inter, sans-serif; background:var(--bg); color:var(--text); margin:0; padding:0; }
-        .layout { display:flex; min-height:100vh; }
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
 
-        /* Sidebar */
-        .sidebar { width:240px; background:var(--card); border-right:1px solid var(--border); padding:18px; box-sizing:border-box; }
-        .logo { font-weight:700; font-size:20px; margin-bottom:18px; }
-        .nav-item { display:flex; align-items:center; gap:8px; padding:10px; border-radius:8px; color:#475569; cursor:pointer; margin-bottom:6px; }
-        .nav-item.active, .nav-item:hover { background:#eef2ff; color:#4338ca; }
-        .submenu { margin-left:8px; margin-top:6px; }
+            body {
+                font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                background-color: #f5f7fb;
+                color: #222;
+            }
 
-        /* Main */
-        .main { flex:1; display:flex; flex-direction:column; }
-        .topbar { height:64px; background:var(--card); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 20px; }
-        .topbar-left { font-weight:600; font-size:16px; }
-        .topbar-right { display:flex; gap:12px; align-items:center; color:var(--muted); }
-        .avatar { width:32px; height:32px; border-radius:999px; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; }
+            .layout {
+                display: flex;
+                min-height: 100vh;
+            }
 
-        .content { padding:20px; max-width:1100px; width:100%; margin:0 auto; box-sizing:border-box; }
-        .panel { background:var(--card); padding:16px; border-radius:10px; box-shadow:0 6px 18px rgba(15,23,42,0.04); margin-bottom:16px; }
-        h2 { margin:0 0 12px 0; }
+            /* Sidebar */
+            .sidebar {
+                width: 240px;
+                background: #ffffff;
+                border-right: 1px solid #e5e7eb;
+                padding: 20px 16px;
+            }
 
-        .row { display:flex; gap:12px; }
-        .col { flex:1; min-width:140px; }
+            .sidebar .logo {
+                font-weight: 700;
+                font-size: 20px;
+                margin-bottom: 24px;
+            }
 
-        label { display:block; font-size:13px; margin-bottom:6px; color:#374151; }
-        input, select { width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:14px; background:#fff; box-sizing:border-box; }
+            .sidebar .menu-title {
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: .08em;
+                color: #9ca3af;
+                margin-bottom: 10px;
+            }
 
-        .muted { font-size:13px; color:var(--muted); margin-top:6px; }
-        .small { font-size:13px; color:#374151; margin-top:6px; }
+            .nav-item {
+                display: flex;
+                align-items: center;
+                padding: 10px 12px;
+                border-radius: 8px;
+                margin-bottom: 4px;
+                font-size: 14px;
+                cursor: pointer;
+                color: #4b5563;
+                text-decoration: none;
+            }
 
-        button { background:var(--primary); color:#fff; padding:10px 14px; border-radius:8px; border:none; cursor:pointer; font-weight:600; }
-        button.ghost { background:transparent; color:var(--primary); border:1px solid var(--border); padding:8px 12px; }
+            .nav-item.active,
+            .nav-item:hover {
+                background: #eef2ff;
+                color: #4338ca;
+            }
 
-        .search-results { background:#fff; border:1px solid var(--border); position:absolute; z-index:50; max-height:260px; overflow:auto; width:360px; margin-top:4px; border-radius:8px; box-shadow:0 8px 20px rgba(2,6,23,0.06); }
-        .sr-item { padding:10px; cursor:pointer; border-bottom:1px solid #f3f4f6; }
-        .sr-item:hover { background:#f8fafc; }
+            /* Submenu */
+            .submenu {
+                margin-left: 30px;
+                margin-top: 2px;
+                display: none;
+            }
 
-        .error { color:#dc2626; margin-top:8px; }
-        .search-type { width:140px; }
-        .search-input { width:220px; }
+            .submenu.open {
+                display: block;
+            }
 
-        .action { text-align:center; width:110px; }
-        table { width:100%; border-collapse:collapse; margin-top:12px; }
-        th, td { padding:12px 10px; border-bottom:1px solid #f1f5f9; text-align:left; vertical-align:middle; }
-        th { background:#f8fafc; color:#374151; font-weight:600; }
+            .submenu .nav-item {
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+            .nav-item span.icon {
+                width: 20px;
+                margin-right: 8px;
+                text-align: center;
+            }
 
-        @media (max-width:900px) {
-            .row { flex-direction:column; }
-            .search-results { width:calc(100% - 40px); }
-            .sidebar { display:none }
-        }
-    </style>
-</head>
+            /* Main */
+            .main {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+            }
 
-<body>
-<div class="layout">
+            /* Topbar */
+            .topbar {
+                height: 64px;
+                background: #ffffff;
+                border-bottom: 1px solid #e5e7eb;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 24px;
+            }
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="logo">LMS</div>
+            .topbar-left {
+                font-size: 18px;
+                font-weight: 600;
+            }
 
-        <div class="nav-item" onclick="goToDashboard()">
-            <span>📊</span><span>Dashboard</span>
-        </div>
+            .topbar-right {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-size: 14px;
+            }
 
-        <div class="nav-item" onclick="toggleUserMenu()">
-            <span>👤</span><span>User Management</span>
-        </div>
+            .badge-role {
+                padding: 6px 10px;
+                border-radius: 999px;
+                font-size: 12px;
+                background: #eef2ff;
+                color: #4f46e5;
+                font-weight: 600;
+            }
 
-        <div id="userSubmenu" class="submenu">
-            <div class="nav-item" onclick="goToUserRegistration()">📝 User Registration</div>
-        </div>
+            .avatar {
+                width: 32px;
+                height: 32px;
+                border-radius: 999px;
+                background: #4f46e5;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                font-weight: 600;
+            }
 
-        <div class="nav-item" onclick="goToLoanProducts()">
-            <span>💰</span><span>Loan Products</span>
-        </div>
+            .logout-btn {
+                border: none;
+                background: #fee2e2;
+                color: #b91c1c;
+                padding: 6px 10px;
+                border-radius: 999px;
+                font-size: 12px;
+                cursor: pointer;
+            }
 
-        <!-- Loan Applications (OPEN by default) -->
-        <div class="nav-item active" onclick="toggleLoanMenu()">
-            <span>📄</span><span>Loan Applications</span>
-        </div>
+            .logout-btn:hover {
+                background: #fecaca;
+            }
 
-        <div id="loanSubmenu" class="submenu open">
-            <div class="nav-item" onclick="goToBorrowerReg()">
-                📝 Borrower Registration
+            /* Content */
+            .content {
+                padding: 24px;
+            }
+
+            .panel {
+                background: #ffffff;
+                border-radius: 12px;
+                padding: 24px;
+                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+                margin-bottom: 24px;
+            }
+
+            h2 {
+                font-size: 18px;
+                font-weight: 600;
+                margin-bottom: 20px;
+                color: #111827;
+            }
+
+            .row {
+                display: flex;
+                gap: 16px;
+                margin-bottom: 16px;
+            }
+
+            .col {
+                flex: 1;
+            }
+
+            label {
+                display: block;
+                font-size: 13px;
+                font-weight: 500;
+                margin-bottom: 6px;
+                color: #374151;
+            }
+
+            input, select {
+                width: 100%;
+                padding: 10px 12px;
+                border-radius: 8px;
+                border: 1px solid #d1d5db;
+                font-size: 14px;
+                background: #fff;
+                outline: none;
+                transition: border-color 0.2s;
+            }
+
+            input:focus {
+                border-color: #4f46e5;
+            }
+
+            button {
+                background: #4f46e5;
+                color: #fff;
+                padding: 10px 20px;
+                border-radius: 8px;
+                border: none;
+                cursor: pointer;
+                font-weight: 600;
+                font-size: 14px;
+                transition: background 0.2s;
+            }
+
+            button:hover {
+                background: #4338ca;
+            }
+
+            .error {
+                color: #dc2626;
+                font-size: 13px;
+                margin-top: 8px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 12px;
+            }
+
+            th, td {
+                padding: 14px 12px;
+                border-bottom: 1px solid #f1f5f9;
+                text-align: left;
+                font-size: 14px;
+            }
+
+            th {
+                background: #f8fafc;
+                color: #4b5563;
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 11px;
+                letter-spacing: 0.05em;
+            }
+
+            .footer {
+                font-size: 12px;
+                color: #9ca3af;
+                margin-top: 24px;
+                text-align: right;
+            }
+
+            @media (max-width: 1024px) {
+                .row { flex-direction: column; }
+            }
+
+            @media (max-width: 768px) {
+                .sidebar { display: none; }
+            }
+        </style>
+    </head>
+
+    <body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">LMS</div>
+            <div class="menu-title">Menu</div>
+            <div class="nav-item" onclick="goToDashboard()">
+                <span class="icon">📊</span>
+                <span>Dashboard</span>
             </div>
-
-            <div class="nav-item" onclick="goToLoanAccount()">
-                💼 Loan Account
+            <div class="nav-item" onclick="toggleMenu('userSubmenu')">
+                <span class="icon">👤</span>
+                <span>User Management</span>
             </div>
-
-            <!-- ACTIVE PAGE -->
-            <div class="nav-item active">
-                💸 Loan Disbursement
+            <div id="userSubmenu" class="submenu">
+                <div class="nav-item" onclick="goToUserRegistration()">
+                    <span class="icon">📝</span>
+                    <span>User Registration</span>
+                </div>
             </div>
-        </div>
+            <div class="nav-item" onclick="goToLoanProducts()">
+                <span class="icon">💰</span>
+                <span>Loan Products</span>
+            </div>
+            <div class="nav-item active" onclick="toggleMenu('loanSubmenu')">
+                <span class="icon">📄</span>
+                <span>Loan Applications</span>
+            </div>
+            <div id="loanSubmenu" class="submenu open">
+                <div class="nav-item" onclick="goToBorrowerReg()">
+                    <span class="icon">📝</span>
+                    <span>Borrower Registration</span>
+                </div>
+                <div class="nav-item" onclick="goToLoanAccount()">
+                    <span class="icon">💼</span>
+                    <span>Loan Account</span>
+                </div>
+                <div class="nav-item active">
+                    <span class="icon">💸</span>
+                    <span>Loan Disbursement</span>
+                </div>
+            </div>
+            <div class="nav-item" onclick="toggleMenu('repaymentSubmenu')">
+                <span class="icon">📆</span>
+                <span>Repayments</span>
+            </div>
+            <div id="repaymentSubmenu" class="submenu">
+                <div class="nav-item" onclick="goToRepaymentSchedule()">
+                    <span class="icon">📑</span>
+                    <span>Repayment Schedule</span>
+                </div>
+                <div class="nav-item" onclick="goToRepaymentCollection()">
+                    <span class="icon">📥</span>
+                    <span>Repayment Collection</span>
+                </div>
+            </div>
+        </aside>
 
-        <div class="nav-item" onclick="goToRepayments()">
-            <span>📆</span><span> Repayments</span></div>
-    </aside>
+        <!-- Main -->
+        <div class="main">
+            <header class="topbar">
+                <div class="topbar-left">
+                    Welcome, <span id="userName">User</span>
+                </div>
+                <div class="topbar-right">
+                    <span class="badge-role" id="userRoleBadge">ROLE</span>
+                    <span id="userEmail" style="color:#6b7280; margin-right: 8px;"></span>
+                    <div class="avatar" id="userAvatar">U</div>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </header>
 
-
-    <!-- Main -->
-    <div class="main">
-
-        <div class="topbar">Loan Disbursement</div>
-
-        <div class="content">
-
-            <!-- Search -->
-            <div class="panel">
-                <h2>Search Loan Account</h2>
-                <div class="row">
-                    <div class="col">
-                        <label>Loan Account Number</label>
-                        <input id="loanNumber" placeholder="LN-000001">
+            <main class="content">
+                <!-- Search -->
+                <div class="panel">
+                    <h2>Search Loan Account</h2>
+                    <div class="row">
+                        <div class="col">
+                            <label>Loan Account Number</label>
+                            <input id="loanNumber" placeholder="LN-000001">
+                        </div>
+                        <div class="col" style="align-self:flex-end; flex: 0 0 auto;">
+                            <button onclick="searchLoan()">Search</button>
+                        </div>
                     </div>
-                    <div class="col" style="align-self:flex-end;">
-                        <button onclick="searchLoan()">Search</button>
+                    <div id="errorBox" class="error"></div>
+                </div>
+
+                <!-- Details -->
+                <div class="panel">
+                    <h2>Loan Details</h2>
+                    <div class="row">
+                        <div class="col">
+                            <label>Borrower Name</label>
+                            <input id="borrowerName" readonly style="background-color: #f9fafb;">
+                        </div>
+                        <div class="col">
+                            <label>Loan Product</label>
+                            <input id="loanProduct" readonly style="background-color: #f9fafb;">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <label>Interest Rate (%)</label>
+                            <input id="interestRate" readonly style="background-color: #f9fafb;">
+                        </div>
+                        <div class="col">
+                            <label>Installment Type</label>
+                            <input id="installmentType" readonly style="background-color: #f9fafb;">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <label>Application Amount</label>
+                            <input id="approvedAmount" readonly style="background-color: #f9fafb;">
+                        </div>
+                        <div class="col">
+                            <label>Disbursement Amount</label>
+                            <input id="disbursementAmount" type="number">
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 10px;">
+                        <button onclick="disburse()">Disburse Loan</button>
                     </div>
                 </div>
-                <div id="errorBox" class="error"></div>
-            </div>
 
-            <!-- Details -->
-            <div class="panel">
-                <h2>Loan Details</h2>
-
-                <div class="row">
-                    <div class="col">
-                        <label>Borrower Name</label>
-                        <input id="borrowerName" readonly>
-                    </div>
-                    <div class="col">
-                        <label>Loan Product</label>
-                        <input id="loanProduct" readonly>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        <label>Interest Rate (%)</label>
-                        <input id="interestRate" readonly>
-                    </div>
-                    <div class="col">
-                        <label>Installment Type</label>
-                        <input id="installmentType" readonly>
+                <!-- List -->
+                <div class="panel">
+                    <h2>Recent Disbursements</h2>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Loan No</th>
+                                <th>Borrower</th>
+                                <th>Product</th>
+                                <th>App. Amount</th>
+                                <th>Disbursed</th>
+                            </tr>
+                            </thead>
+                            <tbody id="disbursementTable">
+                            <tr><td colspan="6" style="text-align: center; color: #9ca3af;">No data found</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col">
-                        <label>Application Amount</label>
-                        <input id="approvedAmount" readonly>
-                    </div>
-                    <div class="col">
-                        <label>Disbursement Amount</label>
-                        <input id="disbursementAmount" type="number">
-                    </div>
-                </div>
-
-                <button onclick="disburse()">Disburse</button>
-            </div>
-
-            <!-- List -->
-            <div class="panel">
-                <h2>Disbursement List</h2>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Loan No</th>
-                        <th>Borrower</th>
-                        <th>Product</th>
-                        <th>Application Amount</th>
-                        <th>Disbursed Amount</th>
-
-                    </tr>
-                    </thead>
-                    <tbody id="disbursementTable">
-                    <tr><td colspan="6">No data</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
+                <div class="footer">Loan Management System · Disbursement Module</div>
+            </main>
         </div>
     </div>
-</div>
 
-<script>
-    const API = "http://localhost:8080/api";
-    let currentLoan = null;
+    <script>
+        const API = "http://localhost:8080/api";
+        let currentLoan = null;
 
-    // Cache elements
-    const errorBox = document.getElementById("errorBox");
-    const borrowerName = document.getElementById("borrowerName");
-    const loanProduct = document.getElementById("loanProduct");
-    const interestRate = document.getElementById("interestRate");
-    const installmentType = document.getElementById("installmentType");
-    const approvedAmount = document.getElementById("approvedAmount");
-    const disbursementAmount = document.getElementById("disbursementAmount");
+        // 1) User Auth check
+        const userJson = localStorage.getItem('user');
+        if (userJson) {
+            const user = JSON.parse(userJson);
+            document.getElementById('userName').innerText = user.name || 'User';
+            document.getElementById('userEmail').innerText = user.email || '';
+            document.getElementById('userRoleBadge').innerText = user.role || 'USER';
+            const initial = (user.name && user.name.length > 0) ? user.name[0].toUpperCase() : 'U';
+            document.getElementById('userAvatar').innerText = initial;
+        }
 
-    async function searchLoan() {
-        const loanNo = document.getElementById("loanNumber").value.trim();
-        if (!loanNo) return;
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+
+        // Navigation & UI functions
+        function toggleMenu(id) {
+            const menu = document.getElementById(id);
+            if (menu) menu.classList.toggle("open");
+        }
+
+        function goToDashboard() { window.location.href = "dashboard.html"; }
+        function goToLoanProducts() { window.location.href = "loan-products.html"; }
+        function goToBorrowerReg() { window.location.href = "borrower.html"; }
+        function goToLoanAccount() { window.location.href = "loan-account.html"; }
+        function goToUserRegistration() { window.location.href = 'user-registration.html'; }
+        function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
+        function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
+
+        // Cache elements
+        const errorBox = document.getElementById("errorBox");
+        const borrowerName = document.getElementById("borrowerName");
+        const loanProduct = document.getElementById("loanProduct");
+        const interestRate = document.getElementById("interestRate");
+        const installmentType = document.getElementById("installmentType");
+        const approvedAmount = document.getElementById("approvedAmount");
+        const disbursementAmount = document.getElementById("disbursementAmount");
+
+        async function searchLoan() {
+            const loanNo = document.getElementById("loanNumber").value.trim();
+            if (!loanNo) return;
         
-        errorBox.innerText = "";
+            errorBox.innerText = "";
 
-        try {
-            const res = await fetch(`${API}/loan-accounts/by-loan-number/${loanNo}`);
-            if (!res.ok) {
-                errorBox.innerText = "Loan not found";
-                clearForm();
+            try {
+                // Fetching from loan-accounts to get full details including interest and installment type
+                const res = await fetch(`${API}/loan-accounts/by-loan-number/${loanNo}`);
+                if (!res.ok) {
+                    errorBox.innerText = "Loan not found";
+                    clearForm();
+                    return;
+                }
+
+                currentLoan = await res.json();
+
+                // Mapping fields - ensuring interestRate and installmentType are set
+                borrowerName.value = currentLoan.borrowerName || "";
+                loanProduct.value = currentLoan.loanProductName || "";
+                interestRate.value = currentLoan.interestRate || "";
+                installmentType.value = currentLoan.installmentType || "";
+                approvedAmount.value = currentLoan.approvedAmount || "";
+                
+                // Requirement: Don't show amount in disbursement field on search
+                disbursementAmount.value = ""; 
+            } catch (err) {
+                errorBox.innerText = "Error connecting to server";
+            }
+        }
+
+        async function disburse() {
+
+            if (!currentLoan) return;
+
+            const amount = Number(disbursementAmount.value);
+            if (amount <= 0 || amount > currentLoan.approvedAmount) {
+                errorBox.innerText = "Invalid disbursement amount";
                 return;
             }
 
-            currentLoan = await res.json();
+            const payload = {
+                loanAccountId: currentLoan.id,
+                disbursementAmount: amount
+            };
 
-            borrowerName.value = currentLoan.borrowerName || "";
-            loanProduct.value = currentLoan.loanProductName || "";
-            interestRate.value = currentLoan.interestRate || "";
-            installmentType.value = currentLoan.installmentType || "";
-            approvedAmount.value = currentLoan.approvedAmount || "";
-            disbursementAmount.value = currentLoan.approvedAmount || ""; // Default to full amount
-        } catch (err) {
-            errorBox.innerText = "Error connecting to server";
-        }
-    }
+            const res = await fetch(`${API}/disbursements`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
 
-    async function disburse() {
-
-        if (!currentLoan) return;
-
-        const amount = Number(disbursementAmount.value);
-        if (amount <= 0 || amount > currentLoan.approvedAmount) {
-            errorBox.innerText = "Invalid disbursement amount";
-            return;
+            if (res.ok) {
+                await loadList();
+                clearForm();
+            } else {
+                errorBox.innerText = await res.text();
+            }
         }
 
-        const payload = {
-            loanAccountId: currentLoan.id,
-            disbursementAmount: amount
-        };
+        async function loadList() {
+            const res = await fetch(`${API}/disbursements`);
+            const list = await res.json();
 
-        const res = await fetch(`${API}/disbursements`, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(payload)
-        });
+            const table = document.getElementById("disbursementTable");
+            table.innerHTML = "";
 
-        if (res.ok) {
-            await loadList();
-            clearForm();
-        } else {
-            errorBox.innerText = await res.text();
+            list.forEach((d, i) => {
+                table.innerHTML += `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td>${d.loanNumber}</td>
+                    <td>${d.borrowerName}</td>
+                    <td>${d.loanProductName}</td>
+                    <td>${d.approvedAmount}</td>
+                    <td>${d.disbursementAmount}</td>
+                </tr>`;
+            });
         }
-    }
 
-    async function loadList() {
-        const res = await fetch(`${API}/disbursements`);
-        const list = await res.json();
-
-        const table = document.getElementById("disbursementTable");
-        table.innerHTML = "";
-
-        list.forEach((d, i) => {
-            table.innerHTML += `
-        <tr>
-            <td>${i + 1}</td>
-            <td>${d.loanNumber}</td>
-            <td>${d.borrowerName}</td>
-            <td>${d.loanProductName}</td>
-            <td>${d.approvedAmount}</td>
-            <td>${d.disbursementAmount}</td>
-
-        </tr>`;
-        });
-    }
-
-    function clearForm() {
-        currentLoan = null;
-        loanNumber.value = "";
-        borrowerName.value = "";
-        loanProduct.value = "";
-        interestRate.value = "";
-        installmentType.value = "";
-        approvedAmount.value = "";
-        disbursementAmount.value = "";
-        errorBox.innerText = "";
-    }
-
-    window.onload = loadList;
-    function toggleLoanMenu() {
-        const menu = document.getElementById("loanSubmenu");
-        const parent = document.getElementById("loanMenu");
-
-        menu.classList.toggle("open");
-        parent.classList.toggle("active");
-
-        // save state
-        localStorage.setItem("loanMenuOpen", menu.classList.contains("open"));
-    }
-
-    function toggleUserMenu() {
-        const menu = document.getElementById("userSubmenu");
-        menu.classList.toggle("open");
-    }
-
-    // ===== RESTORE MENU STATE ON LOAD =====
-    window.addEventListener("DOMContentLoaded", () => {
-        const open = localStorage.getItem("loanMenuOpen") === "true";
-        if (open) {
-            document.getElementById("loanSubmenu").classList.add("open");
-            document.getElementById("loanMenu").classList.add("active");
+        function clearForm() {
+            currentLoan = null;
+            loanNumber.value = "";
+            borrowerName.value = "";
+            loanProduct.value = "";
+            interestRate.value = "";
+            installmentType.value = "";
+            approvedAmount.value = "";
+            disbursementAmount.value = "";
+            errorBox.innerText = "";
         }
-    });
 
-    // ===== NAVIGATION =====
-    function goToDashboard(){ location.href="dashboard.html"; }
-    function goToBorrowerReg(){ location.href="borrower.html"; }
-    function goToLoanAccount(){ location.href="loan-account.html"; }
-    function goToLoanProducts(){ location.href="loan-products.html"; }
-    function goToRepayments(){ location.href="repayment-schedule.html"; }
-</script>
+        window.onload = loadList;
 
-</body>
+    </script>
+
+    </body>
 </html>

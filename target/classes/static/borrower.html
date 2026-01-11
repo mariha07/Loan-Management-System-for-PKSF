@@ -105,7 +105,12 @@
             <span class="icon">📆</span><span>Repayments</span>
         </div>
         <div id="repaymentSubmenu" class="submenu">
-            <div class="nav-item" onclick="goToRepaymentSchedule()">📑 Repayment Schedule</div>
+            <div class="nav-item" onclick="goToRepaymentSchedule()">
+                <span class="icon">📑</span><span>Repayment Schedule</span>
+            </div>
+            <div class="nav-item" onclick="goToRepaymentCollection()">
+                <span class="icon">📥</span><span>Repayment Collection</span>
+            </div>
         </div>
     </aside>
 
@@ -254,6 +259,7 @@
     function goToLoanAccount() { window.location.href = "loan-account.html"; }
     function goToLoanDisbursement() { window.location.href = "loan-disbursement.html"; }
     function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
+    function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
 
     function toggleUserMenu() { toggleVis('userSubmenu'); }
     function toggleLoanMenu() { toggleVis('loanSubmenu'); }

@@ -4,70 +4,385 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Repayment Collection</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        body { background-color: #f8f9fa; padding-top: 50px; }
-        .card { box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: #f5f7fb;
+            color: #222;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            padding: 20px 16px;
+        }
+
+        .sidebar .logo {
+            font-weight: 700;
+            font-size: 20px;
+            margin-bottom: 24px;
+        }
+
+        .sidebar .menu-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: #9ca3af;
+            margin-bottom: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            color: #4b5563;
+        }
+
+        .nav-item.active,
+        .nav-item:hover {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        /* Submenu */
+        .submenu {
+            margin-left: 30px;
+            margin-top: 2px;
+            display: none;
+        }
+
+        .submenu.open {
+            display: block;
+        }
+
+        .submenu .nav-item {
+            padding: 8px 10px;
+            font-size: 13px;
+        }
+        .nav-item span.icon {
+            width: 20px;
+            margin-right: 8px;
+            text-align: center;
+        }
+
+        /* Main */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Topbar */
+        .topbar {
+            height: 64px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .topbar-left {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .badge-role {
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            background: #4f46e5;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Content */
+        .content {
+            padding: 24px;
+        }
+
+        .panel {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #111827;
+            border-bottom: 1px solid #f3f4f6;
+            padding-bottom: 12px;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #374151;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .form-control, .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: #4f46e5;
+            ring: 2px solid #eef2ff;
+        }
+
+        .form-control[readonly] {
+            background-color: #f9fafb;
+            color: #6b7280;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-success:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .logout-btn {
+            border: none;
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: #fecaca;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 24px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Loan Repayment Collection</h4>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="logo">LMS</div>
+        <div class="menu-title">Menu</div>
+        <div class="nav-item" onclick="window.location.href='dashboard.html'">
+            <span class="icon">📊</span>
+            <span>Dashboard</span>
+        </div>
+        <div class="nav-item" onclick="toggleMenu('userSubmenu')">
+            <span class="icon">👤</span>
+            <span>User Management</span>
+        </div>
+        <div id="userSubmenu" class="submenu">
+            <div class="nav-item" onclick="goToUserRegistration()">
+                <span class="icon">📝</span>
+                <span>User Registration</span>
+            </div>
+        </div>
+        <div class="nav-item" onclick="goToLoanProducts()">
+            <span class="icon">💰</span>
+            <span>Loan Products</span>
+        </div>
+        <div class="nav-item" onclick="toggleMenu('loanSubmenu')">
+            <span class="icon">📄</span>
+            <span>Loan Applications</span>
+        </div>
+        <div id="loanSubmenu" class="submenu">
+            <div class="nav-item" onclick="goToBorrowerReg()">
+                <span class="icon">📝</span>
+                <span>Borrower Registration</span>
+            </div>
+            <div class="nav-item" onclick="goToLoanAccount()">
+                <span class="icon">💼</span>
+                <span>Loan Account</span>
+            </div>
+            <div class="nav-item" onclick="goToLoanDisbursement()">
+                <span class="icon">💸</span>
+                <span>Loan Disbursement</span>
+            </div>
+        </div>
+        <div class="nav-item" onclick="toggleMenu('repaymentSubmenu')">
+            <span class="icon">📆</span>
+            <span>Repayments</span>
+        </div>
+        <div id="repaymentSubmenu" class="submenu open">
+            <div class="nav-item" onclick="goToRepaymentSchedule()">
+                <span class="icon">📑</span>
+                <span>Repayment Schedule</span>
+            </div>
+            <div class="nav-item active" onclick="goToRepaymentCollection()">
+                <span class="icon">📥</span>
+                <span>Repayment Collection</span>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main">
+        <header class="topbar">
+            <div class="topbar-left">
+                Repayment Collection
+            </div>
+            <div class="topbar-right">
+                <span class="badge-role" id="userRoleBadge">ROLE</span>
+                <span id="userName" style="font-weight: 500;">User</span>
+                <div class="avatar" id="userAvatar">U</div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </header>
+
+        <main class="content">
+            <div class="panel">
+                <div class="panel-title">Loan Repayment Collection</div>
+
+                <!-- Search Section -->
+                <div class="form-group">
+                    <label class="form-label">Search Loan Number</label>
+                    <div class="input-group">
+                        <input type="text" id="loanNumberSearch" class="form-control" placeholder="Enter Loan No (e.g. LOAN-101)">
+                        <button class="btn btn-primary" type="button" onclick="searchLoan()">Search</button>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <!-- Search Section -->
-                    <div class="mb-4">
-                        <label for="loanNumberSearch" class="form-label">Search Loan Number</label>
-                        <div class="input-group">
-                            <input type="text" id="loanNumberSearch" class="form-control" placeholder="Enter Loan No (e.g. LOAN-101)" autocomplete="off">
-                            <button class="btn btn-outline-primary" type="button" onclick="searchLoan()">Search</button>
+
+                <hr style="margin: 24px 0; border: 0; border-top: 1px solid #f3f4f6;">
+
+                <!-- Collection Form -->
+                <form id="collectionForm">
+                    <div class="form-group">
+                        <label class="form-label">Installment No</label>
+                        <select id="installmentNo" class="form-select" onchange="updateInstallmentAmount()" disabled>
+                            <option value="">-- Select Installment --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Total Installment Amount</label>
+                        <input type="number" id="installmentAmountDisplay" class="form-control" readonly>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="form-label">Principal Outstanding</label>
+                            <input type="number" id="principalOutstanding" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Interest Outstanding</label>
+                            <input type="number" id="interestOutstanding" class="form-control" readonly>
                         </div>
                     </div>
 
-                    <hr>
+                    <div class="form-group">
+                        <label class="form-label">Payment Amount</label>
+                        <input type="number" id="paymentAmount" class="form-control" placeholder="Enter amount to pay" required>
+                    </div>
 
-                    <!-- Collection Form -->
-                    <form id="collectionForm">
-                        <div class="mb-3">
-                            <label for="installmentNo" class="form-label">Installment No</label>
-                            <select id="installmentNo" class="form-select" onchange="updateInstallmentAmount()" disabled>
-                                <option value="">-- Select Installment --</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="installmentAmountDisplay" class="form-label">Total Installment Amount</label>
-                            <input type="number" id="installmentAmountDisplay" class="form-control" readonly>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="principalOutstanding" class="form-label">Principal Outstanding</label>
-                                <input type="number" id="principalOutstanding" class="form-control" readonly>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="interestOutstanding" class="form-label">Interest Outstanding</label>
-                                <input type="number" id="interestOutstanding" class="form-control" readonly>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="paymentAmount" class="form-label">Payment Amount</label>
-                            <input type="number" id="paymentAmount" class="form-control" placeholder="Enter amount to pay" required>
-                        </div>
-
-                        <div class="d-grid">
-                            <button type="button" id="saveBtn" class="btn btn-success" onclick="saveCollection()" disabled>Save Payment</button>
-                        </div>
-                    </form>
-                </div>
+                    <button type="button" id="saveBtn" class="btn btn-success" onclick="saveCollection()" disabled>Save Payment</button>
+                </form>
             </div>
-        </div>
+            <div class="footer">Loan Management System · Repayment Portal</div>
+        </main>
     </div>
 </div>
 
@@ -75,6 +390,34 @@
     let schedulesData = [];
     const API_BASE = "http://localhost:8080/api";
 
+    // Auth & Navigation
+    const userJson = localStorage.getItem('user');
+    if (userJson) {
+        const user = JSON.parse(userJson);
+        document.getElementById('userName').innerText = user.name || 'User';
+        document.getElementById('userRoleBadge').innerText = user.role || 'USER';
+        document.getElementById('userAvatar').innerText = (user.name) ? user.name[0].toUpperCase() : 'U';
+    }
+
+    function toggleMenu(id) {
+        const menu = document.getElementById(id);
+        if (menu) menu.classList.toggle("open");
+    }
+
+    function goToLoanProducts() { window.location.href = "loan-products.html"; }
+    function goToBorrowerReg() { window.location.href = "borrower.html"; }
+    function goToLoanAccount() { window.location.href = "loan-account.html"; }
+    function goToLoanDisbursement() { window.location.href = "loan-disbursement.html"; }
+    function goToUserRegistration() { window.location.href = 'user-registration.html'; }
+    function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
+    function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
+
+    function logout() {
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+    }
+
+    // Business Logic
     async function searchLoan() {
         const loanNo = document.getElementById('loanNumberSearch').value.trim();
         if (!loanNo) {
@@ -87,11 +430,9 @@
             if (!res.ok) throw new Error("Loan not found or schedule missing");
 
             schedulesData = await res.json();
-
             const select = document.getElementById('installmentNo');
             select.innerHTML = '<option value="">-- Select Installment --</option>';
 
-            // Get NEXT unpaid installment only
             const next = schedulesData
                 .filter(s => s.status !== "PAID")
                 .sort((a, b) => a.installmentNo - b.installmentNo)[0];
@@ -106,13 +447,9 @@
             option.textContent = `Installment ${next.installmentNo} (${next.status})`;
             select.appendChild(option);
 
-            // ✅ AUTO SELECT
             select.value = next.installmentNo;
             select.disabled = false;
-
-            // ✅ AUTO FILL DETAILS
             updateInstallmentAmount();
-
             document.getElementById("saveBtn").disabled = false;
 
         } catch (e) {
@@ -124,7 +461,6 @@
     function updateInstallmentAmount() {
         const instNo = document.getElementById('installmentNo').value;
         const s = schedulesData.find(x => x.installmentNo == instNo);
-
         if (!s) return;
 
         document.getElementById('principalOutstanding').value = s.principalOutstanding;
@@ -161,17 +497,14 @@
             }
 
             alert("Payment successful");
-
             document.getElementById("paymentAmount").value = "";
-            searchLoan(); // reload next installment
-
+            searchLoan();
         } catch (e) {
             alert("Payment failed: " + e.message);
             console.error(e);
         }
     }
 </script>
-
 
 </body>
 </html>

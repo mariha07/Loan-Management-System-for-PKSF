@@ -19,94 +19,75 @@
         body {
             font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background: #f5f7fb;
-            color: #111827;
+            color: #222;
         }
 
-        .app-layout {
+        .layout {
             display: flex;
             min-height: 100vh;
         }
 
-        /* ===== Sidebar ===== */
+        /* Sidebar */
         .sidebar {
-            width: 230px;
+            width: 240px;
             background: #ffffff;
             border-right: 1px solid #e5e7eb;
-            padding: 20px 18px;
-            display: flex;
-            flex-direction: column;
+            padding: 20px 16px;
         }
 
-        .sidebar-logo {
-
-            font-size: 20px;
-
+        .sidebar .logo {
             font-weight: 700;
-
+            font-size: 20px;
             margin-bottom: 24px;
-
         }
 
-        .sidebar-menu-title {
-
-            font-size: 11px;
-
+        .sidebar .menu-title {
+            font-size: 12px;
             text-transform: uppercase;
-
-            letter-spacing: .12em;
-
+            letter-spacing: .08em;
             color: #9ca3af;
-
             margin-bottom: 10px;
-
         }
 
         .nav-item {
-
             display: flex;
-
             align-items: center;
-
-            gap: 8px;
-
-            padding: 9px 11px;
-
-            border-radius: 10px;
-
-            font-size: 14px;
-
-            color: #4b5563;
-
-            cursor: pointer;
-
+            padding: 10px 12px;
+            border-radius: 8px;
             margin-bottom: 4px;
-
-            transition: background 0.12s ease, color 0.12s ease;
-
+            font-size: 14px;
+            cursor: pointer;
+            color: #4b5563;
         }
 
-        .nav-item span.icon {
-
-            width: 20px;
-
-            text-align: center;
-
-        }
-
+        .nav-item.active,
         .nav-item:hover {
-
             background: #eef2ff;
-
             color: #4338ca;
         }
 
-        .nav-item.active {
-            background: #e0e7ff;
-            color: #3730a3;
-            font-weight: 500;
+        /* Submenu */
+        .submenu {
+            margin-left: 30px;
+            margin-top: 2px;
+            display: none;
         }
 
-        /* ===== Main area ===== */
+        .submenu.open {
+            display: block;
+        }
+
+        .submenu .nav-item {
+            padding: 8px 10px;
+            font-size: 13px;
+        }
+        .nav-item span.icon {
+            width: 20px;
+            margin-right: 8px;
+            text-align: center;
+        }
+
+        /* Main */
         .main {
             flex: 1;
             display: flex;
@@ -114,613 +95,268 @@
         }
 
         /* Topbar */
-
         .topbar {
-
             height: 64px;
-
             background: #ffffff;
-
             border-bottom: 1px solid #e5e7eb;
-
             display: flex;
-
             align-items: center;
-
             justify-content: space-between;
-
-            padding: 0 28px;
-
+            padding: 0 24px;
         }
 
         .topbar-left {
-
-            display: flex;
-
-            flex-direction: column;
-
-            gap: 2px;
-
-        }
-
-        .topbar-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
-        }
-
-        .topbar-subtitle {
-
-            font-size: 12px;
-
-            color: #9ca3af;
-
         }
 
         .topbar-right {
-
             display: flex;
-
             align-items: center;
-
-            gap: 10px;
-
-            font-size: 13px;
-
-            color: #4b5563;
-
+            gap: 12px;
+            font-size: 14px;
         }
-
 
         .badge-role {
-
-            padding: 5px 10px;
-
+            padding: 6px 10px;
             border-radius: 999px;
-
+            font-size: 12px;
             background: #eef2ff;
-
             color: #4f46e5;
-
-            font-size: 11px;
-
             font-weight: 600;
-
         }
-
 
         .avatar {
-
             width: 32px;
-
             height: 32px;
-
             border-radius: 999px;
-
             background: #4f46e5;
-
-            color: #ffffff;
-
+            color: white;
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
-            font-size: 15px;
-
+            font-size: 16px;
             font-weight: 600;
-
         }
 
-
-        /* Content wrapper */
-
+        /* Content */
         .content {
-
-            flex: 1;
-
-            padding: 24px 28px 32px;
-
-            display: flex;
-
-            justify-content: center;
-
+            padding: 24px;
         }
-
-
-        .content-inner {
-
-            width: 100%;
-
-            max-width: 1100px;
-
-        }
-
 
         .card {
-
             background: #ffffff;
-
-            border-radius: 18px;
-
-            padding: 20px 22px 22px;
-
-            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
-
-            border: 1px solid #e5e7eb;
-
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+            margin-bottom: 24px;
         }
-
-
-        .card + .card {
-
-            margin-top: 18px;
-
-        }
-
 
         .card-title {
-
-            font-size: 17px;
-
+            font-size: 16px;
             font-weight: 600;
-
             margin-bottom: 4px;
-
         }
-
 
         .card-subtitle {
-
             font-size: 12px;
-
-            color: #9ca3af;
-
-            margin-bottom: 16px;
-
+            color: #6b7280;
+            margin-bottom: 20px;
         }
 
-
-        /* ===== Form layout ===== */
-
+        /* Form layout */
         .form-grid {
-
             display: grid;
-
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-
-            gap: 12px 14px;
-
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
         }
-
-
-        .form-group {
-
-            display: flex;
-
-            flex-direction: column;
-
-        }
-
 
         .form-group.full {
-
             grid-column: 1 / -1;
-
         }
-
 
         .form-group label {
-
-            font-size: 12px;
-
+            display: block;
+            font-size: 13px;
             color: #4b5563;
-
-            margin-bottom: 4px;
-
+            margin-bottom: 6px;
         }
-
 
         .form-group input,
         .form-group select {
-
             width: 100%;
-
-            border-radius: 10px;
-
-            border: 1px solid #d1d5db;
-
-            padding: 8px 10px;
-
-            font-size: 13px;
-
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
             outline: none;
-
-            background: #f9fafb;
-
-            transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
-
         }
-
-
-        .form-group input::placeholder {
-
-            color: #9ca3af;
-
-        }
-
 
         .form-group input:focus,
         .form-group select:focus {
-
             border-color: #6366f1;
-
-            background: #ffffff;
-
-            box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.18);
-
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
         }
-
 
         .helper-text {
-
             font-size: 11px;
-
             color: #9ca3af;
-
-            margin-top: 2px;
-
+            margin-top: 4px;
         }
-
 
         .form-actions {
-
             grid-column: 1 / -1;
-
             display: flex;
-
-            gap: 8px;
-
             align-items: center;
-
-            margin-top: 4px;
-
+            gap: 12px;
+            margin-top: 8px;
         }
-
 
         .btn-primary {
-
+            background: #4f46e5;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
             border: none;
-
-            background: linear-gradient(135deg, #4f46e5, #6366f1);
-
-            color: #ffffff;
-
-            padding: 8px 18px;
-
-            border-radius: 999px;
-
-            font-size: 13px;
-
             font-weight: 500;
-
             cursor: pointer;
-
         }
-
-
-        .btn-primary:hover {
-
-            filter: brightness(1.05);
-
-        }
-
 
         .btn-secondary {
-
-            border: none;
-
-            background: #e5e7eb;
-
-            color: #374151;
-
-            padding: 7px 16px;
-
-            border-radius: 999px;
-
-            font-size: 12px;
-
-            cursor: pointer;
-
-        }
-
-
-        .btn-secondary:hover {
-
-            background: #d1d5db;
-
-        }
-
-
-        .message {
-
-            font-size: 12px;
-
-            margin-top: 4px;
-
-        }
-
-        .message.error {
-            color: #b91c1c;
-        }
-
-        .message.success {
-            color: #15803d;
-        }
-
-
-        /* ===== List ===== */
-
-        .list-header {
-
-            display: flex;
-
-            align-items: baseline;
-
-            justify-content: space-between;
-
-            margin-bottom: 10px;
-
-        }
-
-
-        .list-header span {
-
-            font-size: 12px;
-
-            color: #6b7280;
-
-        }
-
-
-        table {
-
-            width: 100%;
-
-            border-collapse: collapse;
-
-            font-size: 12px;
-
-        }
-
-
-        thead {
-
             background: #f3f4f6;
-
+            color: #4b5563;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
         }
 
-
-        th, td {
-
-            padding: 8px 6px;
-
-            border-bottom: 1px solid #e5e7eb;
-
-            text-align: left;
-
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
         }
-
 
         th {
-
-            font-weight: 600;
-
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
             color: #6b7280;
-
+            font-weight: 600;
         }
 
-
-        tbody tr:nth-child(even) {
-
-            background: #f9fafb;
-
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f3f4f6;
         }
-
-
-        tbody tr:hover {
-
-            background: #eef2ff;
-
-        }
-
-
-        /* icon action buttons */
 
         .action-buttons {
-
             display: flex;
-
-            gap: 6px;
-
+            gap: 8px;
         }
-
 
         .btn-icon {
-
+            background: none;
             border: none;
-
-            background: transparent;
-
-            padding: 4px;
-
-            border-radius: 999px;
-
             cursor: pointer;
-
-            font-size: 15px;
-
+            font-size: 16px;
         }
 
-
-        .btn-icon.edit:hover {
-
-            background: #e0ecff;
-
-        }
-
-
-        .btn-icon.delete:hover {
-
+        .logout-btn {
+            border: none;
             background: #fee2e2;
-
+            color: #b91c1c;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            cursor: pointer;
         }
 
-
-        @media (max-width: 1024px) {
-
-            .content {
-                padding: 18px;
-            }
-
-            .sidebar {
-                display: none;
-            }
-
-        }
-
-
-        @media (max-width: 640px) {
-
+        @media (max-width: 768px) {
             .form-grid {
                 grid-template-columns: 1fr;
             }
-
         }
-
     </style>
-
 </head>
-
 <body>
 
-
-<div class="app-layout">
-
-
-    <!-- Sidebar -->
-
+<div class="layout">
     <aside class="sidebar">
-
-        <div class="sidebar-logo">LMS</div>
-
-
-        <div class="sidebar-menu-title">Menu</div>
-
-
+        <div class="logo">LMS</div>
+        <div class="menu-title">Menu</div>
         <div class="nav-item" onclick="goDashboard()">
-
             <span class="icon">📊</span>
-
             <span>Dashboard</span>
-
         </div>
-
-
-        <!-- User Management (parent) -->
-
-        <div class="nav-item" onclick="toggleUserMenu()">
-
+        <div class="nav-item" onclick="toggleMenu('userSubmenu')">
             <span class="icon">👤</span>
-
             <span>User Management</span>
-
         </div>
-
-
-        <div id="userSubmenu" class="submenu" style="display:none;">
-
+        <div id="userSubmenu" class="submenu">
             <div class="nav-item" onclick="goToUserRegistration()">
-
                 <span class="icon">📝</span>
-
                 <span>User Registration</span>
-
             </div>
-
         </div>
-
         <div class="nav-item active">
-
             <span class="icon">💰</span>
-
             <span>Loan Products</span>
-
         </div>
-
-
-        <div class="nav-item">
-
+        <div class="nav-item" onclick="toggleMenu('loanSubmenu')">
             <span class="icon">📄</span>
-
             <span>Loan Applications</span>
-
         </div>
-
+        <div id="loanSubmenu" class="submenu">
+            <div class="nav-item" onclick="goToBorrowerReg()">
+                <span class="icon">📝</span>
+                <span>Borrower Registration</span>
+            </div>
+            <div class="nav-item" onclick="goToLoanAccount()">
+                <span class="icon">💼</span>
+                <span>Loan Account</span>
+            </div>
+            <div class="nav-item" onclick="goToLoanDisbursement()">
+                <span class="icon">💸</span>
+                <span>Loan Disbursement</span>
+            </div>
+        </div>
+        <div class="nav-item" onclick="toggleMenu('repaymentSubmenu')">
+            <span class="icon">📆</span>
+            <span>Repayments</span>
+        </div>
+        <div id="repaymentSubmenu" class="submenu">
+            <div class="nav-item" onclick="goToRepaymentSchedule()">
+                <span class="icon">📑</span>
+                <span>Repayment Schedule</span>
+            </div>
+            <div class="nav-item" onclick="goToRepaymentCollection()">
+                <span class="icon">📥</span>
+                <span>Repayment Collection</span>
+            </div>
+        </div>
     </aside>
 
-
-    <!-- Main -->
-
     <div class="main">
-
-        <!-- Topbar -->
-
         <header class="topbar">
-
             <div class="topbar-left">
-
-                <div class="topbar-title">Loan Products</div>
-
-                <div class="topbar-subtitle">Create and manage loan products for your LMS</div>
-
+                Loan Products
             </div>
-
             <div class="topbar-right">
-
-                <span id="userEmail"></span>
-
-                <span id="userRoleBadge" class="badge-role">ROLE</span>
-
-                <div id="userAvatar" class="avatar">U</div>
-
+                <span class="badge-role" id="userRoleBadge">ROLE</span>
+                <span id="userEmail" style="color:#6b7280;"></span>
+                <div class="avatar" id="userAvatar">U</div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
-
         </header>
 
-
-        <!-- Content -->
-
         <main class="content">
+            <section class="card">
+                <div class="card-title">Create / Edit Loan Product</div>
+                <div class="card-subtitle">Fill in the details and click Save Product to create, or Update Product to edit.</div>
 
-            <div class="content-inner">
-
-
-                <!-- FORM CARD (UPOR) -->
-
-                <section class="card">
-
-                    <div class="card-title">Create / Edit Loan Product</div>
-
-                    <div class="card-subtitle">
-
-                        Fill in the details and click <strong>Save Product</strong> to create, or <strong>Update
-                        Product</strong> to edit.
-
-                    </div>
-
-
-                    <form id="loanProductForm" class="form-grid">
+                <form id="loanProductForm" class="form-grid">
 
                         <div class="form-group full">
 
@@ -829,66 +465,60 @@
                         </div>
 
                     </form>
-
                 </section>
-
 
                 <!-- LIST CARD (NICHE) -->
-
                 <section class="card">
-
                     <div class="list-header">
-
                         <div class="card-title">Loan Product List</div>
-
                         <span>Total: <strong id="totalProducts">0</strong></span>
-
                     </div>
 
-
                     <table>
-
                         <thead>
-
                         <tr>
-
                             <th>#</th>
-
                             <th>Name</th>
-
                             <th>Type</th>
-
                             <th>Interest</th>
-
                             <th>Installments</th>
-
                             <th>Action</th>
-
                         </tr>
-
                         </thead>
-
                         <tbody id="productTableBody">
-
                         <!-- rows here -->
-
                         </tbody>
-
                     </table>
-
                 </section>
-
-
-            </div>
-
         </main>
-
     </div>
-
 </div>
 
-
 <script>
+    // Navigation functions (aligned with dashboard)
+    function toggleMenu(id) {
+        const menu = document.getElementById(id);
+        if (menu) menu.classList.toggle("open");
+    }
+
+    function goDashboard() { window.location.href = 'dashboard.html'; }
+    function goToLoanProducts() { window.location.href = "loan-products.html"; }
+    function goToBorrowerReg() { window.location.href = "borrower.html"; }
+    function goToLoanAccount() { window.location.href = "loan-account.html"; }
+    function goToLoanDisbursement() { window.location.href = "loan-disbursement.html"; }
+    function goToUserRegistration() { window.location.href = 'user-registration.html'; }
+    function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
+    function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
+
+    function logout() {
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+    }
+
+    // AUTO OPEN RELEVANT SUBMENU
+    if (window.location.pathname.includes("loan")) {
+        document.getElementById("loanSubmenu")?.classList.add("open");
+    }
 
     // ===== USER INFO FROM LOCALSTORAGE =====
 

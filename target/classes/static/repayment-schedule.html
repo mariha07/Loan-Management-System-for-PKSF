@@ -2,231 +2,404 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Repayment Schedule</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            --bg:#f5f7fb;
-            --muted:#6b7280;
-            --primary:#4f46e5;
-            --card:#fff;
-            --border:#e5e7eb;
-            --text:#222;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin:0;
-            font-family: Inter, Arial, sans-serif;
-            background:var(--bg);
-            color:var(--text);
+            font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: #f5f7fb;
+            color: #222;
         }
 
         .layout {
-            display:flex;
-            min-height:100vh;
+            display: flex;
+            min-height: 100vh;
         }
 
+        /* Sidebar */
         .sidebar {
-            width:240px;
-            background:var(--card);
-            border-right:1px solid var(--border);
-            padding:18px;
-            box-sizing:border-box;
+            width: 240px;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            padding: 20px 16px;
         }
 
-        .logo {
-            font-size:20px;
-            font-weight:700;
-            margin-bottom:20px;
+        .sidebar .logo {
+            font-weight: 700;
+            font-size: 20px;
+            margin-bottom: 24px;
+        }
+
+        .sidebar .menu-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: #9ca3af;
+            margin-bottom: 10px;
         }
 
         .nav-item {
-            display:flex;
-            align-items:center;
-            gap:8px;
-            padding:10px;
-            border-radius:8px;
-            cursor:pointer;
-            color:#475569;
-            margin-bottom:6px;
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            color: #4b5563;
         }
 
-        .nav-item:hover,
-        .nav-item.active {
-            background:#eef2ff;
-            color:#4338ca;
+        .nav-item.active,
+        .nav-item:hover {
+            background: #eef2ff;
+            color: #4338ca;
         }
 
+        /* Submenu */
         .submenu {
-            margin-left:16px;
-            display:none;
+            margin-left: 30px;
+            margin-top: 2px;
+            display: none;
         }
 
         .submenu.open {
-            display:block;
+            display: block;
         }
 
+        .submenu .nav-item {
+            padding: 8px 10px;
+            font-size: 13px;
+        }
+
+        .nav-item span.icon {
+            width: 20px;
+            margin-right: 8px;
+            text-align: center;
+        }
+
+        /* Main */
         .main {
-            flex:1;
-            padding:20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
-        .card {
-            background:var(--card);
-            border-radius:10px;
-            padding:16px;
-            margin-bottom:16px;
-            box-shadow:0 6px 18px rgba(15,23,42,.05);
+        /* Topbar */
+        .topbar {
+            height: 64px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
         }
 
-        .row {
-            display:flex;
-            gap:12px;
-            align-items:flex-end;
+        .topbar-left {
+            font-size: 18px;
+            font-weight: 600;
         }
 
-        label {
-            font-size:13px;
-            margin-bottom:6px;
-            display:block;
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
         }
 
-        input {
-            width:100%;
-            padding:8px;
-            border-radius:6px;
-            border:1px solid #d1d5db;
+        .badge-role {
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-weight: 600;
         }
 
-        button {
-            padding:10px 16px;
-            background:var(--primary);
-            color:#fff;
-            border:none;
-            border-radius:8px;
-            cursor:pointer;
-            font-weight:600;
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            background: #4f46e5;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
         }
 
-        button.secondary {
-            background:#e5e7eb;
-            color:#111;
+        /* Content */
+        .content {
+            padding: 24px;
+        }
+
+        .panel {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+            margin-bottom: 24px;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #111827;
+            border-bottom: 1px solid #f3f4f6;
+            padding-bottom: 12px;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #374151;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-control[readonly] {
+            background-color: #f9fafb;
+            color: #6b7280;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #111;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
         }
 
         table {
-            width:100%;
-            border-collapse:collapse;
-            margin-top:10px;
-        }
-
-        th, td {
-            padding:10px;
-            border-bottom:1px solid #e5e7eb;
-            font-size:14px;
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
         }
 
         th {
-            background:#f8fafc;
+            background: #f8fafc;
+            text-align: left;
+            padding: 12px;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #e5e7eb;
         }
 
-        .error { color:#dc2626; margin-top:8px; }
-        .success { color:#16a34a; margin-top:8px; }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f3f4f6;
+            color: #1e293b;
+        }
 
-        @media (max-width:900px) {
-            .sidebar { display:none; }
-            .row { flex-direction:column; }
+        .status-msg {
+            margin-top: 12px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .error { color: #dc2626; }
+        .success { color: #16a34a; }
+
+        .logout-btn {
+            border: none;
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 24px;
+            text-align: center;
         }
     </style>
 </head>
-
 <body>
 
 <div class="layout">
-
-    <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="logo">LMS</div>
-
-        <div class="nav-item" onclick="go('dashboard.html')">📊 Dashboard</div>
-
-        <div class="nav-item" onclick="toggleMenu('userSubmenu')">👤 User Management</div>
+        <div class="menu-title">Menu</div>
+        <div class="nav-item" onclick="window.location.href='dashboard.html'">
+            <span class="icon">📊</span>
+            <span>Dashboard</span>
+        </div>
+        <div class="nav-item" onclick="toggleMenu('userSubmenu')">
+            <span class="icon">👤</span>
+            <span>User Management</span>
+        </div>
         <div id="userSubmenu" class="submenu">
-            <div class="nav-item" onclick="go('user-registration.html')">📝 User Registration</div>
+            <div class="nav-item" onclick="window.location.href='user-registration.html'">
+                <span class="icon">📝</span>
+                <span>User Registration</span>
+            </div>
         </div>
-
-        <div class="nav-item" onclick="go('loan-products.html')">💰 Loan Products</div>
-
-        <div class="nav-item" onclick="toggleMenu('loanSubmenu')">📄 Loan Applications</div>
+        <div class="nav-item" onclick="window.location.href='loan-products.html'">
+            <span class="icon">💰</span>
+            <span>Loan Products</span>
+        </div>
+        <div class="nav-item" onclick="toggleMenu('loanSubmenu')">
+            <span class="icon">📄</span>
+            <span>Loan Applications</span>
+        </div>
         <div id="loanSubmenu" class="submenu">
-            <div class="nav-item" onclick="go('borrower.html')">📝 Borrower Registration</div>
-            <div class="nav-item" onclick="go('loan-account.html')">💼 Loan Account</div>
-            <div class="nav-item" onclick="go('loan-disbursement.html')">💸 Loan Disbursement</div>
+            <div class="nav-item" onclick="window.location.href='borrower.html'">
+                <span class="icon">📝</span>
+                <span>Borrower Registration</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='loan-account.html'">
+                <span class="icon">💼</span>
+                <span>Loan Account</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='loan-disbursement.html'">
+                <span class="icon">💸</span>
+                <span>Loan Disbursement</span>
+            </div>
         </div>
-
         <div class="nav-item" onclick="toggleMenu('repaymentSubmenu')">
-            📆 Repayments
+            <span class="icon">📆</span>
+            <span>Repayments</span>
         </div>
-
         <div id="repaymentSubmenu" class="submenu open">
-            <div class="nav-item active" onclick="go('repayment-schedule.html')">
-                📑 Repayment Schedule Generation
+            <div class="nav-item active" onclick="window.location.href='repayment-schedule.html'">
+                <span class="icon">📑</span>
+                <span>Repayment Schedule</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='loan_repayment_collection.html'">
+                <span class="icon">📥</span>
+                <span>Repayment Collection</span>
             </div>
         </div>
     </aside>
 
-    <!-- MAIN -->
-    <main class="main">
+    <div class="main">
+        <header class="topbar">
+            <div class="topbar-left">
+                Repayment Schedule
+            </div>
+            <div class="topbar-right">
+                <span class="badge-role" id="userRoleBadge">ROLE</span>
+                <span id="userName" style="font-weight: 500;">User</span>
+                <div class="avatar" id="userAvatar">U</div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </header>
 
-        <div class="card">
-            <h2>Repayment Schedule Generation</h2>
-
-            <div class="row">
-                <div style="flex:1">
-                    <label>Loan Number</label>
-                    <input id="loanNumber" placeholder="LN-000001">
+        <main class="content">
+            <div class="panel">
+                <div class="panel-title">Schedule Generation</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Loan Number</label>
+                    <div class="input-group">
+                        <input type="text" id="loanNumber" class="form-control" placeholder="Enter Loan No (e.g. LN-000001)">
+                        <button id="generateBtn" class="btn btn-primary" onclick="generateSchedule()">Generate</button>
+                        <button class="btn btn-secondary" onclick="loadSchedule()">View</button>
+                    </div>
                 </div>
 
-                <button id="generateBtn" onclick="generateSchedule()">Generate</button>
-                <button class="secondary" onclick="loadSchedule()">View</button>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label class="form-label">Loan Amount</label>
+                        <input id="loanAmount" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Installments</label>
+                        <input id="installments" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Type</label>
+                        <input id="installmentType" class="form-control" readonly>
+                    </div>
+                </div>
+
+                <div id="msg" class="status-msg"></div>
             </div>
 
-            <label>Loan Amount</label>
-            <input id="loanAmount" readonly>
-
-            <label>No of Installments</label>
-            <input id="installments" readonly>
-
-            <label>Installment Type</label>
-            <input id="installmentType" readonly>
-
-            <div id="msg" class="error"></div>
-        </div>
-
-        <div class="card">
-            <h2>Repayment Schedule List</h2>
-
-            <table>
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Loan No</th>
-                    <th>Inst</th>
-                    <th>Date</th>
-                    <th>Principal Paid</th>
-                    <th>Interest Paid</th>
-                    <th>Installment</th>
-                    <th>Principal OS</th>
-                    <th>Interest OS</th>
-                </tr>
-                </thead>
-                <tbody id="scheduleTable">
-                <tr><td colspan="9">No data</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-    </main>
+            <div class="panel">
+                <div class="panel-title">Repayment Schedule List</div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Loan No</th>
+                            <th>Inst</th>
+                            <th>Date</th>
+                            <th>Principal Paid</th>
+                            <th>Interest Paid</th>
+                            <th>Installment</th>
+                            <th>Principal OS</th>
+                            <th>Interest OS</th>
+                        </tr>
+                        </thead>
+                        <tbody id="scheduleTable">
+                        <tr><td colspan="9" style="text-align: center; color: #9ca3af;">No data available</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="footer">Loan Management System · Repayment Portal</div>
+        </main>
+    </div>
 </div>
 
 <script>
@@ -240,12 +413,27 @@
     const typeField = document.getElementById("installmentType");
     const generateBtn = document.getElementById("generateBtn");
 
-    // ===============================
-    // AUTO FILL LOAN INFO
-    // ===============================
+    // Auth info
+    const userJson = localStorage.getItem('user');
+    if (userJson) {
+        const user = JSON.parse(userJson);
+        document.getElementById('userName').innerText = user.name || 'User';
+        document.getElementById('userRoleBadge').innerText = user.role || 'USER';
+        document.getElementById('userAvatar').innerText = (user.name) ? user.name[0].toUpperCase() : 'U';
+    }
+
+    function toggleMenu(id) {
+        document.getElementById(id).classList.toggle("open");
+    }
+
+    function logout() {
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+    }
+
     loanNoField.addEventListener("input", async () => {
         const loanNo = loanNoField.value.trim();
-        if (loanNo.length < 6) return;
+        if (loanNo.length < 3) return;
 
         try {
             const res = await fetch(`${API_BASE}/loan-accounts/by-loan-number/${loanNo}`);
@@ -253,13 +441,10 @@
                 clearLoanInfo();
                 return;
             }
-
             const data = await res.json();
-
             amountField.value = data.approvedAmount ?? "";
             instField.value = data.numberOfInstallments ?? "";
             typeField.value = data.installmentType ?? "";
-
             statusMsg.innerText = "";
         } catch {
             clearLoanInfo();
@@ -272,116 +457,71 @@
         typeField.value = "";
     }
 
-    // ===============================
-    // GENERATE SCHEDULE (ONCE)
-    // ===============================
     async function generateSchedule() {
         const loanNo = loanNoField.value.trim();
         if (!loanNo) {
-            statusMsg.innerText = "Loan number required";
-            return;
-        }
-
-        statusMsg.innerText = "Generating schedule...";
-        statusMsg.className = "error";
-        tblBody.innerHTML = "";
-
-        try {
-            const res = await fetch(
-                `${API_BASE}/repayment-schedules/generate/${loanNo}`,
-                { method: "POST" }
-            );
-
-            if (!res.ok) {
-                statusMsg.innerText = await res.text() || "Schedule already generated";
-                return;
-            }
-
-            const list = await res.json();
-            renderTable(list);
-
-            statusMsg.className = "success";
-            statusMsg.innerText = "Repayment schedule generated";
-
-            generateBtn.style.display = "none"; // hide after generate
-
-        } catch {
-            statusMsg.innerText = "Server error";
-        }
-    }
-
-    async function generateSchedule() {
-        const loanNo = loanNoField.value.trim();
-        if (!loanNo) {
+            statusMsg.className = "status-msg error";
             statusMsg.innerText = "Please enter a Loan Number";
             return;
         }
 
+        statusMsg.className = "status-msg";
         statusMsg.innerText = "Calculating...";
-        statusMsg.className = "error";
         tblBody.innerHTML = "";
 
         try {
-            // Changed endpoint to /generate-all/ to match the backend controller
             const res = await fetch(`${API_BASE}/repayment-schedules/generate-all/${loanNo}`, { method: "POST" });
 
             if (!res.ok) {
+                statusMsg.className = "status-msg error";
                 statusMsg.innerText = await res.text() || "Failed to generate";
                 return;
             }
 
             const data = await res.json();
-            statusMsg.className = "success";
-            statusMsg.innerText = "Repayment schedule generated successfully";
+            statusMsg.className = "status-msg success";
+            statusMsg.innerText = "Schedule generated successfully";
 
             renderTable(data);
             generateBtn.style.display = "none";
         } catch (err) {
+            statusMsg.className = "status-msg error";
             statusMsg.innerText = "Server error";
         }
     }
 
-    // ===============================
-    // VIEW EXISTING SCHEDULE
-    // ===============================
     async function loadSchedule() {
         const loanNo = loanNoField.value.trim();
         if (!loanNo) {
+            statusMsg.className = "status-msg error";
             statusMsg.innerText = "Loan number required";
             return;
         }
 
-        tblBody.innerHTML = "";
-
         try {
-            const res = await fetch(
-                `${API_BASE}/repayment-schedules/by-loan/${loanNo}`
-            );
-
+            const res = await fetch(`${API_BASE}/repayment-schedules/by-loan/${loanNo}`);
             if (!res.ok) {
+                statusMsg.className = "status-msg error";
                 statusMsg.innerText = "No schedule found";
+                tblBody.innerHTML = `<tr><td colspan="9" style="text-align: center;">No schedule available</td></tr>`;
                 return;
             }
 
             const list = await res.json();
-
             if (list.length === 0) {
-                tblBody.innerHTML =
-                    `<tr><td colspan="7">No schedule available</td></tr>`;
+                tblBody.innerHTML = `<tr><td colspan="9" style="text-align: center;">No schedule available</td></tr>`;
                 return;
             }
 
             renderTable(list);
+            statusMsg.innerText = "";
             generateBtn.style.display = "none";
-
         } catch {
+            statusMsg.className = "status-msg error";
             statusMsg.innerText = "Server error";
         }
     }
 
-    // ===============================
-    // RENDER TABLE
-    // ===============================
     function renderTable(list) {
         tblBody.innerHTML = "";
         list.forEach((s, i) => {
@@ -397,12 +537,7 @@
                     <td>${s.principalOutstanding}</td>
                     <td>${s.interestOutstanding}</td>
                 </tr>`;
-            });
-        }
-
-    function go(url) { window.location.href = url; }
-    function toggleMenu(id) {
-        document.getElementById(id).classList.toggle("open");
+        });
     }
 </script>
 
