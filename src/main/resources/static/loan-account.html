@@ -233,6 +233,16 @@
                 background: #f9fafb;
             }
 
+            .btn-primary {
+                background: #4f46e5;
+                color: #fff;
+                padding: 10px 20px;
+                border-radius: 8px;
+                border: none;
+                font-weight: 500;
+                cursor: pointer;
+            }
+
             /* Search results */
             .search-results {
                 background: #fff;
@@ -449,9 +459,14 @@
 
                 <!-- Recent Accounts -->
                 <div class="panel">
-                    <h2>Recent Loan Accounts</h2>
-                    <table>
-                        <thead>
+                    <div class="list-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <div>
+                                    <h2>Recent Loan Accounts</h2>
+                                </div>
+                                <button class="btn-primary" onclick="downloadReport()" style="background: #10b981;">📄 Download PDF</button>
+                            </div>
+                            <table>
+                            <thead>
                         <tr>
                             <th style="width:50px">#</th>
                             <th>Loan Number</th>
@@ -672,6 +687,10 @@
         }
 
         // ======= VIEW ACCOUNT =======
+        function downloadReport() {
+            window.open(`${API_BASE}/loan-accounts/report/pdf`, '_blank');
+        }
+
         function viewAccount(id) {
             const acc = accounts.find(a => String(a.id) === String(id));
             if (!acc) return;

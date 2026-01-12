@@ -20,6 +20,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.util.stream.Stream;
 
 @Service // Marks this as a Service class so Spring can use it to handle business logic.
 @Transactional // Ensures that database operations either all succeed or all fail together (maintains data integrity)
@@ -205,5 +210,49 @@ public class LoanAccountServiceImpl implements LoanAccountService {
         dto.setLoanType(acc.getLoanProduct().getLoanType().name());
         return dto;
     }
+    @Override
+    public ByteArrayInputStream generateLoanAccountReport() {
+        List<LoanAccount> accounts = loanAccountRepository.findAll();
+        Document document = new Document(PageSize.A4);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
 
+        try {
+            PdfWriter.getInstance(document, out);
+            document.open();
+
+            Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+            font.setSize(18);
+            Paragraph para = new Paragraph("Loan Account List Report", font);
+            para.setAlignment(Element.ALIGN_CENTER);
+            document.add(para);
+            document.add(Chunk.NEWLINE);
+
+            PdfPTable table = new PdfPTable(5);
+            table.setWidthPercentage(100);
+            table.setWidths(new int[]{3, 4, 4, 3, 3});
+
+            Stream.of("Loan No", "Borrower", "Product", "Amount", "Status").forEach(headerTitle -> {
+                PdfPCell header = new PdfPCell();
+                header.setBackgroundColor(java.awt.Color.LIGHT_GRAY);
+                header.setBorderWidth(2);
+                header.setPhrase(new Phrase(headerTitle));
+                table.addCell(header);
+            });
+
+            for (LoanAccount acc : accounts) {
+                table.addCell(acc.getLoanNumber());
+                table.addCell(acc.getBorrower() != null ? acc.getBorrower().getName() : "");
+                table.addCell(acc.getLoanProduct() != null ? acc.getLoanProduct().getName() : "");
+                table.addCell(String.valueOf(acc.getApprovedAmount()));
+                table.addCell(acc.getStatus());
+            }
+
+            document.add(table);
+            document.close();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
 }

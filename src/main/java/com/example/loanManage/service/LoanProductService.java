@@ -2,6 +2,7 @@ package com.example.loanManage.service;
 
 import com.example.loanManage.dto.LoanProductDto;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 public interface LoanProductService {
@@ -17,4 +18,6 @@ public interface LoanProductService {
     LoanProductDto update(Long id, LoanProductDto request);
 
     void deactivate(Long id);
+
+    ByteArrayInputStream generateLoanProductReport();
 }

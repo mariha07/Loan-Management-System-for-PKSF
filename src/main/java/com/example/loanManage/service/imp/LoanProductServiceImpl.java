@@ -4,19 +4,23 @@ import com.example.loanManage.dto.LoanProductDto;
 import com.example.loanManage.entity.LoanProduct;
 import com.example.loanManage.repository.LoanProductRepository;
 import com.example.loanManage.service.LoanProductService;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class LoanProductServiceImpl implements LoanProductService {
 
-    private final LoanProductRepository loanProductRepository;
-
-    public LoanProductServiceImpl(LoanProductRepository loanProductRepository) {
-        this.loanProductRepository = loanProductRepository;
-    }
+    @Autowired
+    private LoanProductRepository loanProductRepository;
 
     @Override
     public LoanProductDto create(LoanProductDto request) {
@@ -33,16 +37,14 @@ public class LoanProductServiceImpl implements LoanProductService {
 
     @Override
     public List<LoanProductDto> getAll() {
-        return loanProductRepository.findAll()
-                .stream()
+        return loanProductRepository.findAll().stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<LoanProductDto> getActive() {
-        return loanProductRepository.findByActiveTrue()
-                .stream()
+        return loanProductRepository.findByActiveTrue().stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
@@ -130,5 +132,52 @@ public class LoanProductServiceImpl implements LoanProductService {
 
         if (dto.getInstallmentType() == null)
             throw new RuntimeException("Installment type is required");
+    }
+
+    @Override
+    public ByteArrayInputStream generateLoanProductReport() {
+        List<LoanProduct> products = loanProductRepository.findAll();
+        Document document = new Document(PageSize.A4);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try {
+            PdfWriter.getInstance(document, out);
+            document.open();
+
+            Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+            font.setSize(18);
+            Paragraph para = new Paragraph("Loan Product List Report", font);
+            para.setAlignment(Element.ALIGN_CENTER);
+            document.add(para);
+            document.add(Chunk.NEWLINE);
+
+            PdfPTable table = new PdfPTable(6);
+            table.setWidthPercentage(100);
+            table.setWidths(new float[]{1, 3, 2, 2, 2, 2});
+
+            String[] headers = {"#", "Name", "Code", "Type", "Rate (%)", "Installments"};
+            for (String header : headers) {
+                PdfPCell cell = new PdfPCell(new Phrase(header));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(cell);
+            }
+
+            int count = 1;
+            for (LoanProduct p : products) {
+                table.addCell(String.valueOf(count++));
+                table.addCell(p.getName());
+                table.addCell(p.getCode());
+                table.addCell(p.getLoanType().toString());
+                table.addCell(String.valueOf(p.getInterestRate()));
+                table.addCell(String.valueOf(p.getNumberOfInstallments()));
+            }
+
+            document.add(table);
+            document.close();
+        } catch (DocumentException ex) {
+            ex.printStackTrace();
+        }
+
+        return new ByteArrayInputStream(out.toByteArray());
     }
 }

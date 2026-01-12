@@ -66,6 +66,14 @@
             color: #4338ca;
         }
 
+        .nav-item a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
         /* Submenu */
         .submenu {
             margin-left: 30px;
@@ -282,63 +290,63 @@
 </head>
 <body>
 
-<div class="layout">
-    <aside class="sidebar">
-        <div class="logo">LMS</div>
-        <div class="menu-title">Menu</div>
-        <div class="nav-item" onclick="goDashboard()">
-            <span class="icon">📊</span>
-            <span>Dashboard</span>
-        </div>
-        <div class="nav-item" onclick="toggleMenu('userSubmenu')">
-            <span class="icon">👤</span>
-            <span>User Management</span>
-        </div>
-        <div id="userSubmenu" class="submenu">
-            <div class="nav-item" onclick="goToUserRegistration()">
-                <span class="icon">📝</span>
-                <span>User Registration</span>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="logo">LMS</div>
+            <div class="menu-title">Menu</div>
+            <div class="nav-item" onclick="goDashboard()">
+                <span class="icon">📊</span>
+                <span>Dashboard</span>
             </div>
-        </div>
-        <div class="nav-item active">
-            <span class="icon">💰</span>
-            <span>Loan Products</span>
-        </div>
-        <div class="nav-item" onclick="toggleMenu('loanSubmenu')">
-            <span class="icon">📄</span>
-            <span>Loan Applications</span>
-        </div>
-        <div id="loanSubmenu" class="submenu">
-            <div class="nav-item" onclick="goToBorrowerReg()">
-                <span class="icon">📝</span>
-                <span>Borrower Registration</span>
+            <div class="nav-item" onclick="toggleMenu('userSubmenu')">
+                <span class="icon">👤</span>
+                <span>User Management</span>
             </div>
-            <div class="nav-item" onclick="goToLoanAccount()">
-                <span class="icon">💼</span>
-                <span>Loan Account</span>
+            <div id="userSubmenu" class="submenu">
+                <div class="nav-item" onclick="goToUserRegistration()">
+                    <span class="icon">📝</span>
+                    <span>User Registration</span>
+                </div>
             </div>
-            <div class="nav-item" onclick="goToLoanDisbursement()">
-                <span class="icon">💸</span>
-                <span>Loan Disbursement</span>
+            <div class="nav-item active">
+                <span class="icon">💰</span>
+                <span>Loan Products</span>
             </div>
-        </div>
-        <div class="nav-item" onclick="toggleMenu('repaymentSubmenu')">
-            <span class="icon">📆</span>
-            <span>Repayments</span>
-        </div>
-        <div id="repaymentSubmenu" class="submenu">
-            <div class="nav-item" onclick="goToRepaymentSchedule()">
-                <span class="icon">📑</span>
-                <span>Repayment Schedule</span>
+            <div class="nav-item" onclick="toggleMenu('loanSubmenu')">
+                <span class="icon">📄</span>
+                <span>Loan Applications</span>
             </div>
-            <div class="nav-item" onclick="goToRepaymentCollection()">
-                <span class="icon">📥</span>
-                <span>Repayment Collection</span>
+            <div id="loanSubmenu" class="submenu open">
+                <div class="nav-item" onclick="goToBorrowerReg()">
+                    <span class="icon">📝</span>
+                    <span>Borrower Registration</span>
+                </div>
+                <div class="nav-item" onclick="goToLoanAccount()">
+                    <span class="icon">💼</span>
+                    <span>Loan Account</span>
+                </div>
+                <div class="nav-item" onclick="goToLoanDisbursement()">
+                    <span class="icon">💸</span>
+                    <span>Loan Disbursement</span>
+                </div>
             </div>
-        </div>
-    </aside>
+            <div class="nav-item" onclick="toggleMenu('repaymentSubmenu')">
+                <span class="icon">📆</span>
+                <span>Repayments</span>
+            </div>
+            <div id="repaymentSubmenu" class="submenu">
+                <div class="nav-item" onclick="goToRepaymentSchedule()">
+                    <span class="icon">📑</span>
+                    <span>Repayment Schedule</span>
+                </div>
+                <div class="nav-item" onclick="goToRepaymentCollection()">
+                    <span class="icon">📥</span>
+                    <span>Repayment Collection</span>
+                </div>
+            </div>
+        </aside>
 
-    <div class="main">
+        <div class="main">
         <header class="topbar">
             <div class="topbar-left">
                 Loan Products
@@ -469,12 +477,15 @@
 
                 <!-- LIST CARD (NICHE) -->
                 <section class="card">
-                    <div class="list-header">
-                        <div class="card-title">Loan Product List</div>
-                        <span>Total: <strong id="totalProducts">0</strong></span>
-                    </div>
+                    <div class="list-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <div>
+                                <div class="card-title">Loan Product List</div>
+                                <span>Total: <strong id="totalProducts">0</strong></span>
+                            </div>
+                            <button class="btn-primary" onclick="downloadReport()" style="background: #10b981;">📄 Download PDF</button>
+                        </div>
 
-                    <table>
+                        <table>
                         <thead>
                         <tr>
                             <th>#</th>
@@ -494,402 +505,161 @@
     </div>
 </div>
 
-<script>
-    // Navigation functions (aligned with dashboard)
-    function toggleMenu(id) {
-        const menu = document.getElementById(id);
-        if (menu) menu.classList.toggle("open");
-    }
+    <script>
+        const API_BASE = 'http://localhost:8080/api';
 
-    function goDashboard() { window.location.href = 'dashboard.html'; }
-    function goToLoanProducts() { window.location.href = "loan-products.html"; }
-    function goToBorrowerReg() { window.location.href = "borrower.html"; }
-    function goToLoanAccount() { window.location.href = "loan-account.html"; }
-    function goToLoanDisbursement() { window.location.href = "loan-disbursement.html"; }
-    function goToUserRegistration() { window.location.href = 'user-registration.html'; }
-    function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
-    function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
-
-    function logout() {
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
-    }
-
-    // AUTO OPEN RELEVANT SUBMENU
-    if (window.location.pathname.includes("loan")) {
-        document.getElementById("loanSubmenu")?.classList.add("open");
-    }
-
-    // ===== USER INFO FROM LOCALSTORAGE =====
-
-    const userJson = localStorage.getItem('user');
-
-    if (!userJson) {
-
-        window.location.href = 'login.html';
-
-    } else {
-
-        const user = JSON.parse(userJson);
-
-        document.getElementById('userEmail').innerText = user.email || '';
-
-        document.getElementById('userRoleBadge').innerText = user.role || 'USER';
-
-        const initial = (user.name && user.name.length > 0) ? user.name[0].toUpperCase() : 'U';
-
-        document.getElementById('userAvatar').innerText = initial;
-
-    }
-
-
-    function goDashboard() {
-
-        window.location.href = 'dashboard.html';
-
-    }
-
-    function goToUserRegistration() {
-
-        window.location.href = "user-registration.html";
-
-    }
-
-
-    // ===== EDIT MODE STATE =====
-
-    let editingId = null; // null = create, not null = update
-
-    let productsCache = []; // last loaded list
-
-
-    const form = document.getElementById('loanProductForm');
-
-    const formMessage = document.getElementById('formMessage');
-
-    const submitBtn = document.getElementById('submitBtn');
-
-
-    // ===== FORM SUBMIT =====
-
-    form.addEventListener('submit', async function (e) {
-
-        e.preventDefault();
-
-        formMessage.textContent = '';
-
-        formMessage.className = 'message';
-
-
-        const name = document.getElementById('name').value.trim();
-
-        const code = document.getElementById('code').value.trim();
-
-        const maxLoan = parseFloat(document.getElementById('maxLoan').value);
-
-        const minLoan = parseFloat(document.getElementById('minLoan').value);
-
-        const loanType = document.getElementById('loanType').value;
-
-        const interestRate = parseFloat(document.getElementById('interestRate').value);
-
-        const numberOfInstallments = parseInt(document.getElementById('numberOfInstallments').value, 10);
-
-        const installmentType = document.getElementById('installmentType').value;
-
-
-        if (!name || !code || isNaN(maxLoan) || isNaN(minLoan) ||
-
-            isNaN(interestRate) || isNaN(numberOfInstallments)) {
-
-            formMessage.textContent = 'Please fill all required fields correctly.';
-
-            formMessage.classList.add('error');
-
-            return;
-
+        // Navigation functions
+        function toggleMenu(id) {
+            const menu = document.getElementById(id);
+            if (menu) menu.classList.toggle("open");
         }
 
+        function goDashboard() { window.location.href = 'dashboard.html'; }
+        function goToLoanProducts() { window.location.href = "loan-products.html"; }
+        function goToBorrowerReg() { window.location.href = "borrower.html"; }
+        function goToLoanAccount() { window.location.href = "loan-account.html"; }
+        function goToLoanDisbursement() { window.location.href = "loan-disbursement.html"; }
+        function goToUserRegistration() { window.location.href = 'user-registration.html'; }
+        function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
+        function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
 
-        const payload = {
+        function downloadReport() {
+            window.open(`${API_BASE}/loan-products/report/pdf`, '_blank');
+        }
 
-            name,
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
 
-            code,
+        // ===== EDIT MODE STATE =====
+        let editingId = null; 
+        let productsCache = [];
 
-            maxLoan,
+        window.onload = function() {
+            const userJson = localStorage.getItem('user');
+            if (!userJson) {
+                window.location.href = 'login.html';
+                return;
+            }
+            const user = JSON.parse(userJson);
+            document.getElementById('userEmail').innerText = user.email || '';
+            document.getElementById('userRoleBadge').innerText = user.role || 'USER';
+            document.getElementById('userAvatar').innerText = (user.name || 'U')[0].toUpperCase();
 
-            minLoan,
-
-            loanType,
-
-            interestRate,
-
-            numberOfInstallments,
-
-            installmentType
-
+            loadProducts();
         };
 
+        const form = document.getElementById('loanProductForm');
+        const formMessage = document.getElementById('formMessage');
+        const submitBtn = document.getElementById('submitBtn');
 
-        try {
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            formMessage.textContent = '';
 
-            let url = 'http://localhost:8080/api/loan-products';
+            const payload = {
+                name: document.getElementById('name').value.trim(),
+                code: document.getElementById('code').value.trim(),
+                maxLoan: parseFloat(document.getElementById('maxLoan').value),
+                minLoan: parseFloat(document.getElementById('minLoan').value),
+                loanType: document.getElementById('loanType').value,
+                interestRate: parseFloat(document.getElementById('interestRate').value),
+                numberOfInstallments: parseInt(document.getElementById('numberOfInstallments').value, 10),
+                installmentType: document.getElementById('installmentType').value
+            };
 
-            let method = 'POST';
-
-
-            if (editingId !== null) {
-
-                url = `http://localhost:8080/api/loan-products/${editingId}`;
-
-                method = 'PUT';
-
-            }
-
-
-            const res = await fetch(url, {
-
-                method,
-
-                headers: {'Content-Type': 'application/json'},
-
-                body: JSON.stringify(payload)
-
-            });
-
-
-            if (!res.ok) {
-
-                const text = await res.text();
-
-                console.error('Error response:', text);
-
-                formMessage.textContent = 'Failed to save product.';
-
-                formMessage.classList.add('error');
-
+            if (!payload.name || !payload.code || isNaN(payload.maxLoan)) {
+                formMessage.textContent = 'Please fill all required fields.';
+                formMessage.style.color = 'red';
                 return;
-
             }
 
-
-            formMessage.textContent = (editingId === null)
-
-                ? 'Product created successfully!'
-
-                : 'Product updated successfully!';
-
-            formMessage.classList.add('success');
-
-
-            cancelEdit();
-
-            await loadProducts();
-
-        } catch (err) {
-
-            console.error('Error while saving:', err);
-
-            formMessage.textContent = 'Unexpected error while saving product.';
-
-            formMessage.classList.add('error');
-
-        }
-
-    });
-
-
-    function resetFormFields() {
-
-        document.getElementById('name').value = '';
-
-        document.getElementById('code').value = '';
-
-        document.getElementById('maxLoan').value = '';
-
-        document.getElementById('minLoan').value = '';
-
-        document.getElementById('loanType').value = 'PERSONAL';
-
-        document.getElementById('interestRate').value = 10;
-
-        document.getElementById('numberOfInstallments').value = 12;
-
-        document.getElementById('installmentType').value = 'MONTHLY';
-
-    }
-
-
-    function cancelEdit() {
-
-        editingId = null;
-
-        resetFormFields();
-
-        submitBtn.textContent = 'Save Product';
-
-        formMessage.textContent = '';
-
-        formMessage.className = 'message';
-
-    }
-
-
-    // ===== LOAD PRODUCTS =====
-
-    async function loadProducts() {
-
-        try {
-
-            const res = await fetch('http://localhost:8080/api/loan-products');
-
-            const list = await res.json();
-
-            productsCache = list;
-
-
-            const tbody = document.getElementById('productTableBody');
-
-            tbody.innerHTML = '';
-
-
-            list.forEach((p, index) => {
-
-                const tr = document.createElement('tr');
-
-                tr.innerHTML = `
-
-<td>${index + 1}</td>
-
-<td>${p.name}</td>
-
-<td>${p.loanType}</td>
-
-<td>${p.interestRate}%</td>
-
-<td>${p.numberOfInstallments}</td>
-
-<td>
-
-<div class="action-buttons">
-
-<button class="btn-icon edit" title="Edit" onclick="editProduct(${p.id})">✏️</button>
-
-<button class="btn-icon delete" title="Delete" onclick="deleteProduct(${p.id})">🗑️</button>
-
-</div>
-
-</td>
-
-`;
-
-                tbody.appendChild(tr);
-
-            });
-
-
-            document.getElementById('totalProducts').innerText = list.length;
-
-        } catch (err) {
-
-            console.error('Error loading products:', err);
-
-        }
-
-    }
-
-
-    // ===== EDIT PRODUCT =====
-
-    function editProduct(id) {
-
-        const p = productsCache.find(prod => prod.id === id);
-
-        if (!p) return;
-
-
-        editingId = id;
-
-        document.getElementById('name').value = p.name || '';
-
-        document.getElementById('code').value = p.code || '';
-
-        document.getElementById('loanType').value = p.loanType || 'PERSONAL';
-
-        document.getElementById('maxLoan').value = p.maxLoan ?? '';
-
-        document.getElementById('minLoan').value = p.minLoan ?? '';
-
-        document.getElementById('interestRate').value = p.interestRate ?? 10;
-
-        document.getElementById('numberOfInstallments').value = p.numberOfInstallments ?? 12;
-
-        document.getElementById('installmentType').value = p.installmentType || 'MONTHLY';
-
-
-        submitBtn.textContent = 'Update Product';
-
-        formMessage.textContent = 'Editing product: ' + (p.name || '');
-
-        formMessage.className = 'message';
-
-
-        window.scrollTo({top: 0, behavior: 'smooth'});
-
-    }
-
-
-    // ===== DELETE PRODUCT =====
-
-    async function deleteProduct(id) {
-
-        const ok = confirm('Are you sure you want to delete this product?');
-
-        if (!ok) return;
-
-
-        try {
-
-            const res = await fetch(`http://localhost:8080/api/loan-products/${id}`, {
-
-                method: 'DELETE'
-
-            });
-
-            if (res.status === 204 || res.ok) {
-
-                await loadProducts();
-
-            } else {
-
-                console.error('Delete failed, status:', res.status);
-
+            try {
+                const url = editingId ? `${API_BASE}/loan-products/${editingId}` : `${API_BASE}/loan-products`;
+                const method = editingId ? 'PUT' : 'POST';
+
+                const res = await fetch(url, {
+                    method,
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    formMessage.textContent = editingId ? 'Updated successfully!' : 'Created successfully!';
+                    formMessage.style.color = 'green';
+                    cancelEdit();
+                    loadProducts();
+                } else {
+                    formMessage.textContent = 'Error saving product.';
+                    formMessage.style.color = 'red';
+                }
+            } catch (err) {
+                console.error(err);
             }
+        });
 
-        } catch (err) {
+        async function loadProducts() {
+            try {
+                const res = await fetch(`${API_BASE}/loan-products`);
+                const list = await res.json();
+                productsCache = list;
 
-            console.error('Error deleting product:', err);
-
+                const tbody = document.getElementById('productTableBody');
+                tbody.innerHTML = '';
+                list.forEach((p, index) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${p.name || ''}</td>
+                        <td>${p.loanType || ''}</td>
+                        <td>${p.interestRate || 0}%</td>
+                        <td>${p.numberOfInstallments || 0}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon" onclick="editProduct(${p.id})">✏️</button>
+                                <button class="btn-icon" onclick="deleteProduct(${p.id})">🗑️</button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                document.getElementById('totalProducts').innerText = list.length;
+            } catch (err) {
+                console.error(err);
+            }
         }
 
-    }
+        function editProduct(id) {
+            const p = productsCache.find(prod => prod.id === id);
+            if (!p) return;
+            editingId = id;
+            document.getElementById('name').value = p.name || '';
+            document.getElementById('code').value = p.code || '';
+            document.getElementById('loanType').value = p.loanType || 'PERSONAL';
+            document.getElementById('maxLoan').value = p.maxLoan ?? '';
+            document.getElementById('minLoan').value = p.minLoan ?? '';
+            document.getElementById('interestRate').value = p.interestRate ?? 10;
+            document.getElementById('numberOfInstallments').value = p.numberOfInstallments ?? 12;
+            document.getElementById('installmentType').value = p.installmentType || 'MONTHLY';
+            submitBtn.textContent = 'Update Product';
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
 
+        async function deleteProduct(id) {
+            if (!confirm('Are you sure?')) return;
+            try {
+                const res = await fetch(`${API_BASE}/loan-products/${id}`, { method: 'DELETE' });
+                if (res.ok) loadProducts();
+            } catch (err) { console.error(err); }
+        }
 
-    // expose for inline onclick
-
-    window.editProduct = editProduct;
-
-    window.deleteProduct = deleteProduct;
-
-
-    // initial load
-
-    loadProducts();
-
-</script>
-
-
+        function cancelEdit() {
+            editingId = null;
+            form.reset();
+            submitBtn.textContent = 'Save Product';
+            formMessage.textContent = '';
+        }
+    </script>
 </body>
-
 </html>

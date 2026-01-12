@@ -5,6 +5,7 @@ import com.example.loanManage.entity.Borrower;
 import com.example.loanManage.entity.LoanProduct;
 import org.springframework.data.domain.Page;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 public interface LoanAccountService {
@@ -23,4 +24,5 @@ public interface LoanAccountService {
 
     LoanAccountDto getByLoanNumber(String loanNumber);
 
+    ByteArrayInputStream generateLoanAccountReport();
 }

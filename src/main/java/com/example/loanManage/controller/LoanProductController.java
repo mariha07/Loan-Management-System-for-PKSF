@@ -2,8 +2,13 @@ package com.example.loanManage.controller;
 
 import com.example.loanManage.dto.LoanProductDto;
 import com.example.loanManage.service.LoanProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import java.io.ByteArrayInputStream;
 
 import java.util.List;
 
@@ -12,11 +17,8 @@ import java.util.List;
 @CrossOrigin(origins = "*") // Allows any frontend (like React) to connect to these endpoints.
 public class LoanProductController {
 
-    private final LoanProductService loanProductService; // Variable to hold the business logic for loan products.
-
-    public LoanProductController(LoanProductService loanProductService) { // Connects the service to the controller.
-        this.loanProductService = loanProductService;
-    }
+    @Autowired
+    private LoanProductService loanProductService;
 
     // POST /api/loan-products
     @PostMapping // Handles POST requests to save a new loan product (e.g., "Gold Loan").
@@ -58,5 +60,17 @@ public class LoanProductController {
     public ResponseEntity<Void> deactivate(@PathVariable Long id) {
         loanProductService.deactivate(id); // Calls the service to flip the active status to false.
         return ResponseEntity.noContent().build(); // Returns a 204 "No Content" status (successful deletion).
+    }
+
+    @GetMapping("/report/pdf")
+    public ResponseEntity<InputStreamResource> downloadPdf() {
+        ByteArrayInputStream bis = loanProductService.generateLoanProductReport();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=loan_products.pdf");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
     }
 }

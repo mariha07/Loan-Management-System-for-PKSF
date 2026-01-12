@@ -6,7 +6,12 @@ import com.example.loanManage.entity.LoanProduct;
 import com.example.loanManage.service.LoanAccountService;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +65,18 @@ public class LoanAccountController {
     public Map<String, String> nextLoanNumber() {
         return Map.of("nextLoanNumber", loanAccountService.getNextLoanNumber());
         // Returns the number inside a JSON object for the frontend to display.
+    }
+
+    @GetMapping("/report/pdf")
+    public ResponseEntity<InputStreamResource> downloadPdf() {
+        ByteArrayInputStream bis = loanAccountService.generateLoanAccountReport();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=loan_accounts.pdf");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
     }
 
     // ================= FIND BY LOAN NUMBER =================
