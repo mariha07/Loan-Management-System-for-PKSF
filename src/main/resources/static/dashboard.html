@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>LMS Dashboard</title>
@@ -259,7 +259,6 @@
     </style>
 </head>
 <body>
-
 <div class="layout">
     <aside class="sidebar">
         <div class="logo">LMS</div>
@@ -312,6 +311,33 @@
             <div class="nav-item" onclick="goToRepaymentCollection()">
                 <span class="icon">📥</span>
                 <span>Repayment Collection</span>
+            </div>
+        </div>
+
+        <div class="nav-item" onclick="toggleMenu('analyticalSubmenu')">
+            <span class="icon">📊</span>
+            <span>Reports</span>
+        </div>
+        <div id="analyticalSubmenu" class="submenu">
+            <div class="nav-item" onclick="goToLoanPortfolioReport()">
+                <span class="icon">📈</span>
+                <span>Loan Portfolio Report</span>
+            </div>
+            <div class="nav-item">
+                <span class="icon">📈</span>
+                <span>Repayment Performance Report</span>
+            </div>
+            <div class="nav-item">
+                <span class="icon">📈</span>
+                <span>Borrower Analysis Report</span>
+            </div>
+            <div class="nav-item">
+                <span class="icon">📈</span>
+                <span>Loan Product Analysis</span>
+            </div>
+            <div class="nav-item">
+                <span class="icon">⚠️</span>
+                <span>Overdue & Risk Report</span>
             </div>
         </div>
     </aside>
@@ -407,6 +433,7 @@
     function goToUserRegistration() { window.location.href = 'user-registration.html'; }
     function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
     function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
+    function goToLoanPortfolioReport() { window.location.href = "report-loan-portfolio.html"; }
 
     // AUTO OPEN RELEVANT SUBMENU
     const page = window.location.pathname;

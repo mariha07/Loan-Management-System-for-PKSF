@@ -1,676 +1,668 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8"/>
-        <title>Loan Account Opening - LMS</title>
-        <meta name="viewport" content="width=device-width,initial-scale=1"/>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-        <style>
-            * {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-            }
+<head>
+    <meta charset="utf-8"/>
+    <title>Loan Account Opening - LMS</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-            body {
-                font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-                background-color: #f5f7fb;
-                color: #222;
-            }
+        body {
+            font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: #f5f7fb;
+            color: #222;
+        }
 
-            .layout {
-                display: flex;
-                min-height: 100vh;
-            }
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
 
-            /* Sidebar */
-            .sidebar {
-                width: 240px;
-                background: #ffffff;
-                border-right: 1px solid #e5e7eb;
-                padding: 20px 16px;
-            }
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            padding: 20px 16px;
+        }
 
-            .sidebar .logo {
-                font-weight: 700;
-                font-size: 20px;
-                margin-bottom: 24px;
-            }
+        .sidebar .logo {
+            font-weight: 700;
+            font-size: 20px;
+            margin-bottom: 24px;
+        }
 
-            .sidebar .menu-title {
-                font-size: 12px;
-                text-transform: uppercase;
-                letter-spacing: .08em;
-                color: #9ca3af;
-                margin-bottom: 10px;
-            }
+        .sidebar .menu-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: #9ca3af;
+            margin-bottom: 10px;
+        }
 
-            .nav-item {
-                display: flex;
-                align-items: center;
-                padding: 10px 12px;
-                border-radius: 8px;
-                margin-bottom: 4px;
-                font-size: 14px;
-                cursor: pointer;
-                color: #4b5563;
-                text-decoration: none;
-            }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            color: #4b5563;
+            text-decoration: none;
+        }
 
-            .nav-item.active,
-            .nav-item:hover {
-                background: #eef2ff;
-                color: #4338ca;
-            }
+        .nav-item.active,
+        .nav-item:hover {
+            background: #eef2ff;
+            color: #4338ca;
+        }
 
-            .submenu {
-                margin-left: 30px;
-                margin-top: 2px;
-                display: none;
-            }
+        .submenu {
+            margin-left: 30px;
+            margin-top: 2px;
+            display: none;
+        }
 
-            .submenu.open {
-                display: block;
-            }
+        .submenu.open {
+            display: block;
+        }
 
-            .submenu .nav-item {
-                padding: 8px 10px;
-                font-size: 13px;
-            }
+        .submenu .nav-item {
+            padding: 8px 10px;
+            font-size: 13px;
+        }
 
-            .nav-item span.icon {
-                width: 20px;
-                margin-right: 8px;
-                text-align: center;
-            }
+        .nav-item span.icon {
+            width: 20px;
+            margin-right: 8px;
+            text-align: center;
+        }
 
-            /* Main */
-            .main {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-            }
+        /* Main */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
 
-            /* Topbar */
-            .topbar {
-                height: 64px;
-                background: #ffffff;
-                border-bottom: 1px solid #e5e7eb;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 0 24px;
-            }
+        /* Topbar */
+        .topbar {
+            height: 64px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
 
-            .topbar-left {
-                font-size: 18px;
-                font-weight: 600;
-            }
+        .topbar-left {
+            font-size: 18px;
+            font-weight: 600;
+        }
 
-            .topbar-right {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                font-size: 14px;
-            }
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
 
-            .badge-role {
-                padding: 6px 10px;
-                border-radius: 999px;
-                font-size: 12px;
-                background: #eef2ff;
-                color: #4f46e5;
-                font-weight: 600;
-            }
+        .badge-role {
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-weight: 600;
+        }
 
-            .avatar {
-                width: 32px;
-                height: 32px;
-                border-radius: 999px;
-                background: #4f46e5;
-                color: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 16px;
-                font-weight: 600;
-            }
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            background: #4f46e5;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+        }
 
-            .logout-btn {
-                border: none;
-                background: #fee2e2;
-                color: #b91c1c;
-                padding: 6px 10px;
-                border-radius: 999px;
-                font-size: 12px;
-                cursor: pointer;
-            }
+        .logout-btn {
+            border: none;
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            cursor: pointer;
+        }
 
-            /* Content */
-            .content {
-                padding: 24px;
-            }
+        /* Content */
+        .content {
+            padding: 24px;
+        }
 
-            .panel {
-                background: #ffffff;
-                padding: 24px;
-                border-radius: 12px;
-                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
-                margin-bottom: 24px;
-            }
+        .panel {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+            margin-bottom: 24px;
+        }
 
-            h2 {
-                font-size: 18px;
-                font-weight: 600;
-                margin-bottom: 20px;
-                color: #111827;
-            }
+        h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #111827;
+        }
 
-            .row {
-                display: flex;
-                gap: 16px;
-                margin-bottom: 16px;
-            }
+        .row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
 
-            .col {
-                flex: 1;
-            }
+        .col {
+            flex: 1;
+        }
 
-            label {
-                display: block;
-                font-size: 13px;
-                font-weight: 500;
-                margin-bottom: 6px;
-                color: #374151;
-            }
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #374151;
+        }
 
-            input, select {
-                width: 100%;
-                padding: 10px 12px;
-                border-radius: 8px;
-                border: 1px solid #d1d5db;
-                font-size: 14px;
-                background: #fff;
-                color: #111827;
-            }
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-size: 14px;
+            background: #fff;
+            color: #111827;
+        }
 
-            input:focus, select:focus {
-                outline: none;
-                border-color: #4f46e5;
-                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-            }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
 
-            input[readonly] {
-                background: #f9fafb;
-                cursor: not-allowed;
-            }
+        input[readonly] {
+            background: #f9fafb;
+            cursor: not-allowed;
+        }
 
-            button {
-                background: #4f46e5;
-                color: #fff;
-                padding: 10px 20px;
-                border-radius: 8px;
-                border: none;
-                cursor: pointer;
-                font-weight: 600;
-                font-size: 14px;
-                transition: background 0.2s;
-            }
+        button {
+            background: #4f46e5;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
 
-            button:hover {
-                background: #4338ca;
-            }
+        button:hover {
+            background: #4338ca;
+        }
 
-            button.ghost {
-                background: #fff;
-                color: #4f46e5;
-                border: 1px solid #e5e7eb;
-            }
+        button.ghost {
+            background: #fff;
+            color: #4f46e5;
+            border: 1px solid #e5e7eb;
+        }
 
-            button.ghost:hover {
-                background: #f9fafb;
-            }
+        button.ghost:hover {
+            background: #f9fafb;
+        }
 
-            .btn-primary {
-                background: #4f46e5;
-                color: #fff;
-                padding: 10px 20px;
-                border-radius: 8px;
-                border: none;
-                font-weight: 500;
-                cursor: pointer;
-            }
+        .btn-primary {
+            background: #4f46e5;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
 
-            /* Search results */
-            .search-results {
-                background: #fff;
-                border: 1px solid #e5e7eb;
-                position: absolute;
-                z-index: 50;
-                max-height: 300px;
-                overflow-y: auto;
-                width: 400px;
-                margin-top: 4px;
-                border-radius: 12px;
-                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            }
+        /* Search results */
+        .search-results {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            position: absolute;
+            z-index: 50;
+            max-height: 300px;
+            overflow-y: auto;
+            width: 400px;
+            margin-top: 4px;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
 
-            .sr-item {
-                padding: 12px 16px;
-                cursor: pointer;
-                border-bottom: 1px solid #f3f4f6;
-            }
+        .sr-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f3f4f6;
+        }
 
-            .sr-item:hover {
-                background: #f8fafc;
-            }
+        .sr-item:hover {
+            background: #f8fafc;
+        }
 
-            /* Table */
-            table {
-                width: 100%;
-                border-collapse: collapse;
-            }
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-            th {
-                text-align: left;
-                font-size: 12px;
-                text-transform: uppercase;
-                letter-spacing: .05em;
-                color: #6b7280;
-                padding: 12px 16px;
-                background: #f9fafb;
-                border-bottom: 1px solid #e5e7eb;
-            }
+        th {
+            text-align: left;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: #6b7280;
+            padding: 12px 16px;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
 
-            td {
-                padding: 16px;
-                font-size: 14px;
-                border-bottom: 1px solid #e5e7eb;
-                color: #374151;
-            }
+        td {
+            padding: 16px;
+            font-size: 14px;
+            border-bottom: 1px solid #e5e7eb;
+            color: #374151;
+        }
 
-            .muted { font-size: 13px; color: #6b7280; }
-            .error { color: #dc2626; font-size: 13px; margin-top: 8px; }
-            .small { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+        .muted { font-size: 13px; color: #6b7280; }
+        .error { color: #dc2626; font-size: 13px; margin-top: 8px; }
+        .small { font-size: 12px; color: #9ca3af; margin-top: 4px; }
 
-            @media (max-width: 768px) {
-                .sidebar { display: none; }
-                .row { flex-direction: column; }
-            }
-        </style>
-    </head>
-    <body>
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="logo">LMS</div>
-            <div class="menu-title">Menu</div>
-            <div class="nav-item" onclick="goToDashboard()">
-                <span class="icon">📊</span>
-                <span>Dashboard</span>
-            </div>
-            <div class="nav-item" onclick="toggleMenu('userSubmenu')">
-                <span class="icon">👤</span>
-                <span>User Management</span>
-            </div>
-            <div id="userSubmenu" class="submenu">
-                <div class="nav-item" onclick="goToUserRegistration()">
-                    <span class="icon">📝</span>
-                    <span>User Registration</span>
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+        <div class="layout">
+            <aside class="sidebar">
+                <div class="logo">LMS</div>
+                <div class="menu-title">Menu</div>
+
+                <div class="nav-item" onclick="goDashboard()">
+                    <span class="icon">📊</span><span>Dashboard</span>
                 </div>
-            </div>
-            <div class="nav-item" onclick="goToLoanProducts()">
-                <span class="icon">💰</span>
-                <span>Loan Products</span>
-            </div>
-            <div class="nav-item" onclick="toggleMenu('loanSubmenu')">
-                <span class="icon">📄</span>
-                <span>Loan Applications</span>
-            </div>
-            <div id="loanSubmenu" class="submenu open">
-                <div class="nav-item" onclick="goToBorrowerReg()">
-                    <span class="icon">📝</span>
-                    <span>Borrower Registration</span>
-                </div>
-                <div class="nav-item active">
-                    <span class="icon">💼</span>
-                    <span>Loan Account</span>
-                </div>
-                <div class="nav-item" onclick="goToLoanDisbursement()">
-                    <span class="icon">💸</span>
-                    <span>Loan Disbursement</span>
-                </div>
-            </div>
-            <div class="nav-item" onclick="toggleMenu('repaymentSubmenu')">
-                <span class="icon">📆</span>
-                <span>Repayments</span>
-            </div>
-            <div id="repaymentSubmenu" class="submenu">
-                <div class="nav-item" onclick="goToRepaymentSchedule()">
-                    <span class="icon">📑</span>
-                    <span>Repayment Schedule</span>
-                </div>
-                <div class="nav-item" onclick="goToRepaymentCollection()">
-                    <span class="icon">📥</span>
-                    <span>Repayment Collection</span>
-                </div>
-            </div>
-        </aside>
 
-        <div class="main">
-            <header class="topbar">
-                <div class="topbar-left">
-                    Open Loan Account
+                <div class="nav-item" onclick="toggleUserMenu()">
+                    <span class="icon">👤</span><span>User Management</span>
                 </div>
-                <div class="topbar-right">
-                    <span class="badge-role" id="userRoleBadge">ROLE</span>
-                    <span id="userEmail" style="color:#6b7280;"></span>
-                    <div class="avatar" id="userAvatar">U</div>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
-                </div>
-            </header>
-
-            <main class="content">
-                <!-- Search panel -->
-                <div class="panel" style="position:relative;">
-                    <h2>Select Borrower</h2>
-                    <div class="row" style="align-items: flex-end;">
-                        <div style="width: 180px;">
-                            <label>Search type</label>
-                            <select id="searchType">
-                                <option value="auto">Auto</option>
-                                <option value="NID">NID</option>
-                                <option value="BRN">BRN</option>
-                                <option value="PASSPORT">Passport</option>
-                                <option value="MOBILE">Mobile</option>
-                            </select>
-                        </div>
-                        <div style="flex: 2;">
-                            <label id="searchLabel">Search (name or number)</label>
-                            <input id="searchInput" placeholder="Start typing...">
-                        </div>
-                        <div>
-                            <button id="btnSearch" class="ghost">Search</button>
-                        </div>
-                        <div class="col">
-                            <label>Loan Number</label>
-                            <input id="loanNumber" readonly/>
-                        </div>
+                <div id="userSubmenu" class="submenu">
+                    <div class="nav-item" onclick="goToUserRegistration()">
+                        <span class="icon">📝</span><span>User Registration</span>
                     </div>
-                    <div id="searchResults" class="search-results" style="display:none; left:200px; top:100px;"></div>
                 </div>
 
-                <!-- Account details -->
-                <div class="panel">
-                    <h2>Account Open Details</h2>
-                    <div class="row">
-                        <div class="col">
-                            <label>Borrower Name</label>
-                            <input id="bf_name" readonly placeholder="Select borrower..."/>
-                        </div>
-                        <div class="col">
-                            <label>ID Type</label>
-                            <input id="bf_idType" readonly/>
-                        </div>
-                        <div class="col">
-                            <label>ID No</label>
-                            <input id="bf_idNumber" readonly/>
-                        </div>
-                        <div class="col">
-                            <label>Mobile</label>
-                            <input id="bf_mobile" readonly/>
-                        </div>
-                    </div>
+                <div class="nav-item" onclick="goToLoanProducts()">
+                    <span class="icon">💰</span><span>Loan Products</span>
+                </div>
 
-                    <div style="margin-bottom: 20px;">
-                        <label>Loan Product</label>
-                        <select id="productSelect">
-                            <option value="">-- Select product --</option>
+                <div class="nav-item" onclick="toggleLoanMenu()">
+                    <span class="icon">📄</span><span>Loan Applications</span>
+                </div>
+                <div id="loanSubmenu" class="submenu" style="display:block;">
+                    <div class="nav-item" onclick="goToBorrowerReg()">
+                        <span class="icon">📝</span><span>Borrower Registration</span>
+                    </div>
+                    <div class="nav-item active" onclick="goToLoanAccount()">
+                        <span class="icon">💼</span><span>Loan Account</span>
+                    </div>
+                    <div class="nav-item" onclick="goToLoanDisbursement()">
+                        <span class="icon">💸</span><span>Loan Disbursement</span>
+                    </div>
+                </div>
+
+                <div class="nav-item" onclick="toggleRepaymentMenu()">
+                    <span class="icon">📆</span><span>Repayments</span>
+                </div>
+                <div id="repaymentSubmenu" class="submenu">
+                    <div class="nav-item" onclick="goToRepaymentSchedule()">
+                        <span class="icon">📑</span><span>Repayment Schedule</span>
+                    </div>
+                    <div class="nav-item" onclick="goToRepaymentCollection()">
+                        <span class="icon">📥</span><span>Repayment Collection</span>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="main">
+                <header class="topbar">
+                    <div class="topbar-left">Loan Account Opening</div>
+                    <div class="topbar-right">
+                        <span class="badge-role" id="userRoleBadge">ROLE</span>
+                        <span id="userEmail" style="color:#6b7280;"></span>
+                        <div class="avatar" id="userAvatar">U</div>
+                        <button class="logout-btn" onclick="logout()">Logout</button>
+                    </div>
+                </header>
+
+                <main class="content">
+            <!-- Search panel -->
+            <div class="panel" style="position:relative;">
+                <h2>Select Borrower</h2>
+                <div class="row" style="align-items: flex-end;">
+                    <div style="width: 180px;">
+                        <label>Search type</label>
+                        <select id="searchType">
+                            <option value="auto">Auto</option>
+                            <option value="NID">NID</option>
+                            <option value="BRN">BRN</option>
+                            <option value="PASSPORT">Passport</option>
+                            <option value="MOBILE">Mobile</option>
                         </select>
-                        <div class="small" id="productInfo" style="color: #4f46e5; font-weight: 500;"></div>
                     </div>
-
-                    <div class="row">
-                        <div class="col">
-                            <label>Application Amount</label>
-                            <input id="approvedAmount" type="number" step="0.01" placeholder="0.00"/>
-                        </div>
-                        <div class="col">
-                            <label>Installment Type</label>
-                            <input id="prod_installmentType" readonly/>
-                        </div>
-                        <div class="col">
-                            <label>Interest Rate (%)</label>
-                            <input id="prod_interestRate" readonly/>
-                        </div>
-                        <div class="col">
-                            <label># Installments</label>
-                            <input id="prod_numberOfInstallments" readonly/>
-                        </div>
+                    <div style="flex: 2;">
+                        <label id="searchLabel">Search (name or number)</label>
+                        <input id="searchInput" placeholder="Start typing...">
                     </div>
+                    <div>
+                        <button id="btnSearch" class="ghost">Search</button>
+                    </div>
+                    <div class="col">
+                        <label>Loan Number</label>
+                        <input id="loanNumber" readonly/>
+                    </div>
+                </div>
+                <div id="searchResults" class="search-results" style="display:none; left:200px; top:100px;"></div>
+            </div>
 
-                    <div style="display:flex; gap:16px; align-items:center; margin-top:12px;">
-                        <button id="saveBtn">Open Account</button>
-                        <div id="saveMsg" class="muted"></div>
-                        <div id="errorBox" class="error"></div>
+            <!-- Account details -->
+            <div class="panel">
+                <h2>Account Open Details</h2>
+                <div class="row">
+                    <div class="col">
+                        <label>Borrower Name</label>
+                        <input id="bf_name" readonly placeholder="Select borrower..."/>
+                    </div>
+                    <div class="col">
+                        <label>ID Type</label>
+                        <input id="bf_idType" readonly/>
+                    </div>
+                    <div class="col">
+                        <label>ID No</label>
+                        <input id="bf_idNumber" readonly/>
+                    </div>
+                    <div class="col">
+                        <label>Mobile</label>
+                        <input id="bf_mobile" readonly/>
                     </div>
                 </div>
 
-                <!-- Recent Accounts -->
-                <div class="panel">
-                    <div class="list-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                <div>
-                                    <h2>Recent Loan Accounts</h2>
-                                </div>
-                                <button class="btn-primary" onclick="downloadReport()" style="background: #10b981;">📄 Download PDF</button>
-                            </div>
-                            <table>
-                            <thead>
-                        <tr>
-                            <th style="width:50px">#</th>
-                            <th>Loan Number</th>
-                            <th>Borrower</th>
-                            <th>Product</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th style="text-align: center;">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody id="accountList">
-                        <tr><td colspan="7" class="muted" style="text-align:center;">Loading...</td></tr>
-                        </tbody>
-                    </table>
+                <div style="margin-bottom: 20px;">
+                    <label>Loan Product</label>
+                    <select id="productSelect">
+                        <option value="">-- Select product --</option>
+                    </select>
+                    <div class="small" id="productInfo" style="color: #4f46e5; font-weight: 500;"></div>
+                </div>
 
-                    <div id="paginationBar" style="display:flex; align-items:center; justify-content:flex-end; gap:16px; margin-top:20px;">
-                        <div class="muted">
-                            Items per page:
-                            <select id="pageSizeSelect" style="width: auto; padding: 4px 8px; margin-left: 8px;">
-                                <option value="8">8</option>
-                                <option value="10" selected>10</option>
-                                <option value="20">20</option>
-                            </select>
-                        </div>
-                        <div id="pageInfo" class="muted"></div>
-                        <div style="display:flex; gap:8px;">
-                            <button class="ghost" id="prevBtn" style="padding: 6px 12px;">⟨</button>
-                            <button class="ghost" id="nextBtn" style="padding: 6px 12px;">⟩</button>
-                        </div>
+                <div class="row">
+                    <div class="col">
+                        <label>Application Amount</label>
+                        <input id="approvedAmount" type="number" step="0.01" placeholder="0.00"/>
+                    </div>
+                    <div class="col">
+                        <label>Installment Type</label>
+                        <input id="prod_installmentType" readonly/>
+                    </div>
+                    <div class="col">
+                        <label>Interest Rate (%)</label>
+                        <input id="prod_interestRate" readonly/>
+                    </div>
+                    <div class="col">
+                        <label># Installments</label>
+                        <input id="prod_numberOfInstallments" readonly/>
                     </div>
                 </div>
-            </main>
-        </div>
+
+                <div style="display:flex; gap:16px; align-items:center; margin-top:12px;">
+                    <button id="saveBtn">Open Account</button>
+                    <div id="saveMsg" class="muted"></div>
+                    <div id="errorBox" class="error"></div>
+                </div>
+            </div>
+
+            <!-- Recent Accounts -->
+            <div class="panel">
+                <div class="list-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div>
+                        <h2>Recent Loan Accounts</h2>
+                    </div>
+                    <button class="btn-primary" onclick="downloadReport()" style="background: #10b981;">📄 Download PDF</button>
+                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width:50px">#</th>
+                        <th>Loan Number</th>
+                        <th>Borrower</th>
+                        <th>Product</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th style="text-align: center;">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="accountList">
+                    <tr><td colspan="7" class="muted" style="text-align:center;">Loading...</td></tr>
+                    </tbody>
+                </table>
+
+                <div id="paginationBar" style="display:flex; align-items:center; justify-content:flex-end; gap:16px; margin-top:20px;">
+                    <div class="muted">
+                        Items per page:
+                        <select id="pageSizeSelect" style="width: auto; padding: 4px 8px; margin-left: 8px;">
+                            <option value="8">8</option>
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                        </select>
+                    </div>
+                    <div id="pageInfo" class="muted"></div>
+                    <div style="display:flex; gap:8px;">
+                        <button class="ghost" id="prevBtn" style="padding: 6px 12px;">⟨</button>
+                        <button class="ghost" id="nextBtn" style="padding: 6px 12px;">⟩</button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
+</div>
 
-    <script>
-        // ======= AUTH =======
-        const userJson = localStorage.getItem('user');
-        if (userJson) {
-            const user = JSON.parse(userJson);
-            document.getElementById('userEmail').innerText = user.email || '';
-            document.getElementById('userRoleBadge').innerText = user.role || 'USER';
-            document.getElementById('userAvatar').innerText = (user.name || 'U')[0].toUpperCase();
-        }
-
-        function logout() {
-            localStorage.removeItem('user');
-            window.location.href = 'login.html';
-        }
-
-        // ======= NAVIGATION =======
-        function toggleMenu(id) {
-            const menu = document.getElementById(id);
-            if (menu) menu.classList.toggle("open");
-        }
-        function goToDashboard() { window.location.href = "dashboard.html"; }
-        function goToLoanProducts() { window.location.href = "loan-products.html"; }
-        function goToBorrowerReg() { window.location.href = "borrower.html"; }
-        function goToLoanDisbursement() { window.location.href = "loan-disbursement.html"; }
-        function goToUserRegistration() { window.location.href = 'user-registration.html'; }
-        function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
-        function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
-
-        // ======= CONFIG & REFS =======
-        const API_BASE = 'http://localhost:8080/api';
-        
-        const searchType = document.getElementById('searchType');
-        const searchInput = document.getElementById('searchInput');
-        const btnSearch = document.getElementById('btnSearch');
-        const searchResults = document.getElementById('searchResults');
-
-        const bf_name = document.getElementById('bf_name');
-        const bf_idType = document.getElementById('bf_idType');
-        const bf_idNumber = document.getElementById('bf_idNumber');
-        const bf_mobile = document.getElementById('bf_mobile');
-
-        const productSelect = document.getElementById('productSelect');
-        const productInfo = document.getElementById('productInfo');
-        const approvedAmount = document.getElementById('approvedAmount');
-        const prod_installmentType = document.getElementById('prod_installmentType');
-        const prod_interestRate = document.getElementById('prod_interestRate');
-        const prod_numberOfInstallments = document.getElementById('prod_numberOfInstallments');
-
-        const saveBtn = document.getElementById('saveBtn');
-        const saveMsg = document.getElementById('saveMsg');
-        const errorBox = document.getElementById('errorBox');
-        const accountList = document.getElementById('accountList');
-        const loanNumberInput = document.getElementById('loanNumber');
-
-        let products = [];
-        let selectedBorrower = null;
-        let accounts = [];
-        let currentPage = 0;
-        let pageSize = 10;
-        let totalElements = 0;
-
-        // ======= HELPERS =======
-        function escapeHtml(s) {
-            if (!s) return '';
-            return String(s).replace(/[&<>"']/g, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[m]));
-        }
-
-        function debounce(fn, wait = 300) {
-            let t;
-            return (...args) => {
-                clearTimeout(t);
-                t = setTimeout(() => fn.apply(this, args), wait);
-            };
-        }
-
-        async function loadNextLoanNumber() {
-            try {
-                const res = await fetch(`${API_BASE}/loan-accounts/next-loan-number`);
-                if (res.ok) {
-                    const data = await res.json();
-                    loanNumberInput.value = data.nextLoanNumber;
-                }
-            } catch (err) { console.error(err); }
-        }
-
-        // ======= PRODUCTS =======
-        async function loadProducts() {
-            try {
-                const res = await fetch(`${API_BASE}/loan-accounts/products`);
-                products = await res.json();
-                productSelect.innerHTML = `<option value="">-- Select product --</option>`;
-                products.forEach(p => {
-                    const opt = document.createElement('option');
-                    opt.value = p.id;
-                    opt.text = (p.name || 'Unnamed') + (p.loanType ? ` (${p.loanType})` : '');
-                    productSelect.appendChild(opt);
-                });
-            } catch (err) { console.error(err); }
-        }
-
-        productSelect.addEventListener('change', () => {
-            const p = products.find(x => String(x.id) === String(productSelect.value));
-            if (!p) {
-                productInfo.innerText = '';
-                prod_installmentType.value = '';
-                prod_interestRate.value = '';
-                prod_numberOfInstallments.value = '';
-                return;
+<script>
+            // ======= AUTH & SIDEBAR =======
+            const userJson = localStorage.getItem('user');
+            if (userJson) {
+                const user = JSON.parse(userJson);
+                document.getElementById('userEmail').innerText = user.email || '';
+                document.getElementById('userRoleBadge').innerText = user.role || 'USER';
+                document.getElementById('userAvatar').innerText = user.name ? user.name[0].toUpperCase() : 'U';
             }
-            productInfo.innerText = `Max loan: ${p.maxLoan ?? 'N/A'} — Min loan: ${p.minLoan ?? 'N/A'}`;
-            prod_installmentType.value = p.installmentType ?? '';
-            prod_interestRate.value = p.interestRate ?? '';
-            prod_numberOfInstallments.value = p.numberOfInstallments ?? '';
-        });
 
-        // ======= SEARCH BORROWER =======
-        async function searchBorrower(q) {
-            if (!q || q.trim().length < 2) { searchResults.style.display = 'none'; return; }
-            try {
-                const res = await fetch(`${API_BASE}/loan-accounts/search-borrower?q=${encodeURIComponent(q)}`);
-                const list = await res.json();
-                renderSearchResults(list);
-            } catch (err) { console.error(err); }
-        }
+            function goDashboard() { window.location.href = 'dashboard.html'; }
+            function goToLoanProducts() { window.location.href = 'loan-products.html'; }
+            function goToUserRegistration() { window.location.href = 'user-registration.html'; }
+            function goToBorrowerReg() { window.location.href = "borrower.html"; }
+            function goToLoanAccount() { window.location.href = "loan-account.html"; }
+            function goToLoanDisbursement() { window.location.href = "loan-disbursement.html"; }
+            function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
+            function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
 
-        const debouncedSearch = debounce(searchBorrower);
-        searchInput.addEventListener('input', (e) => debouncedSearch(e.target.value));
+            function toggleUserMenu() { toggleVis('userSubmenu'); }
+            function toggleLoanMenu() { toggleVis('loanSubmenu'); }
+            function toggleRepaymentMenu() { toggleVis('repaymentSubmenu'); }
+            function toggleVis(id) {
+                const m = document.getElementById(id);
+                m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'block' : 'none';
+            }
+            function logout() { localStorage.removeItem('user'); window.location.href = 'login.html'; }
 
-        function renderSearchResults(list) {
-            searchResults.innerHTML = '';
-            if (!list || list.length === 0) { searchResults.style.display = 'none'; return; }
-            list.forEach(b => {
-                const div = document.createElement('div');
-                div.className = 'sr-item';
-                div.innerHTML = `<strong>${escapeHtml(b.name)}</strong><br><small>${escapeHtml(b.idNumber)} • ${escapeHtml(b.mobile)}</small>`;
-                div.onclick = () => {
-                    selectedBorrower = b;
-                    bf_name.value = b.name;
-                    bf_idType.value = b.idType;
-                    bf_idNumber.value = b.idNumber;
-                    bf_mobile.value = b.mobile;
-                    searchResults.style.display = 'none';
-                };
-                searchResults.appendChild(div);
-            });
-            searchResults.style.display = 'block';
-        }
+            // ======= CONFIG & REFS =======
+    const API_BASE = 'http://localhost:8080/api';
 
-        // ======= ACCOUNTS LIST & PAGINATION =======
-        async function loadAccountsPage() {
-            try {
-                const res = await fetch(`${API_BASE}/loan-accounts/page?page=${currentPage}&size=${pageSize}`);
-                if (!res.ok) return;
+    const searchType = document.getElementById('searchType');
+    const searchInput = document.getElementById('searchInput');
+    const btnSearch = document.getElementById('btnSearch');
+    const searchResults = document.getElementById('searchResults');
+
+    const bf_name = document.getElementById('bf_name');
+    const bf_idType = document.getElementById('bf_idType');
+    const bf_idNumber = document.getElementById('bf_idNumber');
+    const bf_mobile = document.getElementById('bf_mobile');
+
+    const productSelect = document.getElementById('productSelect');
+    const productInfo = document.getElementById('productInfo');
+    const approvedAmount = document.getElementById('approvedAmount');
+    const prod_installmentType = document.getElementById('prod_installmentType');
+    const prod_interestRate = document.getElementById('prod_interestRate');
+    const prod_numberOfInstallments = document.getElementById('prod_numberOfInstallments');
+
+    const saveBtn = document.getElementById('saveBtn');
+    const saveMsg = document.getElementById('saveMsg');
+    const errorBox = document.getElementById('errorBox');
+    const accountList = document.getElementById('accountList');
+    const loanNumberInput = document.getElementById('loanNumber');
+
+    let products = [];
+    let selectedBorrower = null;
+    let accounts = [];
+    let currentPage = 0;
+    let pageSize = 10;
+    let totalElements = 0;
+
+    // ======= HELPERS =======
+    function escapeHtml(s) {
+        if (!s) return '';
+        return String(s).replace(/[&<>"']/g, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[m]));
+    }
+
+    function debounce(fn, wait = 300) {
+        let t;
+        return (...args) => {
+            clearTimeout(t);
+            t = setTimeout(() => fn.apply(this, args), wait);
+        };
+    }
+
+    async function loadNextLoanNumber() {
+        try {
+            const res = await fetch(`${API_BASE}/loan-accounts/next-loan-number`);
+            if (res.ok) {
                 const data = await res.json();
-                accounts = data.content;
-                totalElements = data.totalElements;
-                renderAccounts();
-            } catch (err) { console.error(err); }
-        }
-
-        function renderAccounts() {
-            accountList.innerHTML = '';
-            if (accounts.length === 0) {
-                accountList.innerHTML = '<tr><td colspan="7" style="text-align:center;">No accounts found.</td></tr>';
-                return;
+                loanNumberInput.value = data.nextLoanNumber;
             }
-            accounts.forEach((a, idx) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
+        } catch (err) { console.error(err); }
+    }
+
+    // ======= PRODUCTS =======
+    async function loadProducts() {
+        try {
+            const res = await fetch(`${API_BASE}/loan-accounts/products`);
+            products = await res.json();
+            productSelect.innerHTML = `<option value="">-- Select product --</option>`;
+            products.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.text = (p.name || 'Unnamed') + (p.loanType ? ` (${p.loanType})` : '');
+                productSelect.appendChild(opt);
+            });
+        } catch (err) { console.error(err); }
+    }
+
+    productSelect.addEventListener('change', () => {
+        const p = products.find(x => String(x.id) === String(productSelect.value));
+        if (!p) {
+            productInfo.innerText = '';
+            prod_installmentType.value = '';
+            prod_interestRate.value = '';
+            prod_numberOfInstallments.value = '';
+            return;
+        }
+        productInfo.innerText = `Max loan: ${p.maxLoan ?? 'N/A'} — Min loan: ${p.minLoan ?? 'N/A'}`;
+        prod_installmentType.value = p.installmentType ?? '';
+        prod_interestRate.value = p.interestRate ?? '';
+        prod_numberOfInstallments.value = p.numberOfInstallments ?? '';
+    });
+
+    // ======= SEARCH BORROWER =======
+    async function searchBorrower(q) {
+        if (!q || q.trim().length < 2) { searchResults.style.display = 'none'; return; }
+        try {
+            const res = await fetch(`${API_BASE}/loan-accounts/search-borrower?q=${encodeURIComponent(q)}`);
+            const list = await res.json();
+            renderSearchResults(list);
+        } catch (err) { console.error(err); }
+    }
+
+    const debouncedSearch = debounce(searchBorrower);
+    searchInput.addEventListener('input', (e) => debouncedSearch(e.target.value));
+
+    function renderSearchResults(list) {
+        searchResults.innerHTML = '';
+        if (!list || list.length === 0) { searchResults.style.display = 'none'; return; }
+        list.forEach(b => {
+            const div = document.createElement('div');
+            div.className = 'sr-item';
+            div.innerHTML = `<strong>${escapeHtml(b.name)}</strong><br><small>${escapeHtml(b.idNumber)} • ${escapeHtml(b.mobile)}</small>`;
+            div.onclick = () => {
+                selectedBorrower = b;
+                bf_name.value = b.name;
+                bf_idType.value = b.idType;
+                bf_idNumber.value = b.idNumber;
+                bf_mobile.value = b.mobile;
+                searchResults.style.display = 'none';
+            };
+            searchResults.appendChild(div);
+        });
+        searchResults.style.display = 'block';
+    }
+
+    // ======= ACCOUNTS LIST & PAGINATION =======
+    async function loadAccountsPage() {
+        try {
+            const res = await fetch(`${API_BASE}/loan-accounts/page?page=${currentPage}&size=${pageSize}`);
+            if (!res.ok) return;
+            const data = await res.json();
+            accounts = data.content;
+            totalElements = data.totalElements;
+            renderAccounts();
+        } catch (err) { console.error(err); }
+    }
+
+    function renderAccounts() {
+        accountList.innerHTML = '';
+        if (accounts.length === 0) {
+            accountList.innerHTML = '<tr><td colspan="7" style="text-align:center;">No accounts found.</td></tr>';
+            return;
+        }
+        accounts.forEach((a, idx) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
                     <td>${currentPage * pageSize + idx + 1}</td>
                     <td><strong>${escapeHtml(a.loanNumber)}</strong></td>
                     <td>${escapeHtml(a.borrowerName)}</td>
@@ -679,92 +671,92 @@
                     <td><span class="badge-role">${escapeHtml(a.status)}</span></td>
                     <td style="text-align:center;"><button class="ghost" onclick="viewAccount(${a.id})">View</button></td>
                 `;
-                accountList.appendChild(tr);
-            });
-            const start = currentPage * pageSize + 1;
-            const end = Math.min(start + pageSize - 1, totalElements);
-            document.getElementById("pageInfo").innerText = `${totalElements > 0 ? start : 0}–${end} of ${totalElements}`;
-        }
+            accountList.appendChild(tr);
+        });
+        const start = currentPage * pageSize + 1;
+        const end = Math.min(start + pageSize - 1, totalElements);
+        document.getElementById("pageInfo").innerText = `${totalElements > 0 ? start : 0}–${end} of ${totalElements}`;
+    }
 
-        // ======= VIEW ACCOUNT =======
-        function downloadReport() {
-            window.open(`${API_BASE}/loan-accounts/report/pdf`, '_blank');
-        }
+    // ======= VIEW ACCOUNT =======
+    function downloadReport() {
+        window.open(`${API_BASE}/loan-accounts/report/pdf`, '_blank');
+    }
 
-        function viewAccount(id) {
-            const acc = accounts.find(a => String(a.id) === String(id));
-            if (!acc) return;
+    function viewAccount(id) {
+        const acc = accounts.find(a => String(a.id) === String(id));
+        if (!acc) return;
 
-            // Populate Loan Number
-            loanNumberInput.value = acc.loanNumber || "";
+        // Populate Loan Number
+        loanNumberInput.value = acc.loanNumber || "";
 
-            // Populate Borrower Info
-            bf_name.value = acc.borrowerName || "";
-            bf_idType.value = acc.borrowerIdType || "";
-            bf_idNumber.value = acc.borrowerIdNumber || "";
-            bf_mobile.value = acc.borrowerMobile || "";
-            
-            // Set selectedBorrower so save logic works if updated
-            selectedBorrower = { id: acc.borrowerId };
+        // Populate Borrower Info
+        bf_name.value = acc.borrowerName || "";
+        bf_idType.value = acc.borrowerIdType || "";
+        bf_idNumber.value = acc.borrowerIdNumber || "";
+        bf_mobile.value = acc.borrowerMobile || "";
 
-            // Populate Product Selection
-            if (acc.loanProductId) {
-                productSelect.value = acc.loanProductId;
-                const p = products.find(x => String(x.id) === String(acc.loanProductId));
-                if (p) {
-                    productInfo.innerText = `Max loan: ${p.maxLoan ?? 'N/A'} — Min loan: ${p.minLoan ?? 'N/A'}`;
-                    prod_installmentType.value = p.installmentType ?? "";
-                    prod_interestRate.value = p.interestRate ?? "";
-                    prod_numberOfInstallments.value = p.numberOfInstallments ?? "";
-                }
+        // Set selectedBorrower so save logic works if updated
+        selectedBorrower = { id: acc.borrowerId };
+
+        // Populate Product Selection
+        if (acc.loanProductId) {
+            productSelect.value = acc.loanProductId;
+            const p = products.find(x => String(x.id) === String(acc.loanProductId));
+            if (p) {
+                productInfo.innerText = `Max loan: ${p.maxLoan ?? 'N/A'} — Min loan: ${p.minLoan ?? 'N/A'}`;
+                prod_installmentType.value = p.installmentType ?? "";
+                prod_interestRate.value = p.interestRate ?? "";
+                prod_numberOfInstallments.value = p.numberOfInstallments ?? "";
             }
-
-            // Populate Amount
-            approvedAmount.value = acc.approvedAmount ?? "";
-
-            // Scroll to top to see form
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ======= SAVE =======
-        saveBtn.onclick = async () => {
-            errorBox.innerText = ''; saveMsg.innerText = '';
-            if (!selectedBorrower || !productSelect.value || !approvedAmount.value) {
-                errorBox.innerText = 'Please complete all required fields.'; return;
-            }
-            const payload = {
-                borrowerId: selectedBorrower.id,
-                loanProductId: productSelect.value,
-                approvedAmount: Number(approvedAmount.value),
-                openingDate: new Date().toISOString().split('T')[0],
-                status: 'OPEN'
-            };
-            try {
-                const res = await fetch(`${API_BASE}/loan-accounts`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(payload)
-                });
-                if (res.ok) {
-                    saveMsg.innerText = 'Account opened successfully!';
-                    loadNextLoanNumber();
-                    loadAccountsPage();
-                } else {
-                    errorBox.innerText = await res.text();
-                }
-            } catch (err) { errorBox.innerText = 'Server error.'; }
+        // Populate Amount
+        approvedAmount.value = acc.approvedAmount ?? "";
+
+        // Scroll to top to see form
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ======= SAVE =======
+    saveBtn.onclick = async () => {
+        errorBox.innerText = ''; saveMsg.innerText = '';
+        if (!selectedBorrower || !productSelect.value || !approvedAmount.value) {
+            errorBox.innerText = 'Please complete all required fields.'; return;
+        }
+        const payload = {
+            borrowerId: selectedBorrower.id,
+            loanProductId: productSelect.value,
+            approvedAmount: Number(approvedAmount.value),
+            openingDate: new Date().toISOString().split('T')[0],
+            status: 'OPEN'
         };
+        try {
+            const res = await fetch(`${API_BASE}/loan-accounts`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+                saveMsg.innerText = 'Account opened successfully!';
+                loadNextLoanNumber();
+                loadAccountsPage();
+            } else {
+                errorBox.innerText = await res.text();
+            }
+        } catch (err) { errorBox.innerText = 'Server error.'; }
+    };
 
-        // ======= INIT =======
-        document.getElementById("prevBtn").onclick = () => { if (currentPage > 0) { currentPage--; loadAccountsPage(); } };
-        document.getElementById("nextBtn").onclick = () => { if ((currentPage + 1) * pageSize < totalElements) { currentPage++; loadAccountsPage(); } };
-        document.getElementById("pageSizeSelect").onchange = (e) => { pageSize = Number(e.target.value); currentPage = 0; loadAccountsPage(); };
+    // ======= INIT =======
+    document.getElementById("prevBtn").onclick = () => { if (currentPage > 0) { currentPage--; loadAccountsPage(); } };
+    document.getElementById("nextBtn").onclick = () => { if ((currentPage + 1) * pageSize < totalElements) { currentPage++; loadAccountsPage(); } };
+    document.getElementById("pageSizeSelect").onchange = (e) => { pageSize = Number(e.target.value); currentPage = 0; loadAccountsPage(); };
 
-        (async function init() {
-            await loadProducts();
-            await loadNextLoanNumber();
-            await loadAccountsPage();
-        })();
-    </script>
-    </body>
-    </html>
+    (async function init() {
+        await loadProducts();
+        await loadNextLoanNumber();
+        await loadAccountsPage();
+    })();
+</script>
+</body>
+</html>
