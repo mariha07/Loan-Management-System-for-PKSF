@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loan Product Analysis - LMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: #f5f7fb;
+            color: #222;
+        }
+        .layout { display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 240px;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            padding: 20px 16px;
+        }
+        .sidebar .logo { font-weight: 700; font-size: 20px; margin-bottom: 24px; }
+        .sidebar .menu-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: #9ca3af;
+            margin-bottom: 10px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            color: #4b5563;
+            text-decoration: none;
+        }
+        .nav-item.active, .nav-item:hover { background: #eef2ff; color: #4338ca; }
+        .submenu { margin-left: 30px; margin-top: 2px; display: none; }
+        .submenu.open { display: block; }
+        .submenu .nav-item { padding: 8px 10px; font-size: 13px; }
+        .nav-item span.icon { width: 20px; margin-right: 8px; text-align: center; }
+        .main { flex: 1; display: flex; flex-direction: column; }
+        .topbar {
+            height: 64px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+        .topbar-left { font-size: 18px; font-weight: 600; }
+        .topbar-right { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+        .badge-role {
+            padding: 6px 10px; border-radius: 999px; font-size: 12px;
+            background: #eef2ff; color: #4f46e5; font-weight: 600;
+        }
+        .avatar {
+            width: 32px; height: 32px; border-radius: 999px; background: #4f46e5;
+            color: white; display: flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: 600;
+        }
+        .logout-btn {
+            border: none; background: #fee2e2; color: #b91c1c; padding: 6px 10px;
+            border-radius: 999px; font-size: 12px; cursor: pointer;
+        }
+        .content { padding: 24px; }
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px; margin-bottom: 24px;
+        }
+        .stat-card {
+            background: #ffffff; padding: 16px 18px; border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); border: 1px solid #e5e7eb;
+        }
+        .stat-card h4 { font-size: 12px; color: #6b7280; margin-bottom: 6px; }
+        .stat-card .value { font-size: 22px; font-weight: 700; }
+        .panel {
+            background: #ffffff; border-radius: 12px; padding: 24px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); border: 1px solid #e5e7eb;
+            margin-bottom: 24px;
+        }
+        .panel-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; }
+        .chart-container { position: relative; height: 350px; width: 100%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th, td { padding: 12px; border-bottom: 1px solid #f1f5f9; text-align: left; font-size: 14px; }
+        th { background: #f8fafc; color: #4b5563; font-weight: 600; text-transform: uppercase; font-size: 11px; }
+        @media (max-width: 768px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="logo">LMS</div>
+            <div class="menu-title">Menu</div>
+            <div class="nav-item" onclick="goToDashboard()"><span class="icon">📊</span><span>Dashboard</span></div>
+            <div class="nav-item" onclick="toggleVis('userSubmenu')"><span class="icon">👤</span><span>User Management</span></div>
+            <div id="userSubmenu" class="submenu"><div class="nav-item" onclick="goToUserRegistration()">📝 User Registration</div></div>
+            <div class="nav-item" onclick="goToLoanProducts()"><span class="icon">💰</span><span>Loan Products</span></div>
+            <div class="nav-item" onclick="toggleVis('loanSubmenu')"><span class="icon">📄</span><span>Loan Applications</span></div>
+            <div id="loanSubmenu" class="submenu">
+                <div class="nav-item" onclick="goToBorrowerReg()">📝 Borrower Registration</div>
+                <div class="nav-item" onclick="goToLoanAccount()">💼 Loan Account</div>
+                <div class="nav-item" onclick="goToLoanDisbursement()">💸 Loan Disbursement</div>
+            </div>
+            <div class="nav-item" onclick="toggleVis('repaymentSubmenu')"><span class="icon">📆</span><span>Repayments</span></div>
+            <div id="repaymentSubmenu" class="submenu">
+                <div class="nav-item" onclick="goToRepaymentSchedule()">📑 Repayment Schedule</div>
+                <div class="nav-item" onclick="goToRepaymentCollection()">📥 Repayment Collection</div>
+            </div>
+            <div class="nav-item" onclick="toggleVis('analyticalSubmenu')"><span class="icon">📈</span><span>Reports</span></div>
+            <div id="analyticalSubmenu" class="submenu" style="display:block;">
+                <div class="nav-item" onclick="goToLoanPortfolioReport()">📈 Loan Portfolio Report</div>
+                <div class="nav-item" onclick="goToRepaymentPerformanceReport()">📈 Repayment Performance</div>
+                <div class="nav-item" onclick="goToBorrowerAnalysisReport()">📈 Borrower Analysis Report</div>
+                <div class="nav-item active">📈 Loan Product Analysis</div>
+            </div>
+        </aside>
+
+        <div class="main">
+            <header class="topbar">
+                <div class="topbar-left">Loan Product Analysis</div>
+                <div class="topbar-right">
+                    <span class="badge-role" id="userRoleBadge">ROLE</span>
+                    <span id="userEmail" style="color:#6b7280;"></span>
+                    <div class="avatar" id="userAvatar">U</div>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </header>
+
+            <main class="content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Most Popular Product</h4>
+                        <div class="value" id="topProduct">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Total Disbursed (All Products)</h4>
+                        <div class="value" id="totalDisbursed">0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Avg. Interest Rate</h4>
+                        <div class="value" id="avgInterest">0%</div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">Loan Count by Product (Popularity)</div>
+                    <div class="chart-container">
+                        <canvas id="productBarChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">Product-wise Financial Summary</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Active Loans</th>
+                                <th>Total Disbursed</th>
+                                <th>Interest Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody">
+                            <tr><td colspan="4" style="text-align:center;">Loading data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "http://localhost:8080/api";
+        let productChart;
+
+        // Auth & Nav
+        const userJson = localStorage.getItem('user');
+        if (userJson) {
+            const user = JSON.parse(userJson);
+            document.getElementById('userEmail').innerText = user.email || '';
+            document.getElementById('userRoleBadge').innerText = user.role || 'USER';
+            document.getElementById('userAvatar').innerText = user.name ? user.name[0].toUpperCase() : 'U';
+        }
+
+        function toggleVis(id) {
+            const m = document.getElementById(id);
+            if (m) m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'block' : 'none';
+        }
+
+        function logout() { localStorage.removeItem('user'); window.location.href = 'login.html'; }
+        function goToDashboard() { window.location.href = "dashboard.html"; }
+        function goToLoanProducts() { window.location.href = "loan-products.html"; }
+        function goToBorrowerReg() { window.location.href = "borrower.html"; }
+        function goToLoanAccount() { window.location.href = "loan-account.html"; }
+        function goToLoanDisbursement() { window.location.href = "loan-disbursement.html"; }
+        function goToUserRegistration() { window.location.href = 'user-registration.html'; }
+        function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
+        function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
+        function goToLoanPortfolioReport() { window.location.href = "report-loan-portfolio.html"; }
+        function goToRepaymentPerformanceReport() { window.location.href = "repayment_performance_report.html"; }
+        function goToBorrowerAnalysisReport() { window.location.href = "borrower_analysis_report.html"; }
+
+        async function loadProductAnalysis() {
+            try {
+                // 1. Fetch Loan Products
+                const prodRes = await fetch(`${API_BASE}/loan-products/active`);
+                const products = await prodRes.json();
+
+                // 2. Fetch Disbursements (Revenue focus)
+                const disburseRes = await fetch(`${API_BASE}/disbursements`);
+                const disbursements = await disburseRes.json();
+
+                // 3. Fetch Loan Accounts (Popularity focus)
+                const loanRes = await fetch(`${API_BASE}/loan-accounts/page?size=1000`);
+                const loanData = await loanRes.json();
+                const loans = loanData.content || [];
+
+                // Aggregation
+                const productMap = {};
+                products.forEach(p => {
+                    productMap[p.name] = { 
+                        count: 0, 
+                        totalDisbursed: 0, 
+                        rate: p.interestRate 
+                    };
+                });
+
+                loans.forEach(loan => {
+                    if (productMap[loan.loanProductName]) {
+                        productMap[loan.loanProductName].count++;
+                    }
+                });
+
+                disbursements.forEach(d => {
+                    if (productMap[d.loanProductName]) {
+                        productMap[d.loanProductName].totalDisbursed += (Number(d.disbursementAmount) || 0);
+                    }
+                });
+
+                // Update UI Stats
+                let totalDisbursedAll = 0;
+                let sumRates = 0;
+                let topProdName = "-";
+                let maxCount = -1;
+
+                const tableBody = document.getElementById("productTableBody");
+                tableBody.innerHTML = "";
+
+                Object.keys(productMap).forEach(name => {
+                    const data = productMap[name];
+                    totalDisbursedAll += data.totalDisbursed;
+                    sumRates += data.rate;
+
+                    if (data.count > maxCount) {
+                        maxCount = data.count;
+                        topProdName = name;
+                    }
+
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td>${name}</td>
+                            <td>${data.count}</td>
+                            <td>${data.totalDisbursed.toLocaleString()}</td>
+                            <td>${data.rate}%</td>
+                        </tr>
+                    `;
+                });
+
+                document.getElementById('totalDisbursed').innerText = totalDisbursedAll.toLocaleString();
+                document.getElementById('avgInterest').innerText = (sumRates / products.length).toFixed(2) + "%";
+                document.getElementById('topProduct').innerText = topProdName;
+
+                renderChart(productMap);
+
+            } catch (err) { console.error("Analysis Error:", err); }
+        }
+
+        function renderChart(map) {
+            const labels = Object.keys(map);
+            const data = labels.map(l => map[l].count);
+            const ctx = document.getElementById('productBarChart').getContext('2d');
+            
+            if (productChart) productChart.destroy();
+            productChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Number of Loans',
+                        data: data,
+                        backgroundColor: '#4f46e5',
+                        borderRadius: 6,
+                        barThickness: 40
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                }
+            });
+        }
+
+        window.onload = loadProductAnalysis;
+    </script>
+</body>
+</html>
