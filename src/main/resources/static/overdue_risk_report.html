@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Borrower Analysis Report - LMS</title>
+    <title>Overdue & Risk Report - LMS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -253,15 +253,15 @@
         <div id="analyticalSubmenu" class="submenu open" style="display:block;">
             <div class="nav-item" onclick="goToLoanPortfolioReport()">📈 Loan Portfolio Report</div>
             <div class="nav-item" onclick="goToRepaymentPerformanceReport()">📈 Repayment Performance</div>
-            <div class="nav-item active">📈 Borrower Analysis Report</div>
+            <div class="nav-item" onclick="goToBorrowerAnalysisReport()">📈 Borrower Analysis Report</div>
             <div class="nav-item" onclick="goToLoanProductAnalysis()">📈 Loan Product Analysis</div>
-            <div class="nav-item" onclick="goToOverdueRiskReport()">⚠️ Overdue & Risk Report</div>
+            <div class="nav-item active">⚠️ Overdue & Risk Report</div>
         </div>
     </aside>
 
     <div class="main">
         <header class="topbar">
-            <div class="topbar-left">Borrower Analysis Report</div>
+            <div class="topbar-left">Overdue & Risk Report</div>
             <div class="topbar-right">
                 <span class="badge-role" id="userRoleBadge">ROLE</span>
                 <span id="userEmail" style="color:#6b7280;"></span>
@@ -273,30 +273,34 @@
         <main class="content">
             <div class="stats-grid">
                 <div class="stat-card">
-                    <h4>Total Borrowers</h4>
-                    <div class="value" id="totalBorrowers">0</div>
+                    <h4>Total Overdue Loans</h4>
+                    <div class="value" id="totalOverdueLoans">0</div>
                 </div>
                 <div class="stat-card">
-                    <h4>Male</h4>
-                    <div class="value" id="maleCount">0</div>
+                    <h4>Total Overdue Amount</h4>
+                    <div class="value" id="totalOverdueAmount">0</div>
                 </div>
                 <div class="stat-card">
-                    <h4>Female</h4>
-                    <div class="value" id="femaleCount">0</div>
+                    <h4>High Risk Borrowers</h4>
+                    <div class="value" id="highRiskBorrowers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Average Days Overdue</h4>
+                    <div class="value" id="avgDaysOverdue">0</div>
                 </div>
             </div>
 
             <div class="charts-row">
                 <div class="panel">
-                    <div class="panel-title">Monthly Financial Trends (Line Chart)</div>
+                    <div class="panel-title">Overdue Trends (Line Chart)</div>
                     <div class="chart-container">
-                        <canvas id="financialLineChart"></canvas>
+                        <canvas id="overdueTrendsChart"></canvas>
                     </div>
                 </div>
                 <div class="panel">
-                    <div class="panel-title">Financial Monthly Comparison (Bar Chart)</div>
+                    <div class="panel-title">Risk Distribution (Pie Chart)</div>
                     <div class="chart-container">
-                        <canvas id="monthlyAnalysisChart"></canvas>
+                        <canvas id="riskDistributionChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -306,8 +310,7 @@
 
 <script>
     const API_BASE = "http://localhost:8080/api";
-    let barChart, lineChart;
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    let overdueChart, riskChart;
 
     // Auth & Nav
     const userJson = localStorage.getItem('user');
@@ -334,104 +337,150 @@
     function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
     function goToLoanPortfolioReport() { window.location.href = "report-loan-portfolio.html"; }
     function goToRepaymentPerformanceReport() { window.location.href = "repayment_performance_report.html"; }
+    function goToBorrowerAnalysisReport() { window.location.href = "borrower_analysis_report.html"; }
     function goToLoanProductAnalysis(){ window.location.href="loan_product_analysis.html"; }
     function goToOverdueRiskReport() { window.location.href = "overdue_risk_report.html"; }
 
     async function loadData() {
         try {
-            // 1. Borrowers & Gender
-            const bRes = await fetch(`${API_BASE}/borrowers`);
-            const borrowers = await bRes.json();
-            const males = borrowers.filter(b => b.gender && b.gender.toLowerCase() === 'male').length;
-            const females = borrowers.filter(b => b.gender && b.gender.toLowerCase() === 'female').length;
-            document.getElementById('totalBorrowers').innerText = borrowers.length;
-            document.getElementById('maleCount').innerText = males;
-            document.getElementById('femaleCount').innerText = females;
-
-            // 2. Monthly Financials
-            const monthlyDisbursed = new Array(12).fill(0);
-            const monthlyCollected = new Array(12).fill(0);
-            let totalExpected = 0, totalCollected = 0;
-
-            const dRes = await fetch(`${API_BASE}/disbursements`);
-            const disbursements = await dRes.json();
-            disbursements.forEach(d => {
-                if (d.disbursementDate) monthlyDisbursed[new Date(d.disbursementDate).getMonth()] += (Number(d.disbursementAmount) || 0);
-                else monthlyDisbursed[new Date().getMonth()] += (Number(d.disbursementAmount) || 0);
-            });
-
+            // Fetch all loan accounts
             const loanRes = await fetch(`${API_BASE}/loan-accounts/page?size=1000`);
-            const loans = (await loanRes.json()).content || [];
-            for (let loan of loans) {
-                const sRes = await fetch(`${API_BASE}/repayment-schedules/by-loan/${loan.loanNumber}`);
-                if (sRes.ok) {
-                    (await sRes.json()).forEach(s => {
-                        if (s.repaymentDate) {
-                            monthlyCollected[new Date(s.repaymentDate).getMonth()] += (Number(s.paidAmount) || 0);
-                            totalExpected += (Number(s.expectedAmount) || 0);
-                            totalCollected += (Number(s.paidAmount) || 0);
+            const loansPage = await loanRes.json();
+            const loans = loansPage.content || [];
+
+            let totalOverdueLoans = 0;
+            let totalOverdueAmount = 0;
+            let highRiskBorrowers = 0;
+            let totalDaysOverdue = 0;
+            let overdueCount = 0;
+            const overdueByMonth = new Array(12).fill(0);
+            const borrowerRisk = new Map(); // borrowerId -> totalOverdue
+
+            for (const loan of loans) {
+                let loanOverdue = 0;
+                let hasOverdue = false;
+
+                // Fetch repayment schedules for this loan
+                const scheduleRes = await fetch(`${API_BASE}/repayment-schedules/by-loan/${loan.loanNumber}`);
+                if (scheduleRes.ok) {
+                    const schedules = await scheduleRes.json();
+                    for (const schedule of schedules) {
+                        if (schedule.repaymentDate && schedule.expectedAmount) {
+                            const dueDate = new Date(schedule.repaymentDate);
+                            const today = new Date();
+                            const paidAmount = schedule.paidAmount || 0;
+                            const expected = schedule.expectedAmount;
+
+                            if (dueDate < today && paidAmount < expected) {
+                                // Overdue
+                                const overdueAmt = expected - paidAmount;
+                                loanOverdue += overdueAmt;
+                                totalOverdueAmount += overdueAmt;
+                                hasOverdue = true;
+
+                                // Days overdue
+                                const daysOverdue = Math.floor((today - dueDate) / (1000 * 60 * 60 * 24));
+                                totalDaysOverdue += daysOverdue;
+                                overdueCount++;
+
+                                // Overdue by month (due date month)
+                                const month = dueDate.getMonth();
+                                overdueByMonth[month] += overdueAmt;
+                            }
                         }
-                    });
+                    }
+                }
+
+                if (hasOverdue) {
+                    totalOverdueLoans++;
+                }
+
+                // Track borrower risk (using loanNumber as unique identifier per borrower)
+                const loanKey = loan.loanNumber;
+                if (!borrowerRisk.has(loanKey)) {
+                    borrowerRisk.set(loanKey, 0);
+                }
+                borrowerRisk.set(loanKey, borrowerRisk.get(loanKey) + loanOverdue);
+            }
+
+            // Calculate high risk borrowers (overdue > 5000)
+            for (const [loanKey, overdue] of borrowerRisk) {
+                if (overdue > 5000) {
+                    highRiskBorrowers++;
                 }
             }
-            const totalDue = totalExpected - totalCollected;
 
-            renderCharts(monthlyDisbursed, monthlyCollected);
-        } catch (err) { console.error("Error loading data:", err); }
+            // Average days overdue
+            const avgDaysOverdue = overdueCount > 0 ? Math.round(totalDaysOverdue / overdueCount) : 0;
+
+            // Update stats
+            document.getElementById('totalOverdueLoans').innerText = totalOverdueLoans;
+            document.getElementById('totalOverdueAmount').innerText = totalOverdueAmount.toLocaleString();
+            document.getElementById('highRiskBorrowers').innerText = highRiskBorrowers;
+            document.getElementById('avgDaysOverdue').innerText = avgDaysOverdue;
+
+            // Render Charts
+            renderCharts(overdueByMonth, borrowerRisk);
+        } catch (err) {
+            console.error("Error loading data:", err);
+        }
     }
 
-    function renderCharts(dArr, cArr) {
-        // Render Line Chart
-        const ctxLine = document.getElementById('financialLineChart').getContext('2d');
-        if (lineChart) lineChart.destroy();
-        lineChart = new Chart(ctxLine, {
+    function renderCharts(overdueByMonth, borrowerRisk) {
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        // Risk distribution
+        let lowRisk = 0, mediumRisk = 0, highRisk = 0;
+        for (const [borrowerId, overdue] of borrowerRisk) {
+            if (overdue === 0) lowRisk++;
+            else if (overdue <= 5000) mediumRisk++;
+            else highRisk++;
+        }
+
+        // Overdue Trends Line Chart
+        const ctxLine = document.getElementById('overdueTrendsChart').getContext('2d');
+        if (overdueChart) overdueChart.destroy();
+        overdueChart = new Chart(ctxLine, {
             type: 'line',
             data: {
                 labels: monthNames,
-                datasets: [
-                    {
-                        label: 'Disbursed',
-                        data: dArr,
-                        borderColor: '#4f46e5',
-                        backgroundColor: 'rgba(79, 70, 233, 0.1)',
-                        fill: true,
-                        tension: 0.3
-                    },
-                    {
-                        label: 'Collected',
-                        data: cArr,
-                        borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        fill: true,
-                        tension: 0.3
-                    }
-                ]
+                datasets: [{
+                    label: 'Overdue Amount',
+                    data: overdueByMonth,
+                    borderColor: '#f97316',
+                    backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                    fill: true,
+                    tension: 0.3
+                }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: { legend: { position: 'bottom' } },
-                scales: {
-                    y: { beginAtZero: true, ticks: { callback: (v) => v.toLocaleString() } }
-                }
+                scales: { y: { beginAtZero: true, ticks: { callback: (v) => v.toLocaleString() } } }
             }
         });
 
-        // Render Bar Chart
-        const ctxBar = document.getElementById('monthlyAnalysisChart').getContext('2d');
-        if (barChart) barChart.destroy();
-        barChart = new Chart(ctxBar, {
-            type: 'bar',
+        // Risk Distribution Pie Chart
+        const ctxPie = document.getElementById('riskDistributionChart').getContext('2d');
+        if (riskChart) riskChart.destroy();
+        riskChart = new Chart(ctxPie, {
+            type: 'pie',
             data: {
-                labels: monthNames,
-                datasets: [
-                    { label: 'Disbursed', data: dArr, backgroundColor: '#4f46e5' },
-                    { label: 'Collected', data: cArr, backgroundColor: '#10b981' }
-                ]
+                labels: ['Low Risk', 'Medium Risk', 'High Risk'],
+                datasets: [{
+                    data: [lowRisk, mediumRisk, highRisk],
+                    backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+                }]
             },
-            options: { responsive: true, maintainAspectRatio: false }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } }
+            }
         });
     }
+
     window.onload = loadData;
 </script>
 </body>

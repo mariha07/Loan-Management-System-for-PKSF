@@ -284,7 +284,7 @@
                 <span class="icon">📈</span>
                 <span>Borrower Analysis Report</span>
             </div>
-            <div class="nav-item">
+            <div class="nav-item" onclick="goToLoanProductAnalysis()">
                 <span class="icon">📈</span>
                 <span>Loan Product Analysis</span>
             </div>
@@ -430,8 +430,9 @@
     function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
     function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
     function goToLoanPortfolioReport() { window.location.href = "report-loan-portfolio.html"; }
-    function goToRepaymentPerformanceReport() { window.location.href = "repayment_performance_report.html"; }
     function goToBorrowerAnalysisReport() { window.location.href = "borrower_analysis_report.html"; }
+    function goToLoanProductAnalysis(){ window.location.href="loan_product_analysis.html"; }
+    function goToOverdueRiskReport() { window.location.href = "overdue_risk_report.html"; }
 
     // Initial load
     window.onload = loadReportData;
