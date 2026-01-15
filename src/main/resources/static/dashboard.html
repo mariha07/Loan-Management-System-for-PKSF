@@ -263,7 +263,7 @@
     <aside class="sidebar">
         <div class="logo">LMS</div>
         <div class="menu-title">Menu</div>
-        <div class="nav-item active">
+        <div class="nav-item active" onclick="goToDashboard()">
             <span class="icon">📊</span>
             <span>Dashboard</span>
         </div>
@@ -323,19 +323,19 @@
                 <span class="icon">📈</span>
                 <span>Loan Portfolio Report</span>
             </div>
-            <div class="nav-item">
+            <div class="nav-item" onclick="goToRepaymentPerformanceReport()">
                 <span class="icon">📈</span>
                 <span>Repayment Performance Report</span>
             </div>
-            <div class="nav-item">
-                <span class="icon">📈</span>
-                <span>Borrower Analysis Report</span>
-            </div>
-            <div class="nav-item">
+            <div class="nav-item" onclick="goToBorrowerAnalysisReport()">
+                    <span class="icon">📈</span>
+                    <span>Borrower Analysis Report</span>
+                </div>
+                <div class="nav-item" onclick="goToLoanProductAnalysis()">
                 <span class="icon">📈</span>
                 <span>Loan Product Analysis</span>
             </div>
-            <div class="nav-item">
+            <div class="nav-item" onclick="goToOverdueRiskReport()">
                 <span class="icon">⚠️</span>
                 <span>Overdue & Risk Report</span>
             </div>
@@ -423,9 +423,12 @@
     // Navigation functions
     function toggleMenu(id) {
         const menu = document.getElementById(id);
-        if (menu) menu.classList.toggle("open");
+        if (menu) {
+            menu.classList.toggle("open");
+        }
     }
 
+    function goToDashboard() { window.location.href = "dashboard.html"; }
     function goToLoanProducts() { window.location.href = "loan-products.html"; }
     function goToBorrowerReg() { window.location.href = "borrower.html"; }
     function goToLoanAccount() { window.location.href = "loan-account.html"; }
@@ -434,17 +437,23 @@
     function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
     function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
     function goToLoanPortfolioReport() { window.location.href = "report-loan-portfolio.html"; }
+    function goToRepaymentPerformanceReport() { window.location.href = "repayment_performance_report.html"; }
+        function goToBorrowerAnalysisReport() {
+            window.location.href = "borrower_analysis_report.html";
+        }
+        function goToLoanProductAnalysis() { alert("Loan Product Analysis is coming soon!"); }
+    function goToOverdueRiskReport() { alert("Overdue & Risk Report is coming soon!"); }
 
     // AUTO OPEN RELEVANT SUBMENU
     const page = window.location.pathname;
-    if (page.includes("repayment")) {
-        document.getElementById("repaymentSubmenu")?.classList.add("open");
-    }
-    if (page.includes("loan")) {
-        document.getElementById("loanSubmenu")?.classList.add("open");
-    }
     if (page.includes("user")) {
         document.getElementById("userSubmenu")?.classList.add("open");
+    }
+    if (page.includes("dashboard")) {
+        document.getElementById("analyticalSubmenu")?.classList.add("open");
+    }
+    if (page.includes("report") || page.includes("analysis")) {
+        document.getElementById("analyticalSubmenu")?.classList.add("open");
     }
 
     function logout() {

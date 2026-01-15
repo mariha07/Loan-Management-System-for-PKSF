@@ -143,19 +143,54 @@
             padding: 24px;
         }
 
-        .card {
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
             background: #fff;
             padding: 24px;
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
-            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
         }
 
-        h2 {
-            font-size: 18px;
+        .stat-card h3 {
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 20px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            margin-bottom: 8px;
+        }
+
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 700;
             color: #111827;
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 32px;
+        }
+
+        .chart-section {
+            background: #fff;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+        }
+
+        .chart-header {
+            text-align: center;
+            margin-bottom: 16px;
         }
 
         .logout-btn {
@@ -245,19 +280,19 @@
                 <span class="icon">📈</span>
                 <span>Loan Portfolio Report</span>
             </div>
-            <div class="nav-item">
+            <div class="nav-item" onclick="goToRepaymentPerformanceReport()">
                 <span class="icon">📈</span>
                 <span>Repayment Performance Report</span>
             </div>
-            <div class="nav-item">
+            <div class="nav-item" onclick="goToBorrowerAnalysisReport()">
                 <span class="icon">📈</span>
                 <span>Borrower Analysis Report</span>
             </div>
-            <div class="nav-item">
+            <div class="nav-item" onclick="goToLoanProductAnalysis()">
                 <span class="icon">📈</span>
                 <span>Loan Product Analysis</span>
             </div>
-            <div class="nav-item">
+            <div class="nav-item" onclick="goToOverdueRiskReport()">
                 <span class="icon">⚠️</span>
                 <span>Overdue & Risk Report</span>
             </div>
@@ -278,16 +313,37 @@
         </header>
 
         <main class="content">
-            <div class="card">
-                <h2>Summary</h2>
-                <p>Total Loans: <span id="totalLoans">0</span></p>
-                <p>Total Disbursed: <span id="totalDisbursed">0</span> (Count: <span id="disburseCount">0</span>)</p>
-                <p>Total Outstanding: <span id="totalOutstanding">0</span></p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Loans</h3>
+                    <div class="value" id="totalLoans">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Disbursed Amount</h3>
+                    <div class="value" id="totalDisbursed">0.00</div>
+                    <small style="color: #6b7280;">Count: <span id="disburseCount">0</span></small>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Outstanding Amount</h3>
+                    <div class="value" id="totalOutstanding">0.00</div>
+                </div>
             </div>
 
-            <div class="card">
-                <div style="max-width: 300px; margin: 0 auto; position: relative;">
-                    <canvas id="loanChart" width="300" height="300"></canvas>
+            <div class="charts-container">
+                <div class="chart-section">
+                    <div class="chart-header">
+                        <h2>Loan Status Analysis</h2>
+                    </div>
+                    <div style="max-width: 300px; margin: 0 auto;">
+                        <canvas id="loanChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-section">
+                    <div class="chart-header">
+                        <h2>Disbursement Analysis</h2>
+                    </div>
+                    <canvas id="disbursementBarChart"></canvas>
                 </div>
             </div>
         </main>
@@ -323,9 +379,15 @@
     function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
     function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
     function goToLoanPortfolioReport() { window.location.href = "report-loan-portfolio.html"; }
+    function goToRepaymentPerformanceReport() { window.location.href = "repayment_performance_report.html"; }
+    function goToBorrowerAnalysisReport() {
+            window.location.href = "borrower_analysis_report.html";
+        }
 
-    // Logic remains exactly as provided
+
+            // Logic remains exactly as provided
     let myChart = null;
+    let barChart = null;
     const API_BASE = 'http://localhost:8080/api';
 
     window.onload = function() {
@@ -373,6 +435,29 @@
             document.getElementById('totalOutstanding').innerText = totalOutstanding.toLocaleString(undefined, {minimumFractionDigits: 2});
 
             renderChart(activeCount, closedCount);
+            
+            // 1. Fetch all Loan Products to get interest rates
+            const productRes = await fetch(`${API_BASE}/loan-products`);
+            const products = await productRes.json();
+            
+            // 2. Create a map for quick lookup: Product Name -> Interest Rate
+            const rateMap = {};
+            products.forEach(p => {
+                rateMap[p.name] = p.interestRate;
+            });
+
+            // 3. Prepare data for Bar Chart using last 5 disbursements
+            const disbursementsWithRates = disbursements.slice(-5).map(d => {
+                // Match by loanProductName if available in your disbursement DTO
+                // If not, we use a default or match from loan account details
+                return {
+                    amount: d.disbursementAmount,
+                    productName: d.loanProductName || "N/A",
+                    rate: rateMap[d.loanProductName] || 0
+                };
+            });
+
+            renderBarChart(disbursementsWithRates);
 
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -389,19 +474,72 @@
                 labels: ['Active Loans', 'Closed Loans'],
                 datasets: [{
                     data: [active, closed],
-                    backgroundColor: ['#4f46e5', '#10b981']
+                    backgroundColor: ['#4f46e5', '#10b981'],
+                    borderWidth: 1
                 }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
             }
         });
     }
-</script>
+
+    function renderBarChart(disbursementsWithRates) {
+        const ctx = document.getElementById('disbursementBarChart').getContext('2d');
+        if (barChart) barChart.destroy();
+
+            // Function to shorten names (e.g., Nanosoft Company -> Nanosoft)
+            const shortenName = (name) => {
+                if (!name) return "N/A";
+                return name.split(' ')[0]; // Takes only the first word
+            };
+
+            const labels = disbursementsWithRates.map(d => `${shortenName(d.productName)} (${d.rate}%)`);
+            const data = disbursementsWithRates.map(d => Number(d.amount) || 0);
+
+            barChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Disbursement Amount',
+                        data: data,
+                        backgroundColor: '#4f46e5',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            ticks: {
+                                maxRotation: 0, // Labels won't rotate
+                                minRotation: 0,
+                                font: { size: 11 }
+                            }
+                        },
+                        y: { 
+                            beginAtZero: true,
+                            title: { display: true, text: 'Amount' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Amount: ' + context.raw.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>
-
-
-
-

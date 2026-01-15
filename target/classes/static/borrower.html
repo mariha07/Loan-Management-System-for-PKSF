@@ -40,20 +40,19 @@
 
         /* Content */
         .content { padding: 24px; }
-        .content-inner { width: 100%; max-width: 1100px; margin: 0 auto; }
+        .content-inner { width: 100%; }
         .panel { background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); margin-bottom: 24px; }
-        .panel-title { font-size: 16px; font-weight: 600; margin-bottom: 10px; }
 
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .row { display: flex; gap: 16px; margin-bottom: 16px; }
+        .col { flex: 1; }
 
-        .form-group { margin-bottom: 12px; }
+        .form-group { margin-bottom: 0; }
         .form-group label { font-size: 13px; font-weight: 500; margin-bottom: 6px; display: block; color: #374151; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #e5e7eb; font-size: 14px; background: #f9fafb; outline: none; }
-        .btn-primary { background: #4f46e5; color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 500; }
+        .form-group input, .form-group select { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 14px; background: #fff; color: #111827; outline: none; }
+        .form-group input:focus, .form-group select:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        .btn-primary { background: #4f46e5; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; }
 
-        .error { color: #dc2626; font-size: 12px; margin-top: 4px; height: 14px; }
-        .success { color: #059669; font-size: 13px; }
+        .error { color: #dc2626; font-size: 12px; margin-top: 4px; min-height: 14px; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th { text-align: left; padding: 12px; border-bottom: 2px solid #f3f4f6; color: #6b7280; font-size: 13px; }
@@ -61,6 +60,14 @@
 
         .action-btn { cursor: pointer; margin: 0 6px; font-size: 16px; }
         .ghost { background: none; border: 1px solid #e5e7eb; padding: 4px 8px; border-radius: 4px; cursor: pointer; }
+
+        @media (max-width: 1024px) {
+            .row { flex-direction: column; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -131,13 +138,13 @@
                 <section class="panel">
                     <div class="panel-title">Borrower Details</div>
                     <form id="borrowerForm">
-                        <div class="grid-2">
-                            <div class="form-group">
+                        <div class="row">
+                            <div class="col form-group">
                                 <label>Full Name</label>
                                 <input id="name" type="text" placeholder="John Doe">
                                 <p class="error" id="err_name"></p>
                             </div>
-                            <div class="form-group">
+                            <div class="col form-group">
                                 <label>ID Type</label>
                                 <select id="idType">
                                     <option value="">Select</option>
@@ -146,23 +153,20 @@
                                 </select>
                                 <p class="error" id="err_idType"></p>
                             </div>
-                        </div>
-
-                        <div class="grid-2">
-                            <div class="form-group">
+                            <div class="col form-group">
                                 <label>ID Number</label>
                                 <input id="idNumber" type="text">
                                 <p class="error" id="err_idNumber"></p>
                             </div>
-                            <div class="form-group">
+                            <div class="col form-group">
                                 <label>Date of Birth</label>
                                 <input id="dob" type="date">
                                 <p class="error" id="err_dob"></p>
                             </div>
                         </div>
 
-                        <div class="grid-2">
-                            <div class="form-group">
+                        <div class="row">
+                            <div class="col form-group">
                                 <label>Gender</label>
                                 <select id="gender">
                                     <option value="">Select</option>
@@ -171,34 +175,33 @@
                                 </select>
                                 <p class="error" id="err_gender"></p>
                             </div>
-                            <div class="form-group">
+                            <div class="col form-group">
                                 <label>Mobile (11 digits)</label>
                                 <input id="mobile" type="text" maxlength="11" placeholder="01700000000">
                                 <p class="error" id="err_mobile"></p>
                             </div>
+                            <div class="col form-group" style="flex: 2;">
+                                <label>Email Address</label>
+                                <input id="email" type="email" placeholder="john@example.com">
+                                <p class="error" id="err_email"></p>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label>Email Address</label>
-                            <input id="email" type="email" placeholder="john@example.com">
-                            <p class="error" id="err_email"></p>
+                        <h4 style="margin: 15px 0 10px 0; font-size: 14px; color: #4f46e5; font-weight: 600;">Address Information</h4>
+                        <div class="row">
+                            <div class="col form-group"><label>Division</label><input id="p_div"></div>
+                            <div class="col form-group"><label>District</label><input id="p_dis"></div>
+                            <div class="col form-group"><label>Upazila</label><input id="p_upa"></div>
                         </div>
 
-                        <h4 style="margin: 15px 0 10px 0; font-size: 14px; color: #4f46e5;">Address Information</h4>
-                        <div class="grid-3">
-                            <div class="form-group"><label>Division</label><input id="p_div"></div>
-                            <div class="form-group"><label>District</label><input id="p_dis"></div>
-                            <div class="form-group"><label>Upazila</label><input id="p_upa"></div>
-                        </div>
-
-                        <label style="display:flex; align-items:center; gap:8px; margin: 10px 0; font-size: 13px;">
+                        <label style="display:flex; align-items:center; gap:8px; margin: 10px 0; font-size: 13px; color: #374151; font-weight: 500;">
                             <input type="checkbox" id="sameAsPresent"> Same as Present Address
                         </label>
 
-                        <div class="grid-3">
-                            <div class="form-group"><label>Perm. Division</label><input id="per_div"></div>
-                            <div class="form-group"><label>Perm. District</label><input id="per_dis"></div>
-                            <div class="form-group"><label>Perm. Upazila</label><input id="per_upa"></div>
+                        <div class="row">
+                            <div class="col form-group"><label>Perm. Division</label><input id="per_div"></div>
+                            <div class="col form-group"><label>Perm. District</label><input id="per_dis"></div>
+                            <div class="col form-group"><label>Perm. Upazila</label><input id="per_upa"></div>
                         </div>
 
                         <div style="margin-top:20px">
@@ -366,15 +369,15 @@
         document.getElementById("gender").value = b.gender || '';
         document.getElementById("mobile").value = b.mobile || '';
         document.getElementById("email").value = b.email || '';
-        
+
         document.getElementById("p_div").value = b.presentDivision || '';
         document.getElementById("p_dis").value = b.presentDistrict || '';
         document.getElementById("p_upa").value = b.presentUpazila || '';
-        
+
         document.getElementById("per_div").value = b.permanentDivision || '';
         document.getElementById("per_dis").value = b.permanentDistrict || '';
         document.getElementById("per_upa").value = b.permanentUpazila || '';
-        
+
         document.getElementById("saveBtn").innerText = "Update Borrower";
     }
 
