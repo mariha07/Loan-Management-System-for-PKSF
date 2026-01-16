@@ -328,6 +328,27 @@
                 <span>Repayment Collection</span>
             </div>
         </div>
+        <div class="nav-item" onclick="toggleMenu('analyticalSubmenu')">
+            <span class="icon">📊</span>
+            <span>Reports</span>
+        </div>
+        <div id="analyticalSubmenu" class="submenu">
+            <div class="nav-item" onclick="window.location.href='report-loan-portfolio.html'">
+                <span class="icon">📈</span><span>Loan Portfolio Report</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='repayment_performance_report.html'">
+                <span class="icon">📊</span><span>Repayment Performance</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='borrower_analysis_report.html'">
+                <span class="icon">👥</span><span>Borrower Analysis</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='loan_product_analysis.html'">
+                <span class="icon">📈</span><span>Loan Product Analysis</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='overdue_risk_report.html'">
+                <span class="icon">⚠️</span><span>Overdue Risk Report</span>
+            </div>
+        </div>
     </aside>
 
     <div class="main">
@@ -430,6 +451,12 @@
         localStorage.removeItem('user');
         window.location.href = 'login.html';
     }
+
+    function goToLoanPortfolioReport(){ window.location.href="report-loan-portfolio.html"; }
+    function goToRepaymentPerformanceReport(){ window.location.href="repayment_performance_report.html"; }
+    function goToBorrowerAnalysisReport(){ window.location.href="borrower_analysis_report.html"; }
+    function goToLoanProductAnalysis(){ window.location.href="loan_product_analysis.html"; }
+    function goToOverdueRiskReport(){ window.location.href="overdue_risk_report.html"; }
 
     loanNoField.addEventListener("input", async () => {
         const loanNo = loanNoField.value.trim();

@@ -312,6 +312,27 @@
                     <span class="icon">📥</span><span>Repayment Collection</span>
                 </div>
             </div>
+
+            <div class="nav-item" onclick="toggleAnalyticalMenu()">
+                <span class="icon">📊</span><span>Reports</span>
+            </div>
+            <div id="analyticalSubmenu" class="submenu">
+                <div class="nav-item" onclick="goToLoanPortfolioReport()">
+                    <span class="icon">📈</span><span>Loan Portfolio Report</span>
+                </div>
+                <div class="nav-item" onclick="goToRepaymentPerformanceReport()">
+                    <span class="icon">📊</span><span>Repayment Performance</span>
+                </div>
+                <div class="nav-item" onclick="goToBorrowerAnalysisReport()">
+                    <span class="icon">👥</span><span>Borrower Analysis</span>
+                </div>
+                <div class="nav-item" onclick="goToLoanProductAnalysis()">
+                    <span class="icon">📈</span><span>Loan Product Analysis</span>
+                </div>
+                <div class="nav-item" onclick="goToOverdueRiskReport()">
+                    <span class="icon">⚠️</span><span>Overdue Risk Report</span>
+                </div>
+            </div>
         </aside>
 
         <div class="main">
@@ -431,6 +452,7 @@
             function toggleUserMenu() { toggleVis('userSubmenu'); }
             function toggleLoanMenu() { toggleVis('loanSubmenu'); }
             function toggleRepaymentMenu() { toggleVis('repaymentSubmenu'); }
+            function toggleAnalyticalMenu() { toggleVis('analyticalSubmenu'); }
             function toggleVis(id) {
                 const m = document.getElementById(id);
                 m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'block' : 'none';
@@ -444,6 +466,11 @@
             function goToUserRegistration() { window.location.href = 'user-registration.html'; }
             function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
             function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
+            function goToLoanPortfolioReport(){ window.location.href="report-loan-portfolio.html"; }
+            function goToRepaymentPerformanceReport(){ window.location.href="repayment_performance_report.html"; }
+            function goToBorrowerAnalysisReport(){ window.location.href="borrower_analysis_report.html"; }
+            function goToLoanProductAnalysis(){ window.location.href="loan_product_analysis.html"; }
+            function goToOverdueRiskReport(){ window.location.href="overdue_risk_report.html"; }
 
             // Cache elements
         const errorBox = document.getElementById("errorBox");
