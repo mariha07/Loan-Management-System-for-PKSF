@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -55,7 +56,7 @@
             margin-bottom: 4px;
             font-size: 14px;
             cursor: pointer;
-            color: #4b5563;
+            color: black;
             text-decoration: none;
         }
 
@@ -80,10 +81,11 @@
             font-size: 13px;
         }
 
-        .nav-item span.icon {
-            width: 20px;
+        .sidebar i {
+            width: 18px;
+            height: 18px;
             margin-right: 8px;
-            text-align: center;
+            color: black;
         }
 
         /* Main */
@@ -308,67 +310,84 @@
                 <div class="menu-title">Menu</div>
 
                 <div class="nav-item" onclick="goDashboard()">
-                    <span class="icon">📊</span><span>Dashboard</span>
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
                 </div>
 
                 <div class="nav-item" onclick="toggleUserMenu()">
-                    <span class="icon">👤</span><span>User Management</span>
+                    <i data-lucide="users"></i>
+                    <span>User Management</span>
                 </div>
                 <div id="userSubmenu" class="submenu">
                     <div class="nav-item" onclick="goToUserRegistration()">
-                        <span class="icon">📝</span><span>User Registration</span>
+                        <i data-lucide="user-plus"></i>
+                        <span>User Registration</span>
                     </div>
                 </div>
 
                 <div class="nav-item" onclick="goToLoanProducts()">
-                    <span class="icon">💰</span><span>Loan Products</span>
+                    <i data-lucide="wallet"></i>
+                    <span>Loan Products</span>
                 </div>
 
                 <div class="nav-item" onclick="toggleLoanMenu()">
-                    <span class="icon">📄</span><span>Loan Applications</span>
+                    <i data-lucide="file-text"></i>
+                    <span>Loan Applications</span>
                 </div>
                 <div id="loanSubmenu" class="submenu" style="display:block;">
                     <div class="nav-item" onclick="goToBorrowerReg()">
-                        <span class="icon">📝</span><span>Borrower Registration</span>
+                        <i data-lucide="clipboard-edit"></i>
+                        <span>Borrower Registration</span>
                     </div>
                     <div class="nav-item active" onclick="goToLoanAccount()">
-                        <span class="icon">💼</span><span>Loan Account</span>
+                        <i data-lucide="briefcase"></i>
+                        <span>Loan Account</span>
                     </div>
                     <div class="nav-item" onclick="goToLoanDisbursement()">
-                        <span class="icon">💸</span><span>Loan Disbursement</span>
+                        <i data-lucide="banknote"></i>
+                        <span>Loan Disbursement</span>
                     </div>
                 </div>
 
                 <div class="nav-item" onclick="toggleRepaymentMenu()">
-                    <span class="icon">📆</span><span>Repayments</span>
+                    <i data-lucide="calendar-check"></i>
+                    <span>Repayments</span>
                 </div>
                 <div id="repaymentSubmenu" class="submenu">
                     <div class="nav-item" onclick="goToRepaymentSchedule()">
-                        <span class="icon">📑</span><span>Repayment Schedule</span>
+                        <i data-lucide="list-checks"></i>
+                        <span>Repayment Schedule</span>
                     </div>
                     <div class="nav-item" onclick="goToRepaymentCollection()">
-                        <span class="icon">📥</span><span>Repayment Collection</span>
+                        <i data-lucide="download"></i>
+                        <span>Repayment Collection</span>
                     </div>
                 </div>
 
-                <div class="nav-item" onclick="toggleAnalyticalMenu()">
-                    <span class="icon">📊</span><span>Reports</span>
+                <div class="nav-item" onclick="toggleMenu('analyticalSubmenu')">
+                    <i data-lucide="bar-chart-3"></i>
+                    <span>Reports</span>
                 </div>
                 <div id="analyticalSubmenu" class="submenu">
                     <div class="nav-item" onclick="goToLoanPortfolioReport()">
-                        <span class="icon">📈</span><span>Loan Portfolio Report</span>
+                        <i data-lucide="pie-chart"></i>
+                        <span>Loan Portfolio Report</span>
                     </div>
                     <div class="nav-item" onclick="goToRepaymentPerformanceReport()">
-                        <span class="icon">📊</span><span>Repayment Performance</span>
+                        <i data-lucide="trending-up"></i>
+                        <span>Repayment Performance Report</span>
                     </div>
                     <div class="nav-item" onclick="goToBorrowerAnalysisReport()">
-                        <span class="icon">👥</span><span>Borrower Analysis</span>
+                        <i data-lucide="user-search"></i>
+                        <span>Borrower Analysis Report</span>
                     </div>
                     <div class="nav-item" onclick="goToLoanProductAnalysis()">
-                        <span class="icon">📈</span><span>Loan Product Analysis</span>
+                        <i data-lucide="layers"></i>
+                        <span>Loan Product Analysis</span>
                     </div>
                     <div class="nav-item" onclick="goToOverdueRiskReport()">
-                        <span class="icon">⚠️</span><span>Overdue Risk Report</span>
+                        <i data-lucide="alert-triangle"></i>
+                        <span>Overdue & Risk Report</span>
                     </div>
                 </div>
             </aside>
@@ -533,16 +552,16 @@
             function goToLoanDisbursement() { window.location.href = "loan-disbursement.html"; }
             function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
             function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
-            function goToLoanPortfolioReport(){ window.location.href="report-loan-portfolio.html"; }
-            function goToRepaymentPerformanceReport(){ window.location.href="repayment_performance_report.html"; }
-            function goToBorrowerAnalysisReport(){ window.location.href="borrower_analysis_report.html"; }
-            function goToLoanProductAnalysis(){ window.location.href="loan_product_analysis.html"; }
-            function goToOverdueRiskReport(){ window.location.href="overdue_risk_report.html"; }
+            function goToLoanPortfolioReport() { window.location.href = "report-loan-portfolio.html"; }
+            function goToRepaymentPerformanceReport() { window.location.href = "repayment_performance_report.html"; }
+            function goToBorrowerAnalysisReport() { window.location.href = "borrower_analysis_report.html"; }
+            function goToLoanProductAnalysis() { window.location.href = "loan_product_analysis.html"; }
+            function goToOverdueRiskReport() { window.location.href = "overdue_risk_report.html"; }
 
             function toggleUserMenu() { toggleVis('userSubmenu'); }
             function toggleLoanMenu() { toggleVis('loanSubmenu'); }
             function toggleRepaymentMenu() { toggleVis('repaymentSubmenu'); }
-            function toggleAnalyticalMenu() { toggleVis('analyticalSubmenu'); }
+            function toggleMenu(id) { toggleVis(id); }
             function toggleVis(id) {
                 const m = document.getElementById(id);
                 m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'block' : 'none';
@@ -785,5 +804,10 @@
         await loadAccountsPage();
     })();
 </script>
+
+<script>
+    lucide.createIcons();
+</script>
+
 </body>
 </html>

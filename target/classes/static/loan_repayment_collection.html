@@ -57,7 +57,7 @@
             margin-bottom: 4px;
             font-size: 14px;
             cursor: pointer;
-            color: #4b5563;
+            color: black;
         }
 
         .nav-item.active,
@@ -85,6 +85,10 @@
             width: 20px;
             margin-right: 8px;
             text-align: center;
+        }
+
+        .sidebar i {
+            color: black;
         }
 
         /* Main */
@@ -146,145 +150,99 @@
 
         .panel {
             background: #ffffff;
-            padding: 24px;
             border-radius: 12px;
+            padding: 24px;
             box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
-            margin-bottom: 24px;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        h2 {
+        .panel-title {
             font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
+            font-weight: 700;
+            margin-bottom: 24px;
             color: #111827;
+            border-bottom: 1px solid #f3f4f6;
+            padding-bottom: 12px;
         }
 
-        .row {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 16px;
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 20px;
         }
 
-        .col {
-            flex: 1;
-        }
-
-        label {
+        .form-label {
             display: block;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
             margin-bottom: 6px;
             color: #374151;
         }
 
-        input, select {
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .form-control, .form-select {
             width: 100%;
             padding: 10px 12px;
-            border-radius: 8px;
             border: 1px solid #d1d5db;
+            border-radius: 8px;
             font-size: 14px;
-            background: #fff;
-            color: #111827;
+            transition: border-color 0.2s;
         }
 
-        input:focus, select:focus {
+        .form-control:focus, .form-select:focus {
             outline: none;
             border-color: #4f46e5;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            ring: 2px solid #eef2ff;
         }
 
-        input[readonly] {
-            background: #f9fafb;
-            cursor: not-allowed;
+        .form-control[readonly] {
+            background-color: #f9fafb;
+            color: #6b7280;
         }
 
-        button {
-            background: #4f46e5;
-            color: #fff;
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .btn {
             padding: 10px 20px;
             border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
             font-size: 14px;
-            transition: background 0.2s;
-        }
-
-        button:hover {
-            background: #4338ca;
-        }
-
-        button.ghost {
-            background: #fff;
-            color: #4f46e5;
-            border: 1px solid #e5e7eb;
-        }
-
-        button.ghost:hover {
-            background: #f9fafb;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
         }
 
         .btn-primary {
             background: #4f46e5;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 500;
-            cursor: pointer;
+            color: white;
         }
 
-        /* Search results */
-        .search-results {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            position: absolute;
-            z-index: 50;
-            max-height: 300px;
-            overflow-y: auto;
-            width: 400px;
-            margin-top: 4px;
-            border-radius: 12px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        .btn-primary:hover {
+            background: #4338ca;
         }
 
-        .sr-item {
-            padding: 12px 16px;
-            cursor: pointer;
-            border-bottom: 1px solid #f3f4f6;
-        }
-
-        .sr-item:hover {
-            background: #f8fafc;
-        }
-
-        /* Table */
-        table {
+        .btn-success {
+            background: #10b981;
+            color: white;
             width: 100%;
-            border-collapse: collapse;
         }
 
-        th {
-            text-align: left;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            color: #6b7280;
-            padding: 12px 16px;
-            background: #f9fafb;
-            border-bottom: 1px solid #e5e7eb;
+        .btn-success:hover {
+            background: #059669;
         }
 
-        td {
-            padding: 16px;
-            font-size: 14px;
-            border-bottom: 1px solid #e5e7eb;
-            color: #374151;
+        .btn-success:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
         }
-
-        .muted { font-size: 13px; color: #6b7280; }
-        .error { color: #dc2626; font-size: 13px; margin-top: 8px; }
-        .small { font-size: 12px; color: #9ca3af; margin-top: 4px; }
 
         .logout-btn {
             border: none;
@@ -315,80 +273,74 @@
         <div class="logo">LMS</div>
         <div class="menu-title">Menu</div>
         <div class="nav-item" onclick="window.location.href='dashboard.html'">
-            <span class="icon">📊</span>
+            <i data-lucide="layout-dashboard"></i>
             <span>Dashboard</span>
         </div>
         <div class="nav-item" onclick="toggleMenu('userSubmenu')">
-            <span class="icon">👤</span>
+            <i data-lucide="users"></i>
             <span>User Management</span>
         </div>
         <div id="userSubmenu" class="submenu">
             <div class="nav-item" onclick="goToUserRegistration()">
-                <span class="icon">📝</span>
+                <i data-lucide="user-plus"></i>
                 <span>User Registration</span>
             </div>
         </div>
         <div class="nav-item" onclick="goToLoanProducts()">
-            <span class="icon">💰</span>
+            <i data-lucide="credit-card"></i>
             <span>Loan Products</span>
         </div>
         <div class="nav-item" onclick="toggleMenu('loanSubmenu')">
-            <span class="icon">📄</span>
+            <i data-lucide="file-text"></i>
             <span>Loan Applications</span>
         </div>
         <div id="loanSubmenu" class="submenu">
             <div class="nav-item" onclick="goToBorrowerReg()">
-                <span class="icon">📝</span>
+                <i data-lucide="user-plus"></i>
                 <span>Borrower Registration</span>
             </div>
             <div class="nav-item" onclick="goToLoanAccount()">
-                <span class="icon">💼</span>
+                <i data-lucide="briefcase"></i>
                 <span>Loan Account</span>
             </div>
             <div class="nav-item" onclick="goToLoanDisbursement()">
-                <span class="icon">💸</span>
+                <i data-lucide="send"></i>
                 <span>Loan Disbursement</span>
             </div>
         </div>
         <div class="nav-item" onclick="toggleMenu('repaymentSubmenu')">
-            <span class="icon">📆</span>
+            <i data-lucide="dollar-sign"></i>
             <span>Repayments</span>
         </div>
         <div id="repaymentSubmenu" class="submenu open">
             <div class="nav-item" onclick="goToRepaymentSchedule()">
-                <span class="icon">📑</span>
+                <i data-lucide="calendar"></i>
                 <span>Repayment Schedule</span>
             </div>
             <div class="nav-item active" onclick="goToRepaymentCollection()">
-                <span class="icon">📥</span>
+                <i data-lucide="receipt"></i>
                 <span>Repayment Collection</span>
             </div>
         </div>
-
         <div class="nav-item" onclick="toggleMenu('analyticalSubmenu')">
-            <span class="icon">📊</span>
+            <i data-lucide="bar-chart-3"></i>
             <span>Reports</span>
         </div>
         <div id="analyticalSubmenu" class="submenu">
             <div class="nav-item" onclick="goToLoanPortfolioReport()">
-                <span class="icon">📈</span>
-                <span>Loan Portfolio Report</span>
+                <i data-lucide="pie-chart"></i><span>Loan Portfolio Report</span>
             </div>
             <div class="nav-item" onclick="goToRepaymentPerformanceReport()">
-                <span class="icon">📈</span>
-                <span>Repayment Performance Report</span>
+                <i data-lucide="trending-up"></i><span>Repayment Performance</span>
             </div>
             <div class="nav-item" onclick="goToBorrowerAnalysisReport()">
-                <span class="icon">📈</span>
-                <span>Borrower Analysis Report</span>
+                <i data-lucide="users"></i><span>Borrower Analysis</span>
             </div>
             <div class="nav-item" onclick="goToLoanProductAnalysis()">
-                <span class="icon">📈</span>
-                <span>Loan Product Analysis</span>
+                <i data-lucide="bar-chart"></i><span>Loan Product Analysis</span>
             </div>
             <div class="nav-item" onclick="goToOverdueRiskReport()">
-                <span class="icon">⚠️</span>
-                <span>Overdue & Risk Report</span>
+                <i data-lucide="alert-triangle"></i><span>Overdue Risk Report</span>
             </div>
         </div>
     </aside>
@@ -408,16 +360,14 @@
 
         <main class="content">
             <div class="panel">
-                <h2>Loan Repayment Collection</h2>
+                <div class="panel-title">Loan Repayment Collection</div>
 
                 <!-- Search Section -->
-                <div class="row">
-                    <div class="col">
-                        <label>Search Loan Number</label>
-                        <div style="display: flex; gap: 8px;">
-                            <input type="text" id="loanNumberSearch" placeholder="Enter Loan No (e.g. LOAN-101)">
-                            <button class="btn-primary" type="button" onclick="searchLoan()">Search</button>
-                        </div>
+                <div class="form-group">
+                    <label class="form-label">Search Loan Number</label>
+                    <div class="input-group">
+                        <input type="text" id="loanNumberSearch" class="form-control" placeholder="Enter Loan No (e.g. LOAN-101)">
+                        <button class="btn btn-primary" type="button" onclick="searchLoan()">Search</button>
                     </div>
                 </div>
 
@@ -425,38 +375,35 @@
 
                 <!-- Collection Form -->
                 <form id="collectionForm">
-                    <div class="row">
-                        <div class="col">
-                            <label>Installment No</label>
-                            <select id="installmentNo" onchange="updateInstallmentAmount()" disabled>
-                                <option value="">-- Select Installment --</option>
-                            </select>
-                        </div>
-                        <div class="col">
-                            <label>Total Installment Amount</label>
-                            <input type="number" id="installmentAmountDisplay" readonly>
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label">Installment No</label>
+                        <select id="installmentNo" class="form-select" onchange="updateInstallmentAmount()" disabled>
+                            <option value="">-- Select Installment --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Total Installment Amount</label>
+                        <input type="number" id="installmentAmountDisplay" class="form-control" readonly>
                     </div>
 
                     <div class="row">
-                        <div class="col">
-                            <label>Principal Outstanding</label>
-                            <input type="number" id="principalOutstanding" readonly>
+                        <div class="form-group">
+                            <label class="form-label">Principal Outstanding</label>
+                            <input type="number" id="principalOutstanding" class="form-control" readonly>
                         </div>
-                        <div class="col">
-                            <label>Interest Outstanding</label>
-                            <input type="number" id="interestOutstanding" readonly>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col">
-                            <label>Payment Amount</label>
-                            <input type="number" id="paymentAmount" placeholder="Enter amount to pay" required>
+                        <div class="form-group">
+                            <label class="form-label">Interest Outstanding</label>
+                            <input type="number" id="interestOutstanding" class="form-control" readonly>
                         </div>
                     </div>
 
-                    <button type="button" id="saveBtn" class="btn-primary" onclick="saveCollection()" disabled style="width: 100%; margin-top: 16px;">Save Payment</button>
+                    <div class="form-group">
+                        <label class="form-label">Payment Amount</label>
+                        <input type="number" id="paymentAmount" class="form-control" placeholder="Enter amount to pay" required>
+                    </div>
+
+                    <button type="button" id="saveBtn" class="btn btn-success" onclick="saveCollection()" disabled>Save Payment</button>
                 </form>
             </div>
             <div class="footer">Loan Management System · Repayment Portal</div>
@@ -489,11 +436,12 @@
     function goToUserRegistration() { window.location.href = 'user-registration.html'; }
     function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
     function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
-    function goToLoanPortfolioReport() { window.location.href = "report-loan-portfolio.html"; }
-    function goToRepaymentPerformanceReport() { window.location.href = "repayment_performance_report.html"; }
-    function goToBorrowerAnalysisReport() { window.location.href = "borrower_analysis_report.html"; }
-    function goToLoanProductAnalysis() { window.location.href = "loan_product_analysis.html"; }
-    function goToOverdueRiskReport() { window.location.href = "overdue_risk_report.html"; }
+
+    function goToLoanPortfolioReport(){ window.location.href="report-loan-portfolio.html"; }
+    function goToRepaymentPerformanceReport(){ window.location.href="repayment_performance_report.html"; }
+    function goToBorrowerAnalysisReport(){ window.location.href="borrower_analysis_report.html"; }
+    function goToLoanProductAnalysis(){ window.location.href="loan_product_analysis.html"; }
+    function goToOverdueRiskReport(){ window.location.href="overdue_risk_report.html"; }
 
     function logout() {
         localStorage.removeItem('user');
@@ -588,6 +536,9 @@
         }
     }
 </script>
-
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script>
+    lucide.createIcons();
+</script>
 </body>
 </html>

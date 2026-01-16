@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: "Inter", sans-serif; background-color: #f5f7fb; color: #222; }
@@ -23,11 +25,18 @@
         }
         .sidebar .logo { font-weight: 700; font-size: 20px; margin-bottom: 24px; }
         .sidebar .menu-title { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; margin-bottom: 10px; }
-        .nav-item { display: flex; align-items: center; padding: 10px 12px; border-radius: 8px; margin-bottom: 4px; font-size: 14px; cursor: pointer; color: #4b5563; }
+        .nav-item { display: flex; align-items: center; padding: 10px 12px; border-radius: 8px; margin-bottom: 4px; font-size: 14px; cursor: pointer; color: black; }
         .nav-item.active, .nav-item:hover { background: #eef2ff; color: #4338ca; }
         .submenu { margin-left: 30px; margin-top: 2px; display: none; }
         .submenu .nav-item { padding: 8px 10px; font-size: 13px; }
         .nav-item span.icon { width: 20px; margin-right: 8px; text-align: center; }
+
+        .sidebar i {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            color: black;
+        }
 
         /* Main Panel */
         .main { flex: 1; display: flex; flex-direction: column; }
@@ -78,45 +87,66 @@
         <div class="menu-title">Menu</div>
 
         <div class="nav-item" onclick="goDashboard()">
-            <span class="icon">📊</span><span>Dashboard</span>
+            <i data-lucide="layout-dashboard"></i><span>Dashboard</span>
         </div>
 
         <div class="nav-item" onclick="toggleUserMenu()">
-            <span class="icon">👤</span><span>User Management</span>
+            <i data-lucide="users"></i><span>User Management</span>
         </div>
         <div id="userSubmenu" class="submenu">
             <div class="nav-item" onclick="goToUserRegistration()">
-                <span class="icon">📝</span><span>User Registration</span>
+                <i data-lucide="user-plus"></i><span>User Registration</span>
             </div>
         </div>
 
         <div class="nav-item" onclick="goToLoanProducts()">
-            <span class="icon">💰</span><span>Loan Products</span>
+            <i data-lucide="wallet"></i><span>Loan Products</span>
         </div>
 
         <div class="nav-item" onclick="toggleLoanMenu()">
-            <span class="icon">📄</span><span>Loan Applications</span>
+            <i data-lucide="file-text"></i><span>Loan Applications</span>
         </div>
         <div id="loanSubmenu" class="submenu" style="display:block;"> <div class="nav-item active" onclick="goToBorrowerReg()">
-            <span class="icon">📝</span><span>Borrower Registration</span>
+            <i data-lucide="clipboard-edit"></i><span>Borrower Registration</span>
         </div>
             <div class="nav-item" onclick="goToLoanAccount()">
-                <span class="icon">💼</span><span>Loan Account</span>
+                <i data-lucide="briefcase"></i><span>Loan Account</span>
             </div>
             <div class="nav-item" onclick="goToLoanDisbursement()">
-                <span class="icon">💸</span><span>Loan Disbursement</span>
+                <i data-lucide="banknote"></i><span>Loan Disbursement</span>
             </div>
         </div>
 
         <div class="nav-item" onclick="toggleRepaymentMenu()">
-            <span class="icon">📆</span><span>Repayments</span>
+            <i data-lucide="calendar-check"></i><span>Repayments</span>
         </div>
         <div id="repaymentSubmenu" class="submenu">
             <div class="nav-item" onclick="goToRepaymentSchedule()">
-                <span class="icon">📑</span><span>Repayment Schedule</span>
+                <i data-lucide="list-checks"></i><span>Repayment Schedule</span>
             </div>
             <div class="nav-item" onclick="goToRepaymentCollection()">
-                <span class="icon">📥</span><span>Repayment Collection</span>
+                <i data-lucide="download"></i><span>Repayment Collection</span>
+            </div>
+        </div>
+
+        <div class="nav-item" onclick="toggleMenu('analyticalSubmenu')">
+            <i data-lucide="bar-chart-3"></i><span>Reports</span>
+        </div>
+        <div id="analyticalSubmenu" class="submenu">
+            <div class="nav-item" onclick="goToLoanPortfolioReport()">
+                <i data-lucide="pie-chart"></i><span>Loan Portfolio Report</span>
+            </div>
+            <div class="nav-item" onclick="goToRepaymentPerformanceReport()">
+                <i data-lucide="trending-up"></i><span>Repayment Performance Report</span>
+            </div>
+            <div class="nav-item" onclick="goToBorrowerAnalysisReport()">
+                <i data-lucide="user-search"></i><span>Borrower Analysis Report</span>
+            </div>
+            <div class="nav-item" onclick="goToLoanProductAnalysis()">
+                <i data-lucide="layers"></i><span>Loan Product Analysis</span>
+            </div>
+            <div class="nav-item" onclick="goToOverdueRiskReport()">
+                <i data-lucide="alert-triangle"></i><span>Overdue & Risk Report</span>
             </div>
         </div>
     </aside>
@@ -264,6 +294,17 @@
     function goToRepaymentSchedule() { window.location.href = "repayment-schedule.html"; }
     function goToRepaymentCollection() { window.location.href = "loan_repayment_collection.html"; }
 
+    function toggleMenu(id) {
+        const menu = document.getElementById(id);
+        if (menu) menu.classList.toggle("open");
+    }
+
+    function goToLoanPortfolioReport(){ window.location.href="report-loan-portfolio.html"; }
+    function goToRepaymentPerformanceReport(){ window.location.href="repayment_performance_report.html"; }
+    function goToBorrowerAnalysisReport(){ window.location.href="borrower_analysis_report.html"; }
+    function goToLoanProductAnalysis(){ window.location.href="loan_product_analysis.html"; }
+    function goToOverdueRiskReport(){ window.location.href="overdue_risk_report.html"; }
+
     function toggleUserMenu() { toggleVis('userSubmenu'); }
     function toggleLoanMenu() { toggleVis('loanSubmenu'); }
     function toggleRepaymentMenu() { toggleVis('repaymentSubmenu'); }
@@ -386,6 +427,9 @@
     document.getElementById("pageSizeSelect").onchange = (e) => { pageSize = e.target.value; currentPage = 0; loadBorrowers(); };
 
     loadBorrowers();
+</script>
+<script>
+    lucide.createIcons();
 </script>
 </body>
 </html>

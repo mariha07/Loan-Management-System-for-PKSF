@@ -12,6 +12,8 @@
     <!-- Permanent labels support -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         * {
             box-sizing: border-box;
@@ -60,7 +62,7 @@
             margin-bottom: 4px;
             font-size: 14px;
             cursor: pointer;
-            color: #4b5563;
+            color: black;
         }
 
         .nav-item.active,
@@ -84,10 +86,11 @@
             padding: 8px 10px;
             font-size: 13px;
         }
-        .nav-item span.icon {
-            width: 20px;
+        .sidebar i {
+            width: 18px;
+            height: 18px;
             margin-right: 8px;
-            text-align: center;
+            color: black;
         }
 
         /* Main */
@@ -263,80 +266,85 @@
     <aside class="sidebar">
         <div class="logo">LMS</div>
         <div class="menu-title">Menu</div>
+
         <div class="nav-item active" onclick="goToDashboard()">
-            <span class="icon">📊</span>
+            <i data-lucide="layout-dashboard"></i>
             <span>Dashboard</span>
         </div>
+
         <div class="nav-item" onclick="toggleMenu('userSubmenu')">
-            <span class="icon">👤</span>
+            <i data-lucide="users"></i>
             <span>User Management</span>
         </div>
         <div id="userSubmenu" class="submenu">
             <div class="nav-item" onclick="goToUserRegistration()">
-                <span class="icon">📝</span>
+                <i data-lucide="user-plus"></i>
                 <span>User Registration</span>
             </div>
         </div>
+
         <div class="nav-item" onclick="goToLoanProducts()">
-            <span class="icon">💰</span>
+            <i data-lucide="wallet"></i>
             <span>Loan Products</span>
         </div>
+
         <div class="nav-item" onclick="toggleMenu('loanSubmenu')">
-            <span class="icon">📄</span>
+            <i data-lucide="file-text"></i>
             <span>Loan Applications</span>
         </div>
         <div id="loanSubmenu" class="submenu">
             <div class="nav-item" onclick="goToBorrowerReg()">
-                <span class="icon">📝</span>
+                <i data-lucide="clipboard-edit"></i>
                 <span>Borrower Registration</span>
             </div>
             <div class="nav-item" onclick="goToLoanAccount()">
-                <span class="icon">💼</span>
+                <i data-lucide="briefcase"></i>
                 <span>Loan Account</span>
             </div>
             <div class="nav-item" onclick="goToLoanDisbursement()">
-                <span class="icon">💸</span>
+                <i data-lucide="banknote"></i>
                 <span>Loan Disbursement</span>
             </div>
         </div>
+
         <div class="nav-item" onclick="toggleMenu('repaymentSubmenu')">
-            <span class="icon">📆</span>
+            <i data-lucide="calendar-check"></i>
             <span>Repayments</span>
         </div>
         <div id="repaymentSubmenu" class="submenu">
             <div class="nav-item" onclick="goToRepaymentSchedule()">
-                <span class="icon">📑</span>
+                <i data-lucide="list-checks"></i>
                 <span>Repayment Schedule</span>
             </div>
             <div class="nav-item" onclick="goToRepaymentCollection()">
-                <span class="icon">📥</span>
+                <i data-lucide="download"></i>
                 <span>Repayment Collection</span>
             </div>
         </div>
 
         <div class="nav-item" onclick="toggleMenu('analyticalSubmenu')">
-            <span class="icon">📊</span>
+            <i data-lucide="bar-chart-3"></i>
             <span>Reports</span>
         </div>
         <div id="analyticalSubmenu" class="submenu">
             <div class="nav-item" onclick="goToLoanPortfolioReport()">
-                <span class="icon">📈</span>
+                <i data-lucide="pie-chart"></i>
                 <span>Loan Portfolio Report</span>
             </div>
             <div class="nav-item" onclick="goToRepaymentPerformanceReport()">
-                <span class="icon">📈</span>
+                <i data-lucide="trending-up"></i>
                 <span>Repayment Performance Report</span>
             </div>
             <div class="nav-item" onclick="goToBorrowerAnalysisReport()">
-                    <span class="icon">📈</span>
-                    <span>Borrower Analysis Report</span>
-                </div>
-                <div class="nav-item" onclick="goToLoanProductAnalysis()">
-                <span class="icon">📈</span>
+                <i data-lucide="user-search"></i>
+                <span>Borrower Analysis Report</span>
+            </div>
+            <div class="nav-item" onclick="goToLoanProductAnalysis()">
+                <i data-lucide="layers"></i>
                 <span>Loan Product Analysis</span>
             </div>
             <div class="nav-item" onclick="goToOverdueRiskReport()">
-                <span class="icon">⚠️</span>
+                <i data-lucide="alert-triangle"></i>
                 <span>Overdue & Risk Report</span>
             </div>
         </div>
@@ -542,6 +550,10 @@
             cutout: '65%'
         }
     });
+</script>
+
+<script>
+    lucide.createIcons();
 </script>
 
 </body>
